@@ -1,0 +1,1256 @@
+{
+    "municipios": [
+        {
+            "id" : 129,
+            "nome" : "Ambriz",
+            "created_at" : "2022-12-08T01:30:15.857Z",
+            "updated_at" : "2022-12-08T01:30:15.857Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 130,
+            "nome" : "Bula Atumba",
+            "created_at" : "2022-12-08T01:30:45.323Z",
+            "updated_at" : "2022-12-08T01:30:45.323Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 53,
+            "nome" : "Dembos",
+            "created_at" : "2019-11-22T20:37:41.497Z",
+            "updated_at" : "2022-12-08T01:31:25.874Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 100,
+            "nome" : "Pango Aluquém",
+            "created_at" : "2019-11-22T20:37:41.812Z",
+            "updated_at" : "2022-12-08T01:32:03.515Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 52,
+            "nome" : "Dande",
+            "created_at" : "2019-11-22T20:37:41.490Z",
+            "updated_at" : "2022-12-08T01:31:07.052Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 93,
+            "nome" : "Nambuangongo",
+            "created_at" : "2019-11-22T20:37:41.766Z",
+            "updated_at" : "2022-12-08T01:31:42.776Z",
+            "provincia_id" : 1
+        },
+        {
+            "id" : 2,
+            "nome" : "Benguela",
+            "created_at" : "2019-11-19T21:00:38.095Z",
+            "updated_at" : "2022-12-08T01:33:44.060Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 4,
+            "nome" : "Caimbambo",
+            "created_at" : "2019-11-20T22:37:59.781Z",
+            "updated_at" : "2022-12-08T01:34:26.151Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 33,
+            "nome" : "Chongorói",
+            "created_at" : "2019-11-22T20:37:41.371Z",
+            "updated_at" : "2022-12-08T01:35:04.026Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 39,
+            "nome" : "Cubal",
+            "created_at" : "2019-11-22T20:37:41.408Z",
+            "updated_at" : "2022-12-08T01:35:20.274Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 57,
+            "nome" : "Ganda",
+            "created_at" : "2019-11-22T20:37:41.526Z",
+            "updated_at" : "2022-12-08T01:35:37.677Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 131,
+            "nome" : "Balombo",
+            "created_at" : "2022-12-08T01:33:06.780Z",
+            "updated_at" : "2022-12-08T01:33:06.780Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 132,
+            "nome" : "Baía Farta",
+            "created_at" : "2022-12-08T01:33:25.961Z",
+            "updated_at" : "2022-12-08T01:33:25.961Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 133,
+            "nome" : "Bocoio",
+            "created_at" : "2022-12-08T01:34:09.243Z",
+            "updated_at" : "2022-12-08T01:34:09.243Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 134,
+            "nome" : "Catumbela",
+            "created_at" : "2022-12-08T01:34:44.216Z",
+            "updated_at" : "2022-12-08T01:34:44.216Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 66,
+            "nome" : "Lobito",
+            "created_at" : "2019-11-22T20:37:41.587Z",
+            "updated_at" : "2022-12-08T01:35:55.319Z",
+            "provincia_id" : 2
+        },
+        {
+            "id" : 64,
+            "nome" : "Kuito",
+            "created_at" : "2019-11-22T20:37:41.572Z",
+            "updated_at" : "2022-12-08T11:28:11.492Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 8,
+            "nome" : "Camacupa",
+            "created_at" : "2019-11-20T22:45:01.086Z",
+            "updated_at" : "2022-12-08T01:36:36.630Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 19,
+            "nome" : "Catabola",
+            "created_at" : "2019-11-20T22:52:05.354Z",
+            "updated_at" : "2022-12-08T01:36:52.938Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 29,
+            "nome" : "Chinguar",
+            "created_at" : "2019-11-22T20:37:41.357Z",
+            "updated_at" : "2022-12-08T01:37:13.481Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 32,
+            "nome" : "Chitembo",
+            "created_at" : "2019-11-22T20:37:41.366Z",
+            "updated_at" : "2022-12-08T01:37:29.972Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 41,
+            "nome" : "Cuemba",
+            "created_at" : "2019-11-22T20:37:41.421Z",
+            "updated_at" : "2022-12-08T01:37:46.691Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 96,
+            "nome" : "Nharea",
+            "created_at" : "2019-11-22T20:37:41.786Z",
+            "updated_at" : "2022-12-08T01:39:08.860Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 135,
+            "nome" : "Andulo",
+            "created_at" : "2022-12-08T01:36:19.617Z",
+            "updated_at" : "2022-12-08T01:36:19.617Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 46,
+            "nome" : "Cunhinga",
+            "created_at" : "2019-11-22T20:37:41.452Z",
+            "updated_at" : "2022-12-08T01:38:02.965Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 136,
+            "nome" : "Cuíto",
+            "created_at" : "2022-12-08T01:38:21.810Z",
+            "updated_at" : "2022-12-08T01:38:21.810Z",
+            "provincia_id" : 3
+        },
+        {
+            "id" : 137,
+            "nome" : "Belize",
+            "created_at" : "2022-12-08T01:39:38.801Z",
+            "updated_at" : "2022-12-08T01:39:38.801Z",
+            "provincia_id" : 4
+        },
+        {
+            "id" : 138,
+            "nome" : "Buco-Zau",
+            "created_at" : "2022-12-08T01:39:57.309Z",
+            "updated_at" : "2022-12-08T01:39:57.309Z",
+            "provincia_id" : 4
+        },
+        {
+            "id" : 139,
+            "nome" : "Cabinda",
+            "created_at" : "2022-12-08T01:40:16.582Z",
+            "updated_at" : "2022-12-08T01:40:16.582Z",
+            "provincia_id" : 4
+        },
+        {
+            "id" : 140,
+            "nome" : "Cacongo",
+            "created_at" : "2022-12-08T01:40:42.157Z",
+            "updated_at" : "2022-12-08T01:40:42.157Z",
+            "provincia_id" : 4
+        },
+        {
+            "id" : 68,
+            "nome" : "Longa",
+            "created_at" : "2019-11-22T20:37:41.599Z",
+            "updated_at" : "2022-12-08T11:28:56.072Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 5,
+            "nome" : "Calai",
+            "created_at" : "2019-11-20T22:44:27.780Z",
+            "updated_at" : "2022-12-08T01:41:05.601Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 36,
+            "nome" : "Cuangar",
+            "created_at" : "2019-11-22T20:37:41.390Z",
+            "updated_at" : "2022-12-08T01:41:22.590Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 40,
+            "nome" : "Cuchi",
+            "created_at" : "2019-11-22T20:37:41.415Z",
+            "updated_at" : "2022-12-08T01:42:14.151Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 54,
+            "nome" : "Dirico",
+            "created_at" : "2019-11-22T20:37:41.504Z",
+            "updated_at" : "2022-12-08T01:44:03.483Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 83,
+            "nome" : "Mavinga",
+            "created_at" : "2019-11-22T20:37:41.703Z",
+            "updated_at" : "2022-12-08T01:44:20.982Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 84,
+            "nome" : "Menongue",
+            "created_at" : "2019-11-22T20:37:41.709Z",
+            "updated_at" : "2022-12-08T01:44:38.541Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 112,
+            "nome" : "Rivungo",
+            "created_at" : "2019-11-22T20:37:41.888Z",
+            "updated_at" : "2022-12-08T01:45:13.268Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 44,
+            "nome" : "Cuito Cuanavale",
+            "created_at" : "2019-11-22T20:37:41.439Z",
+            "updated_at" : "2022-12-08T01:43:46.166Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 141,
+            "nome" : "Nancova",
+            "created_at" : "2022-12-08T01:44:55.395Z",
+            "updated_at" : "2022-12-08T01:44:55.395Z",
+            "provincia_id" : 5
+        },
+        {
+            "id" : 10,
+            "nome" : "Cambambe",
+            "created_at" : "2019-11-20T22:45:17.299Z",
+            "updated_at" : "2022-12-08T01:46:33.372Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 23,
+            "nome" : "Cazengo",
+            "created_at" : "2019-11-20T22:52:43.585Z",
+            "updated_at" : "2022-12-08T01:46:51.612Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 59,
+            "nome" : "Gonguembo",
+            "created_at" : "2019-11-22T20:37:41.538Z",
+            "updated_at" : "2022-12-08T01:47:38.817Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 74,
+            "nome" : "Lucala",
+            "created_at" : "2019-11-22T20:37:41.644Z",
+            "updated_at" : "2022-12-08T01:47:56.681Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 104,
+            "nome" : "Quiculungo",
+            "created_at" : "2019-11-22T20:37:41.837Z",
+            "updated_at" : "2022-12-08T01:48:13.955Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 113,
+            "nome" : "Samba Caju",
+            "created_at" : "2019-11-22T20:37:41.895Z",
+            "updated_at" : "2022-12-08T01:48:32.712Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 142,
+            "nome" : "Ambaca",
+            "created_at" : "2022-12-08T01:45:41.302Z",
+            "updated_at" : "2022-12-08T01:45:41.302Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 143,
+            "nome" : "Banga",
+            "created_at" : "2022-12-08T01:45:59.851Z",
+            "updated_at" : "2022-12-08T01:45:59.851Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 144,
+            "nome" : "Bolongongo",
+            "created_at" : "2022-12-08T01:46:17.073Z",
+            "updated_at" : "2022-12-08T01:46:17.073Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 58,
+            "nome" : "Golungo Alto",
+            "created_at" : "2019-11-22T20:37:41.532Z",
+            "updated_at" : "2022-12-08T01:47:08.389Z",
+            "provincia_id" : 6
+        },
+        {
+            "id" : 18,
+            "nome" : "Cassongue",
+            "created_at" : "2019-11-20T22:51:57.236Z",
+            "updated_at" : "2022-12-08T01:49:12.193Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 25,
+            "nome" : "Cela",
+            "created_at" : "2019-11-22T20:37:41.344Z",
+            "updated_at" : "2022-12-08T01:49:28.121Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 55,
+            "nome" : "Ebo",
+            "created_at" : "2019-11-22T20:37:41.512Z",
+            "updated_at" : "2022-12-08T01:50:05.762Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 65,
+            "nome" : "Libolo",
+            "created_at" : "2019-11-22T20:37:41.578Z",
+            "updated_at" : "2022-12-08T01:50:28.351Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 90,
+            "nome" : "Mussende",
+            "created_at" : "2019-11-22T20:37:41.747Z",
+            "updated_at" : "2022-12-08T01:50:46.126Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 103,
+            "nome" : "Quibala",
+            "created_at" : "2019-11-22T20:37:41.831Z",
+            "updated_at" : "2022-12-08T01:51:30.063Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 116,
+            "nome" : "Seles",
+            "created_at" : "2019-11-22T20:37:41.915Z",
+            "updated_at" : "2022-12-08T01:52:02.146Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 119,
+            "nome" : "Sumbe",
+            "created_at" : "2019-11-22T20:37:41.934Z",
+            "updated_at" : "2022-12-08T01:52:18.728Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 145,
+            "nome" : "Amboim",
+            "created_at" : "2022-12-08T01:48:55.406Z",
+            "updated_at" : "2022-12-08T01:48:55.406Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 34,
+            "nome" : "Conda",
+            "created_at" : "2019-11-22T20:37:41.377Z",
+            "updated_at" : "2022-12-08T01:49:47.419Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 146,
+            "nome" : "Porto Amboim",
+            "created_at" : "2022-12-08T01:51:04.162Z",
+            "updated_at" : "2022-12-08T01:51:04.162Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 105,
+            "nome" : "Quilenda",
+            "created_at" : "2019-11-22T20:37:41.843Z",
+            "updated_at" : "2022-12-08T01:51:46.565Z",
+            "provincia_id" : 7
+        },
+        {
+            "id" : 38,
+            "nome" : "Cuanhama",
+            "created_at" : "2019-11-22T20:37:41.402Z",
+            "updated_at" : "2022-12-08T01:53:03.591Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 47,
+            "nome" : "Curoca",
+            "created_at" : "2019-11-22T20:37:41.458Z",
+            "updated_at" : "2022-12-08T01:53:18.475Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 49,
+            "nome" : "Cuvelai",
+            "created_at" : "2019-11-22T20:37:41.471Z",
+            "updated_at" : "2022-12-08T01:53:33.561Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 99,
+            "nome" : "Ombadja",
+            "created_at" : "2019-11-22T20:37:41.806Z",
+            "updated_at" : "2022-12-08T01:54:04.988Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 147,
+            "nome" : "Cahama",
+            "created_at" : "2022-12-08T01:52:48.349Z",
+            "updated_at" : "2022-12-08T01:52:48.349Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 92,
+            "nome" : "Namacunde",
+            "created_at" : "2019-11-22T20:37:41.760Z",
+            "updated_at" : "2022-12-08T01:53:49.913Z",
+            "provincia_id" : 8
+        },
+        {
+            "id" : 20,
+            "nome" : "Catchiungo",
+            "created_at" : "2019-11-20T22:52:15.020Z",
+            "updated_at" : "2022-12-08T02:53:14.118Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 56,
+            "nome" : "Ekunha",
+            "created_at" : "2019-11-22T20:37:41.518Z",
+            "updated_at" : "2022-12-08T02:55:36.125Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 121,
+            "nome" : "Tchindjenje",
+            "created_at" : "2019-11-22T20:37:41.947Z",
+            "updated_at" : "2022-12-08T11:41:56.103Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 24,
+            "nome" : "Caála",
+            "created_at" : "2019-11-22T20:37:41.340Z",
+            "updated_at" : "2022-12-08T01:55:04.993Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 60,
+            "nome" : "Huambo",
+            "created_at" : "2019-11-22T20:37:41.546Z",
+            "updated_at" : "2022-12-08T01:55:43.979Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 69,
+            "nome" : "Longonjo",
+            "created_at" : "2019-11-22T20:37:41.606Z",
+            "updated_at" : "2022-12-08T01:56:19.319Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 89,
+            "nome" : "Mungo",
+            "created_at" : "2019-11-22T20:37:41.740Z",
+            "updated_at" : "2022-12-08T01:56:35.931Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 123,
+            "nome" : "Ucuma",
+            "created_at" : "2019-11-22T20:37:41.960Z",
+            "updated_at" : "2022-12-08T01:57:28.107Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 148,
+            "nome" : "Bailundo",
+            "created_at" : "2022-12-08T01:54:29.181Z",
+            "updated_at" : "2022-12-08T01:54:29.181Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 149,
+            "nome" : "Cachiungo",
+            "created_at" : "2022-12-08T01:54:46.281Z",
+            "updated_at" : "2022-12-08T01:54:46.281Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 150,
+            "nome" : "Ecunha",
+            "created_at" : "2022-12-08T01:55:27.816Z",
+            "updated_at" : "2022-12-08T01:55:27.816Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 151,
+            "nome" : "Londuimbali",
+            "created_at" : "2022-12-08T01:56:04.503Z",
+            "updated_at" : "2022-12-08T01:56:04.503Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 152,
+            "nome" : "Chicala-Choloanga",
+            "created_at" : "2022-12-08T01:56:56.100Z",
+            "updated_at" : "2022-12-08T01:56:56.100Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 153,
+            "nome" : "Chinjenje",
+            "created_at" : "2022-12-08T01:57:11.949Z",
+            "updated_at" : "2022-12-08T01:57:11.949Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 67,
+            "nome" : "Londuimbale",
+            "created_at" : "2019-11-22T20:37:41.593Z",
+            "updated_at" : "2022-12-08T02:56:33.462Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 120,
+            "nome" : "Tchicala-Tcholoanga",
+            "created_at" : "2019-11-22T20:37:41.941Z",
+            "updated_at" : "2022-12-08T11:41:11.850Z",
+            "provincia_id" : 9
+        },
+        {
+            "id" : 26,
+            "nome" : "Chiange",
+            "created_at" : "2019-11-22T20:37:41.347Z",
+            "updated_at" : "2022-12-08T02:54:01.641Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 27,
+            "nome" : "Chibia",
+            "created_at" : "2019-11-22T20:37:41.350Z",
+            "updated_at" : "2022-12-08T01:59:04.493Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 28,
+            "nome" : "Chicomba",
+            "created_at" : "2019-11-22T20:37:41.354Z",
+            "updated_at" : "2022-12-08T01:59:26.324Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 30,
+            "nome" : "Chipindo",
+            "created_at" : "2019-11-22T20:37:41.360Z",
+            "updated_at" : "2022-12-08T01:59:41.565Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 48,
+            "nome" : "Cuvango",
+            "created_at" : "2019-11-22T20:37:41.465Z",
+            "updated_at" : "2022-12-08T01:59:57.180Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 61,
+            "nome" : "Humpata",
+            "created_at" : "2019-11-22T20:37:41.553Z",
+            "updated_at" : "2022-12-08T02:00:11.258Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 73,
+            "nome" : "Lubango",
+            "created_at" : "2019-11-22T20:37:41.638Z",
+            "updated_at" : "2022-12-08T02:00:57.532Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 82,
+            "nome" : "Matala",
+            "created_at" : "2019-11-22T20:37:41.695Z",
+            "updated_at" : "2022-12-08T02:07:22.468Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 108,
+            "nome" : "Quipungo",
+            "created_at" : "2019-11-22T20:37:41.862Z",
+            "updated_at" : "2022-12-08T02:07:40.595Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 106,
+            "nome" : "Quilengues",
+            "created_at" : "2019-11-22T20:37:41.850Z",
+            "updated_at" : "2022-12-08T02:07:55.448Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 154,
+            "nome" : "Caconda",
+            "created_at" : "2022-12-08T01:57:47.742Z",
+            "updated_at" : "2022-12-08T01:57:47.742Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 155,
+            "nome" : "Cacula",
+            "created_at" : "2022-12-08T01:58:04.045Z",
+            "updated_at" : "2022-12-08T01:58:04.045Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 7,
+            "nome" : "Caluquembe",
+            "created_at" : "2019-11-20T22:44:42.775Z",
+            "updated_at" : "2022-12-08T01:58:26.855Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 156,
+            "nome" : "Gambos",
+            "created_at" : "2022-12-08T01:58:46.982Z",
+            "updated_at" : "2022-12-08T01:58:46.982Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 63,
+            "nome" : "Jamba",
+            "created_at" : "2019-11-22T20:37:41.565Z",
+            "updated_at" : "2022-12-08T02:00:27.701Z",
+            "provincia_id" : 10
+        },
+        {
+            "id" : 110,
+            "nome" : "Quissama",
+            "created_at" : "2019-11-22T20:37:41.875Z",
+            "updated_at" : "2022-12-08T11:40:02.155Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 22,
+            "nome" : "Cazenga",
+            "created_at" : "2019-11-20T22:52:33.101Z",
+            "updated_at" : "2022-12-08T02:08:46.939Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 3,
+            "nome" : "Luanda",
+            "created_at" : "2019-11-19T21:00:50.052Z",
+            "updated_at" : "2022-12-08T02:09:19.096Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 125,
+            "nome" : "Viana",
+            "created_at" : "2019-11-22T20:37:41.972Z",
+            "updated_at" : "2022-12-08T02:10:32.213Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 157,
+            "nome" : "Belas",
+            "created_at" : "2022-12-08T02:08:13.048Z",
+            "updated_at" : "2022-12-08T02:08:13.048Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 158,
+            "nome" : "Cacuaco",
+            "created_at" : "2022-12-08T02:08:32.110Z",
+            "updated_at" : "2022-12-08T02:08:32.110Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 62,
+            "nome" : "Ícolo e Bengo",
+            "created_at" : "2019-11-22T20:37:41.559Z",
+            "updated_at" : "2022-12-08T02:09:05.671Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 159,
+            "nome" : "Kilamba Kiaxi",
+            "created_at" : "2022-12-08T02:09:47.522Z",
+            "updated_at" : "2022-12-08T02:09:47.522Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 160,
+            "nome" : "Quiçama",
+            "created_at" : "2022-12-08T02:10:03.381Z",
+            "updated_at" : "2022-12-08T02:10:03.381Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 161,
+            "nome" : "Talatona",
+            "created_at" : "2022-12-08T02:10:18.324Z",
+            "updated_at" : "2022-12-08T02:10:18.324Z",
+            "provincia_id" : 11
+        },
+        {
+            "id" : 11,
+            "nome" : "Cambulo",
+            "created_at" : "2019-11-20T22:45:26.391Z",
+            "updated_at" : "2022-12-08T02:10:55.443Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 17,
+            "nome" : "Capenda-Camulemba",
+            "created_at" : "2019-11-20T22:51:42.394Z",
+            "updated_at" : "2022-12-08T02:11:13.058Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 21,
+            "nome" : "Caungula",
+            "created_at" : "2019-11-20T22:52:24.337Z",
+            "updated_at" : "2022-12-08T02:11:27.319Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 37,
+            "nome" : "Cuango",
+            "created_at" : "2019-11-22T20:37:41.396Z",
+            "updated_at" : "2022-12-08T02:11:56.448Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 42,
+            "nome" : "Cuílo",
+            "created_at" : "2019-11-22T20:37:41.427Z",
+            "updated_at" : "2022-12-08T02:12:10.553Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 72,
+            "nome" : "Lubalo",
+            "created_at" : "2019-11-22T20:37:41.631Z",
+            "updated_at" : "2022-12-08T02:12:38.316Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 127,
+            "nome" : "Xá-Muteba",
+            "created_at" : "2019-11-22T20:37:41.985Z",
+            "updated_at" : "2022-12-08T02:13:16.536Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 31,
+            "nome" : "Chitato",
+            "created_at" : "2019-11-22T20:37:41.363Z",
+            "updated_at" : "2022-12-08T02:11:40.553Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 162,
+            "nome" : "Lóvua",
+            "created_at" : "2022-12-08T02:12:24.709Z",
+            "updated_at" : "2022-12-08T02:12:24.709Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 163,
+            "nome" : "Lucapa",
+            "created_at" : "2022-12-08T02:12:57.304Z",
+            "updated_at" : "2022-12-08T02:12:57.304Z",
+            "provincia_id" : 12
+        },
+        {
+            "id" : 50,
+            "nome" : "Dala",
+            "created_at" : "2019-11-22T20:37:41.477Z",
+            "updated_at" : "2022-12-08T02:13:58.300Z",
+            "provincia_id" : 13
+        },
+        {
+            "id" : 115,
+            "nome" : "Saurimo",
+            "created_at" : "2019-11-22T20:37:41.908Z",
+            "updated_at" : "2022-12-08T02:14:30.212Z",
+            "provincia_id" : 13
+        },
+        {
+            "id" : 164,
+            "nome" : "Cacolo",
+            "created_at" : "2022-12-08T02:13:40.442Z",
+            "updated_at" : "2022-12-08T02:13:40.442Z",
+            "provincia_id" : 13
+        },
+        {
+            "id" : 88,
+            "nome" : "Muconda",
+            "created_at" : "2019-11-22T20:37:41.734Z",
+            "updated_at" : "2022-12-08T02:14:15.392Z",
+            "provincia_id" : 13
+        },
+        {
+            "id" : 16,
+            "nome" : "Caombo",
+            "created_at" : "2019-11-20T22:51:32.095Z",
+            "updated_at" : "2022-12-08T02:16:37.021Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 76,
+            "nome" : "Luquembo",
+            "created_at" : "2019-11-22T20:37:41.657Z",
+            "updated_at" : "2022-12-08T02:17:29.513Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 79,
+            "nome" : "Malanje",
+            "created_at" : "2019-11-22T20:37:41.676Z",
+            "updated_at" : "2022-12-08T02:17:43.205Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 80,
+            "nome" : "Marimba",
+            "created_at" : "2019-11-22T20:37:41.682Z",
+            "updated_at" : "2022-12-08T02:17:58.625Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 81,
+            "nome" : "Massango",
+            "created_at" : "2019-11-22T20:37:41.689Z",
+            "updated_at" : "2022-12-08T02:18:12.567Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 87,
+            "nome" : "Mucari",
+            "created_at" : "2019-11-22T20:37:41.728Z",
+            "updated_at" : "2022-12-08T02:18:30.039Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 102,
+            "nome" : "Quela",
+            "created_at" : "2019-11-22T20:37:41.825Z",
+            "updated_at" : "2022-12-08T02:18:45.181Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 109,
+            "nome" : "Quirima",
+            "created_at" : "2019-11-22T20:37:41.869Z",
+            "updated_at" : "2022-12-08T02:18:59.983Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 35,
+            "nome" : "Cuaba Nzogo",
+            "created_at" : "2019-11-22T20:37:41.383Z",
+            "updated_at" : "2022-12-08T02:54:35.800Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 6,
+            "nome" : "Calandula",
+            "created_at" : "2019-11-20T22:44:35.507Z",
+            "updated_at" : "2022-12-08T02:15:14.387Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 12,
+            "nome" : "Cambundi-Catembo",
+            "created_at" : "2019-11-20T22:45:36.525Z",
+            "updated_at" : "2022-12-08T02:16:03.706Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 14,
+            "nome" : "Cangandala",
+            "created_at" : "2019-11-20T22:45:51.866Z",
+            "updated_at" : "2022-12-08T02:16:19.911Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 165,
+            "nome" : "Cacuso",
+            "created_at" : "2022-12-08T02:14:59.776Z",
+            "updated_at" : "2022-12-08T02:14:59.776Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 166,
+            "nome" : "Cuaba Nzoji",
+            "created_at" : "2022-12-08T02:16:57.995Z",
+            "updated_at" : "2022-12-08T02:16:57.995Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 45,
+            "nome" : "Cunda-Dia-Baze",
+            "created_at" : "2019-11-22T20:37:41.446Z",
+            "updated_at" : "2022-12-08T02:17:13.573Z",
+            "provincia_id" : 14
+        },
+        {
+            "id" : 77,
+            "nome" : "Léua",
+            "created_at" : "2019-11-22T20:37:41.663Z",
+            "updated_at" : "2022-12-08T02:20:08.426Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 71,
+            "nome" : "Luau",
+            "created_at" : "2019-11-22T20:37:41.624Z",
+            "updated_at" : "2022-12-08T02:20:23.636Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 70,
+            "nome" : "Luacano",
+            "created_at" : "2019-11-22T20:37:41.612Z",
+            "updated_at" : "2022-12-08T02:20:37.235Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 75,
+            "nome" : "Luchazes",
+            "created_at" : "2019-11-22T20:37:41.651Z",
+            "updated_at" : "2022-12-08T02:20:57.222Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 169,
+            "nome" : "Cameia",
+            "created_at" : "2022-12-08T02:21:11.975Z",
+            "updated_at" : "2022-12-08T02:21:11.975Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 167,
+            "nome" : "Alto Zambeze",
+            "created_at" : "2022-12-08T02:19:23.918Z",
+            "updated_at" : "2022-12-08T02:19:23.918Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 168,
+            "nome" : "Bundas",
+            "created_at" : "2022-12-08T02:19:39.448Z",
+            "updated_at" : "2022-12-08T02:19:39.448Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 9,
+            "nome" : "Camanongue",
+            "created_at" : "2019-11-20T22:45:09.587Z",
+            "updated_at" : "2022-12-08T02:19:54.506Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 85,
+            "nome" : "Moxico",
+            "created_at" : "2019-11-22T20:37:41.715Z",
+            "updated_at" : "2022-12-08T02:21:26.322Z",
+            "provincia_id" : 15
+        },
+        {
+            "id" : 13,
+            "nome" : "Camucuio",
+            "created_at" : "2019-11-20T22:45:44.216Z",
+            "updated_at" : "2022-12-08T02:22:04.155Z",
+            "provincia_id" : 16
+        },
+        {
+            "id" : 94,
+            "nome" : "Moçâmedes",
+            "created_at" : "2019-11-22T20:37:41.773Z",
+            "updated_at" : "2022-12-08T02:22:15.941Z",
+            "provincia_id" : 16
+        },
+        {
+            "id" : 122,
+            "nome" : "Tômbua",
+            "created_at" : "2019-11-22T20:37:41.953Z",
+            "updated_at" : "2022-12-08T02:22:29.520Z",
+            "provincia_id" : 16
+        },
+        {
+            "id" : 126,
+            "nome" : "Virei",
+            "created_at" : "2019-11-22T20:37:41.978Z",
+            "updated_at" : "2022-12-08T02:22:45.121Z",
+            "provincia_id" : 16
+        },
+        {
+            "id" : 170,
+            "nome" : "Bibala",
+            "created_at" : "2022-12-08T02:21:49.603Z",
+            "updated_at" : "2022-12-08T02:21:49.603Z",
+            "provincia_id" : 16
+        },
+        {
+            "id" : 86,
+            "nome" : "Mucaba",
+            "created_at" : "2019-11-22T20:37:41.721Z",
+            "updated_at" : "2022-12-08T02:25:25.850Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 95,
+            "nome" : "Negage",
+            "created_at" : "2019-11-22T20:37:41.779Z",
+            "updated_at" : "2022-12-08T02:25:39.459Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 101,
+            "nome" : "Puri",
+            "created_at" : "2019-11-22T20:37:41.818Z",
+            "updated_at" : "2022-12-08T02:25:52.968Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 107,
+            "nome" : "Quimbele",
+            "created_at" : "2019-11-22T20:37:41.856Z",
+            "updated_at" : "2022-12-08T02:26:06.738Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 111,
+            "nome" : "Quitexe",
+            "created_at" : "2019-11-22T20:37:41.881Z",
+            "updated_at" : "2022-12-08T02:26:21.908Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 114,
+            "nome" : "Sanza Pombo",
+            "created_at" : "2019-11-22T20:37:41.902Z",
+            "updated_at" : "2022-12-08T02:26:40.547Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 117,
+            "nome" : "Songo",
+            "created_at" : "2019-11-22T20:37:41.921Z",
+            "updated_at" : "2022-12-08T02:26:54.620Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 128,
+            "nome" : "Zombo",
+            "created_at" : "2019-11-22T20:37:41.991Z",
+            "updated_at" : "2022-12-08T02:27:42.781Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 78,
+            "nome" : "Macocola",
+            "created_at" : "2019-11-22T20:37:41.670Z",
+            "updated_at" : "2022-12-08T11:29:53.205Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 171,
+            "nome" : "Alto Cauale",
+            "created_at" : "2022-12-08T02:23:30.573Z",
+            "updated_at" : "2022-12-08T02:23:30.573Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 172,
+            "nome" : "Ambuíla",
+            "created_at" : "2022-12-08T02:23:45.599Z",
+            "updated_at" : "2022-12-08T02:23:45.599Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 173,
+            "nome" : "Bembe",
+            "created_at" : "2022-12-08T02:24:07.087Z",
+            "updated_at" : "2022-12-08T02:24:07.087Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 174,
+            "nome" : "Buengas",
+            "created_at" : "2022-12-08T02:24:20.504Z",
+            "updated_at" : "2022-12-08T02:24:20.504Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 175,
+            "nome" : "Bungo",
+            "created_at" : "2022-12-08T02:24:34.749Z",
+            "updated_at" : "2022-12-08T02:24:34.749Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 51,
+            "nome" : "Damba",
+            "created_at" : "2019-11-22T20:37:41.484Z",
+            "updated_at" : "2022-12-08T02:24:49.393Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 176,
+            "nome" : "Milunga",
+            "created_at" : "2022-12-08T02:25:08.255Z",
+            "updated_at" : "2022-12-08T02:25:08.255Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 124,
+            "nome" : "Uíge",
+            "created_at" : "2019-11-22T20:37:41.966Z",
+            "updated_at" : "2022-12-08T02:27:18.276Z",
+            "provincia_id" : 17
+        },
+        {
+            "id" : 43,
+            "nome" : "Cuimba",
+            "created_at" : "2019-11-22T20:37:41.433Z",
+            "updated_at" : "2022-12-08T02:28:02.245Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 91,
+            "nome" : "M'Banza Kongo",
+            "created_at" : "2019-11-22T20:37:41.754Z",
+            "updated_at" : "2022-12-08T11:30:52.772Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 97,
+            "nome" : "Noqui",
+            "created_at" : "2019-11-22T20:37:41.792Z",
+            "updated_at" : "2022-12-08T11:32:18.942Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 98,
+            "nome" : "N'Zeto",
+            "created_at" : "2019-11-22T20:37:41.799Z",
+            "updated_at" : "2022-12-08T11:39:18.754Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 118,
+            "nome" : "Soyo",
+            "created_at" : "2019-11-22T20:37:41.927Z",
+            "updated_at" : "2022-12-08T11:40:41.116Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 177,
+            "nome" : "Mabanza Congo",
+            "created_at" : "2022-12-08T02:28:16.871Z",
+            "updated_at" : "2022-12-08T02:28:54.966Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 178,
+            "nome" : "Nóqui",
+            "created_at" : "2022-12-08T02:29:09.383Z",
+            "updated_at" : "2022-12-08T02:29:09.383Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 179,
+            "nome" : "Nezeto",
+            "created_at" : "2022-12-08T02:29:22.833Z",
+            "updated_at" : "2022-12-08T02:29:22.833Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 180,
+            "nome" : "Soio",
+            "created_at" : "2022-12-08T02:29:36.858Z",
+            "updated_at" : "2022-12-08T02:29:36.858Z",
+            "provincia_id" : 18
+        },
+        {
+            "id" : 181,
+            "nome" : "Tomboco",
+            "created_at" : "2022-12-08T02:29:50.230Z",
+            "updated_at" : "2022-12-08T02:29:50.230Z",
+            "provincia_id" : 18
+        }
+    ]}

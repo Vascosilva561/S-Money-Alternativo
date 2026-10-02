@@ -1,0 +1,201 @@
+{
+    "provincia": [
+        {
+            "id" : 1,
+            "nome" : "Bengo",
+            "capital" : "Caxito",
+            "area_km2" : "31371",
+            "population" : 356641,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.724Z",
+            "updated_at" : "2019-11-24T00:16:32.724Z"
+        },
+        {
+            "id" : 2,
+            "nome" : "Benguela",
+            "capital" : "Benguela",
+            "area_km2" : "31788",
+            "population" : 2231385,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.736Z",
+            "updated_at" : "2019-11-24T00:16:32.736Z"
+        },
+        {
+            "id" : 3,
+            "nome" : "Bié",
+            "capital" : "Kuito",
+            "area_km2" : "70314",
+            "population" : 1455255,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.746Z",
+            "updated_at" : "2019-11-24T00:16:32.746Z"
+        },
+        {
+            "id" : 4,
+            "nome" : "Cabinda",
+            "capital" : "Cabinda",
+            "area_km2" : "7270",
+            "population" : 716076,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.755Z",
+            "updated_at" : "2019-11-24T00:16:32.755Z"
+        },
+        {
+            "id" : 5,
+            "nome" : "Cuando-Cubango",
+            "capital" : "Menongue",
+            "area_km2" : "199049",
+            "population" : 534002,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.765Z",
+            "updated_at" : "2019-11-24T00:16:32.765Z"
+        },
+        {
+            "id" : 6,
+            "nome" : "Cuanza Norte",
+            "capital" : "Ndalatando",
+            "area_km2" : "24190",
+            "population" : 443386,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.775Z",
+            "updated_at" : "2019-11-24T00:16:32.775Z"
+        },
+        {
+            "id" : 7,
+            "nome" : "Cuanza Sul",
+            "capital" : "Sumbe",
+            "area_km2" : "55660",
+            "population" : 1881873,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.784Z",
+            "updated_at" : "2019-11-24T00:16:32.784Z"
+        },
+        {
+            "id" : 8,
+            "nome" : "Cunene",
+            "capital" : "Ondjiva",
+            "area_km2" : "89342",
+            "population" : 990087,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.793Z",
+            "updated_at" : "2019-11-24T00:16:32.793Z"
+        },
+        {
+            "id" : 9,
+            "nome" : "Huambo",
+            "capital" : "Huambo",
+            "area_km2" : "34274",
+            "population" : 2019555,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.803Z",
+            "updated_at" : "2019-11-24T00:16:32.803Z"
+        },
+        {
+            "id" : 10,
+            "nome" : "Huíla",
+            "capital" : "Lubango",
+            "area_km2" : "75002",
+            "population" : 2497422,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.812Z",
+            "updated_at" : "2019-11-24T00:16:32.812Z"
+        },
+        {
+            "id" : 11,
+            "nome" : "Luanda",
+            "capital" : "Luanda",
+            "area_km2" : "2418",
+            "population" : 6945386,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.821Z",
+            "updated_at" : "2019-11-24T00:16:32.821Z"
+        },
+        {
+            "id" : 12,
+            "nome" : "Lunda do Norte",
+            "capital" : "Dundo",
+            "area_km2" : "102783",
+            "population" : 862566,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.830Z",
+            "updated_at" : "2019-11-24T00:16:32.830Z"
+        },
+        {
+            "id" : 13,
+            "nome" : "Lunda Sul",
+            "capital" : "Saurimo",
+            "area_km2" : "45649",
+            "population" : 537587,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.839Z",
+            "updated_at" : "2019-11-24T00:16:32.839Z"
+        },
+        {
+            "id" : 14,
+            "nome" : "Malanje",
+            "capital" : "Malanje",
+            "area_km2" : "97602",
+            "population" : 986363,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.848Z",
+            "updated_at" : "2019-11-24T00:16:32.848Z"
+        },
+        {
+            "id" : 15,
+            "nome" : "Moxico",
+            "capital" : "Luena",
+            "area_km2" : "223023",
+            "population" : 758568,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.857Z",
+            "updated_at" : "2019-11-24T00:16:32.857Z"
+        },
+        {
+            "id" : 16,
+            "nome" : "Namibe",
+            "capital" : "Moçâmedes",
+            "area_km2" : "58137",
+            "population" : 495326,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.866Z",
+            "updated_at" : "2019-11-24T00:16:32.866Z"
+        },
+        {
+            "id" : 17,
+            "nome" : "Uíge",
+            "capital" : "Uíge",
+            "area_km2" : "58698",
+            "population" : 1483118,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.876Z",
+            "updated_at" : "2019-11-24T00:16:32.876Z"
+        },
+        {
+            "id" : 18,
+            "nome" : "Zaire",
+            "capital" : "MBanza Kongo",
+            "area_km2" : "40130",
+            "population" : 594428,
+            "image_map" : "",
+            "country_id" : 6,
+            "created_at" : "2019-11-24T00:16:32.886Z",
+            "updated_at" : "2019-11-24T00:16:32.886Z"
+        }
+    ]}

@@ -1,0 +1,141 @@
+{
+    "recargas":[
+        {
+            "name":"ENDE",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/ende.json"
+
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/ende-produtos.json"
+            }
+            
+        },
+        {
+            "name":"UNITEL",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/unitel.json"
+
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/unitel-produtos.json"
+            }
+               
+        },
+        {
+            "name":"AFRICELL",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/africell.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/africell-produtos.json"
+            }
+        },
+        {
+            "name":"MOVICEL",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/movicel.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/movicel-produtos.json"
+            }
+            
+        },
+        {
+            "name":"ZAPTV",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/zap.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/zap-produtos.json"
+            }   
+        },
+        {
+            "name":"ZAPFIBRA",
+            
+
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/zapfibra.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/zapfibra-produtos.json"
+
+            }
+                
+        },
+        {
+            "name":"DSTV",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/dstv.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/dstv-produtos.json"
+            }
+            
+        },
+        {
+            "name":"ELEPHANTBET",
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/elephantbet.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/elephantbet-produtos.json"
+            }
+        },
+        {
+            "name":"BANTUBET",
+
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/bantubet.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/bantubet-produtos.json"
+            }
+            
+        },
+        {
+            "name":"PREMIERBET",
+
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/premierbet.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/premierbet-produtos.json"
+            }
+            
+        },
+        {
+            "name":"MOJOGOS",
+
+            "resource":{
+                "method":"post",
+                "url":"recarga/confirma/mojogos.json"
+            },
+            "details":{
+                "method":"get",
+                "url":"recarga/mojogos-produtos.json"
+            }
+            
+        }
+    ]
+}
