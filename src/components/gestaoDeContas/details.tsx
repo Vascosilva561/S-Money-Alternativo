@@ -221,6 +221,16 @@ export default function DetailsGestaoUsuario({ onClose, isOpen, itemSelected }: 
                                         <CopyTextButton value={itemSelected?.account_type === "User" ? `${itemSelected?.first_name} ${itemSelected?.last_name}` : itemSelected?.business_name} label={itemSelected?.account_type === "User" ? "utilizador" : "empresa"} />
                                     </div>
                                 </div>
+                                {itemSelected?.account_type !== "User" && <div className="w-full flex justify-between items-center">
+                                    <p>Short Name:</p>
+                                    <p className="h-5">{itemSelected?.short_name || 'N/A'}</p>
+                                </div>}
+                                {itemSelected?.account_type !== "User" && <div className="w-full flex justify-between items-center">
+                                    <p>{"Comerciante: "}</p>
+                                    <p className="h-5">
+                                        {itemSelected?.merchant_payment_number || "N/A"}
+                                    </p>
+                                </div>}
                                 {itemSelected?.account_type === "User" && <div className="w-full flex justify-between items-center">
                                     <p>Data de nascimento:</p>
                                     <p className="h-5">{itemSelected?.user_document?.birthday || "N/A"}</p>
@@ -243,13 +253,13 @@ export default function DetailsGestaoUsuario({ onClose, isOpen, itemSelected }: 
                                 {itemSelected?.account_type === "User" &&
                                     <div className="w-full flex justify-between items-center">
                                         <p>Nacionalidade:</p>
-                                        <p className="h-5">{itemSelected?.user_document?.nacionalidade ?? 'N/A'}</p>
+                                        <p className="h-5">{itemSelected?.country ? (itemSelected?.country === "Angola" ? "Angolana" : "Estrangeira") : "N/A"}</p>
                                     </div>}
                                 {itemSelected?.account_type === "User" ? <div className="w-full flex justify-between items-center">
-                                    <p>{itemSelected?.user_document?.nacionalidade === "Nacional" ? "Nº do Bilhete de Identidade:" : "Nº do Passaporte:"}</p>
+                                    <p>Documento de identificação:</p>
                                     <div className="flex items-center justify-end gap-1">
                                         <p className="h-5">{itemSelected?.bi_number || itemSelected?.nif}</p>
-                                        <CopyTextButton value={itemSelected?.bi_number || itemSelected?.nif} label="bilhete de identidade" />
+                                        <CopyTextButton value={itemSelected?.bi_number || itemSelected?.nif} label="documento de identificação" />
                                     </div>
                                 </div> :
                                     <div className="w-full flex justify-between items-center">
@@ -263,19 +273,19 @@ export default function DetailsGestaoUsuario({ onClose, isOpen, itemSelected }: 
                                 {itemSelected?.account_type === "User" &&
                                     <div className="w-full flex justify-between items-center">
                                         <p>País:</p>
-                                        <p className="h-5">{itemSelected?.user_document?.country ?? 'N/A'}</p>
+                                        <p className="h-5">{itemSelected?.user_document?.country || itemSelected?.country || 'N/A'}</p>
                                     </div>}
                                 <div className="w-full flex justify-between items-center">
                                     <p>Província:</p>
-                                    <p className="h-5">{itemSelected?.user_document?.province ?? 'N/A'}</p>
+                                    <p className="h-5">{itemSelected?.user_document?.province || itemSelected?.province || 'N/A'}</p>
                                 </div>
                                 <div className="w-full flex justify-between items-center">
                                     <p>Município:</p>
-                                    <p className="h-5">{itemSelected?.user_document?.city ?? 'N/A'}</p>
+                                    <p className="h-5">{itemSelected?.user_document?.city || itemSelected?.city || 'N/A'}</p>
                                 </div>
                                 <div className="w-full flex justify-between items-center">
                                     <p>{itemSelected?.account_type === "User" ? "Morada:" : "Endereço da Sede:"}</p>
-                                    <p className="h-5">{itemSelected?.user_document?.address ?? 'N/A'}</p>
+                                    <p className="h-5">{itemSelected?.user_document?.address || itemSelected?.address || 'N/A'}</p>
                                 </div>
                                 <div className="w-full flex justify-between items-center">
                                     <p className="w-full">Situação do utilizador:</p>

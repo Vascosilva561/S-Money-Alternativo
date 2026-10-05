@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import type { Pagamentos } from "@/types/pagamentos"
 import ListaProdutos from "@/components/servicos/listProducts"
 import type { Otp } from "@/types/otps"
 import { Spinner } from "@/components/utils/spinner"
@@ -75,18 +74,13 @@ export default function Margens() {
         }
     }
 
-    const { data, refetch, isFetching, isLoading } = useQuery<Pagamentos>({
+    const { data, refetch, isFetching, isLoading } = useQuery({
         queryKey: ['margensLista', currentPage, perPage, isFiltered],
         queryFn: () => buscaMargens(currentPage),
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setMargenssData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredDataMargens(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
+   
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -99,13 +93,13 @@ export default function Margens() {
     };
 
     useEffect(() => {
-        if (!margensData || margensData?.length === 0) {
+        if (!data?.dados || data?.dados?.length === 0) {
             setFilteredDataMargens([]);
             return;
         }
 
         if (!searchInput) {
-            setFilteredDataMargens(margensData);
+            setFilteredDataMargens(data?.dados);
             return;
         }
 

@@ -1,12 +1,14 @@
 import { Inbox, LoaderCircle } from "lucide-react"
+import type { ReactNode } from "react"
 
 type TableStateRowProps = {
     colSpan: number
     state: "loading" | "empty"
     message: string
+    children?: ReactNode
 }
 
-function TableStateRow({ colSpan, state, message }: TableStateRowProps) {
+function TableStateRow({ colSpan, state, message, children }: TableStateRowProps) {
     const isLoading = state === "loading"
     const Icon = isLoading ? LoaderCircle : Inbox
 
@@ -24,6 +26,7 @@ function TableStateRow({ colSpan, state, message }: TableStateRowProps) {
                         aria-hidden="true"
                     />
                     <span className="text-sm font-medium text-[#637590]">{message}</span>
+                    {children}
                 </div>
             </td>
         </tr>

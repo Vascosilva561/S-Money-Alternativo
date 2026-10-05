@@ -1,6 +1,6 @@
 import { useState } from "react"
 import type { ComponentType, ReactElement } from "react"
-import { ChevronsLeft } from "lucide-react"
+import { ChevronsLeft, Cog, Webhook } from "lucide-react"
 import { NavLink, useLocation } from "react-router"
 
 import {
@@ -70,6 +70,9 @@ const menuSections: SidebarSection[] = [
       { title: "Gestão de Utilizadores", url: "/gestao-de-utilizadores", icon: GestaoContasIcon, key: "gestao_contas" },
     ],
   },
+];
+
+const pagamentosMenus: SidebarSection[] = [
   {
     title: "Operações",
     items: [
@@ -97,6 +100,8 @@ const menuSections: SidebarSection[] = [
     title: "Administração e Configurações",
     items: [
       { title: "Gestão de Níveis", url: "/gestao-de-niveis", icon: GestaoNiveisIcon, key: "gestao_de_niveis" },
+      { title: "Config. Empresas", url: "/config-de-empresas", icon: Cog, key: "gestao_de_niveis" },
+      { title: "Webhooks", url: "/webhooks", icon: Webhook, key: "gestao_de_niveis" },
       { title: "Permissões", url: "/cargos-permissoes", icon: UsuariosPermissoesIcon, key: "permissoes" },
       { title: "Utilizadores backoffice", url: "/usuarios-backoffice", icon: UsuariosBackofficeIcon, key: "usuarios_backoffice" },
       { title: "Serviços", url: "/servicos", icon: ProdutosIcon, key: "servicos" },
@@ -109,6 +114,8 @@ const menuSections: SidebarSection[] = [
     ],
   },
 ]
+
+menuSections.push(...pagamentosMenus)
 
 type WithTooltipProps = {
   children: ReactElement

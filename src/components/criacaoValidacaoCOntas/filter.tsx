@@ -67,15 +67,10 @@ export default function FilterUsuario({ onClose, isOpen, queryParams, setQueryPa
                                 className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                         </div>
                         <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-sm">{typeAccount ? "Bilhete de Identidade" : "NIF"}</label>
-                            <input type="text" value={queryParams.bi} onChange={(e) => setQueryParams({ ...queryParams, bi: e.target.value })}
+                            <label className="text-[#143163] font-semibold text-sm">{typeAccount ? "Documento de identificação" : "NIF"}</label>
+                            <input type="text" value={queryParams.bi || queryParams.passaporte || ""} onChange={(e) => setQueryParams({ ...queryParams, bi: e.target.value, passaporte: "" })}
                                 className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                         </div>
-                        {typeAccount&&<div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-sm">Número do Passaporte</label>
-                            <input type="text" value={queryParams.passaporte} onChange={(e) => setQueryParams({ ...queryParams, passaporte: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>}
                         {!typeAccount &&
                             <div className="flex flex-col space-y-2 mt-6">
                                 <label className="text-[#143163] font-semibold text-sm">Email</label>

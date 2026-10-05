@@ -4,7 +4,7 @@ import { TableStateRow } from "@/components/ui/table-state-row"
 import { Checkbox } from "@/components/ui/checkbox"
 import { generatePaginationRange } from "@/hooks/generatePaginationRange"
 import DetalhesMovimentos from "@/components/movimentos/details"
-import DetalhesPagamentoReference from "@/components/pagamento-referenecia/details"
+import DetalhesPagamentoReference from "@/components/pagamento-referenecia/detailsPayment"
 import DetalhesDeposito from "@/components/pagamentosGPO/details"
 import DetalhesPagamento from "@/components/pagamentos/detalhes"
 import DetalhesLevantamento from "@/components/levantamentos/details"
@@ -40,6 +40,7 @@ import {
 import { useMemo, useState, type ReactNode } from "react"
 import { toast } from "sonner"
 import { useUserContext, type UserContextAccount } from "@/pages/user_context_types"
+import type { ReferencePaymentType } from "@/types/referencePayment"
 
 export type UserContextOperationKey =
   | "transferencias"
@@ -414,7 +415,7 @@ async function requestOperation(
 function DetailsPanel({ detail, row, onClose }: { detail: OperationDefinition["detail"]; row: ContextRow; onClose: () => void }) {
   if (detail === "transfer") return <DetalhesTransferencia itemSelected={row} isOpen onClose={onClose} />
   if (detail === "payment") return <DetalhesPagamento itemSelected={row} isOpen onClose={onClose} />
-  if (detail === "reference") return <DetalhesPagamentoReference itemSelected={row} isOpen onClose={onClose} />
+  if (detail === "reference") return <DetalhesPagamentoReference itemSelected={row as unknown as ReferencePaymentType} isOpen onClose={onClose} />
   if (detail === "gpo") return <DetalhesDeposito itemSelected={row} isOpen onClose={onClose} />
   if (detail === "withdrawal") return <DetalhesLevantamento itemSelected={row} isOpen onClose={onClose} />
   return <DetalhesMovimentos itemSelected={row} isOpen onClose={onClose} />

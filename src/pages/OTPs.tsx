@@ -6,8 +6,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
-import type { Pagamentos } from "@/types/pagamentos"
+import { useMemo, useState } from "react"
 import ListaProdutos from "@/components/servicos/listProducts"
 import ModalEliminarOtp from "@/components/otp/modalELiminar"
 import type { Otp } from "@/types/otps"
@@ -20,8 +19,6 @@ export default function OTPs() {
 
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [servicosData, setServicosData] = useState<Otp[]>([])
-    const [filteredDataUsers, setFilteredUsersData] = useState<Otp[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [showClearFilter, setShowClearFilter] = useState(false)
@@ -51,28 +48,18 @@ export default function OTPs() {
             //console.log(urlOtp)
             const { data } = await api.get(urlOtp)
 
-            //setIsFiltered(false)
-            setFilteredUsersData(data?.dados)
-            setServicosData(data?.dados)
+          
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
         }
     }
 
-    const { data, refetch, isFetching, isLoading } = useQuery<Pagamentos>({
+    const { data, refetch, isFetching, isLoading } = useQuery<Otp>({
         queryKey: ['ListaDeOTP', currentPage, perPage, isFiltered],
         queryFn: () => getPayments(currentPage),
         placeholderData: keepPreviousData,
     })
-
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setServicosData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
-
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
         // Permite espaços no meio, mas evita strings só com espaços
@@ -83,41 +70,37 @@ export default function OTPs() {
         }
     };
 
-    useEffect(() => {
-        if (!servicosData || servicosData?.length === 0) {
-            setFilteredUsersData([]);
-            return;
-        }
+   const filteredUsersData = useMemo(() => {
+    if (!data?.dados?.length) {
+        return [];
+    }
 
-        if (!searchInput) {
-            setFilteredUsersData(servicosData);
-            return;
-        }
+    const normalizedSearch = searchInput.trim().toLowerCase();
 
-        const searchTerm = searchInput?.toLowerCase();
+    if (!normalizedSearch) {
+        return data?.dados;
+    }
 
-        const filtered = servicosData?.filter((item: any) => {
-            if (!searchTerm) return true;
+    return data?.dados?.filter((item: any) => {
+        const emailOrPhone = String(
+            item?.email || item?.phone_number || ""
+        ).toLowerCase();
 
-            const normalizedSearch = searchTerm.toLowerCase().trim();
+        const otpType = String(
+            item?.otp_type || ""
+        ).toLowerCase();
 
-            // Campos visíveis na tabela
-            const emailOrPhone = String(item?.email || item?.phone_number || "").toLowerCase();
-            const otpType = String(item?.otp_type || "").toLowerCase();
-            const otp = String(item?.otp || "").toLowerCase();
+        const otp = String(
+            item?.otp || ""
+        ).toLowerCase();
 
-            return (
-                emailOrPhone.includes(normalizedSearch) ||
-                otpType.includes(normalizedSearch) ||
-                otp.includes(normalizedSearch)
-            );
-        });
-
-
-
-        setFilteredUsersData(filtered);
-
-    }, [servicosData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
+        return (
+            emailOrPhone.includes(normalizedSearch) ||
+            otpType.includes(normalizedSearch) ||
+            otp.includes(normalizedSearch)
+        );
+    });
+}, [data?.dados, searchInput]);// Atualiza ao mudar salesData ou searchTerm
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {
@@ -273,7 +256,7 @@ export default function OTPs() {
 
                                         {isLoading ?
                                             <TableStateRow colSpan={4} state="loading" message="A carregar códigos OTP..." /> :
-                                            filteredDataUsers.length > 0 ? filteredDataUsers.map((item: any) =>
+                                            filteredUsersData.length > 0 ? filteredUsersData.map((item: any) =>
                                                 <tr className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163] ">
 
 

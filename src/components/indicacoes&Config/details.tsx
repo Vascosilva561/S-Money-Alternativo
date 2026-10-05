@@ -5,8 +5,8 @@ import {
     SheetContent,
     SheetHeader,
 } from "@/components/ui/sheet"
-import type { ProgramaIndicacao } from "@/types/configurations"
 import type { ReferralItem } from "@/types/Indicacoes"
+import type { ProgramaIndicacao } from "@/types/configurations"
 
 type props = {
     isOpen: boolean,
@@ -111,55 +111,72 @@ export default function DetailsIndicacoes({ onClose, isOpen, itemSelected }: pro
                             // ---- Detalhes de Programa/Configuração ----
                             <div className="w-full">
                                 <div className="text-sm text-[#143163] space-y-2">
+
+                                    {/* Programa */}
                                     <div className="w-full flex justify-between items-center">
                                         <p>Nome:</p>
                                         <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.name}</p>
                                     </div>
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Descrição:</p>
-                                        <p className="h-5 text-[#4B5563]">{itemSelected?.description}</p>
+                                        <p className="h-5 text-[#4B5563]">
+                                            {itemSelected?.description || "N/A"}
+                                        </p>
                                     </div>
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Estado:</p>
                                         <span className={`ui-status-tag ui-promotion-status-tag ${itemSelected?.active ? "bg-[#DEF7EC] text-[#03543F]" : "bg-[#FDE8E8] text-[#9B1C1C]"}`}>
                                             {itemSelected?.active ? "Activo" : "Inativo"}
                                         </span>
                                     </div>
-                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8"></div>
+
+                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Data de início:</p>
-                                        <p className="h-5 text-[#4B5563]">{itemSelected?.start_date}</p>
+                                        <p className="h-5 text-[#4B5563]">{itemSelected?.start_date || "N/A"}</p>
                                     </div>
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Data de término:</p>
-                                        <p className="h-5 text-[#4B5563]">{itemSelected?.end_date}</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.end_date || "N/A"}</p>
                                     </div>
-                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8"></div>
+
+                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Valor do prémio:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.reward_amount?.toLocaleString('pt-BR')} Kz</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.reward_amount.toLocaleString('pt-AO')} Kz</p>
                                     </div>
+
                                     <div className="w-full flex justify-between items-center">
                                         <p>Orçamento:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.budget?.toLocaleString('pt-BR')} Kz</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.budget.toLocaleString('pt-AO')} Kz</p>
                                     </div>
-                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8"></div>
+
+                                    <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />
+
+                                    {/* Datas */}
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Data de Criação:</p>
+                                        <p>Data de criação:</p>
                                         <p className="h-5 text-[#4B5563]">
                                             {itemSelected?.created_at
-                                                ? new Date(itemSelected.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                                                ? new Date(itemSelected.created_at).toLocaleString("pt-AO")
                                                 : "N/A"}
                                         </p>
                                     </div>
+
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Última Actualização:</p>
+                                        <p>Última actualização:</p>
                                         <p className="h-5 text-[#4B5563]">
                                             {itemSelected?.updated_at
-                                                ? new Date(itemSelected.updated_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                                                ? new Date(itemSelected.updated_at).toLocaleString("pt-AO")
                                                 : "N/A"}
                                         </p>
                                     </div>
+
                                 </div>
                             </div>
                         ) : null}

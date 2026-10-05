@@ -8,9 +8,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import type { Pagamentos } from "@/types/pagamentos"
-import type { Otp } from "@/types/otps"
 import { Spinner } from "@/components/utils/spinner"
 import { TableStateRow } from "@/components/ui/table-state-row"
 import AdicionaPublicidades from "@/components/ad-management/adicionar"
@@ -26,8 +25,6 @@ export default function Publicidades() {
 
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [servicosData, setPublicidadesData] = useState<Otp[]>([])
-    const [filteredDataPublicities, setFilteredDataPublicities] = useState<Otp[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [showClearFilter, setShowClearFilter] = useState(false)
@@ -67,10 +64,6 @@ export default function Publicidades() {
             const urlOtp = isFiltered ? `/front/publicity?per_page=${perPage}&page=${page}&${params}` : `/front/publicity?per_page=${perPage}&page=${page}`
             const { data } = await api.get(urlOtp)
 
-            //setIsFiltered(false)
-            setFilteredDataPublicities(data?.dados)
-            setPublicidadesData(data?.dados)
-
             return data
         } catch (error) {
             console.log("erro ao busscar publicidades ", error)
@@ -83,13 +76,6 @@ export default function Publicidades() {
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setPublicidadesData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredDataPublicities(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
-
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
         // Permite espaços no meio, mas evita strings só com espaços
@@ -100,39 +86,36 @@ export default function Publicidades() {
         }
     };
 
-    useEffect(() => {
-        if (!servicosData || servicosData?.length === 0) {
-            setFilteredDataPublicities([]);
-            return;
+    const filteredDataPublicities = useMemo(() => {
+
+        const publicities = data?.dados ?? [];
+
+        const normalizedSearch = searchInput.toLowerCase().trim();
+
+        if (!normalizedSearch) {
+
+            return publicities;
+
         }
 
-        if (!searchInput) {
-            setFilteredDataPublicities(servicosData);
-            return;
-        }
+        return publicities.filter((item: any) => {
 
-        const searchTerm = searchInput?.toLowerCase();
+            const title = String(item?.title ?? "").toLowerCase();
 
-        const filtered = servicosData?.filter((item: any) => {
-            if (!searchTerm) return true;
-
-            const normalizedSearch = searchTerm.toLowerCase().trim();
-
-            // Campos visíveis na tabela
-            const title = String(item?.title).toLowerCase();
-            const estado = String(item?.status || "").toLowerCase();
+            const estado = String(item?.status ?? "").toLowerCase();
 
             return (
+
                 title.includes(normalizedSearch) ||
+
                 estado.includes(normalizedSearch)
+
             );
+
         });
 
+    }, [data?.dados, searchInput]);
 
-
-        setFilteredDataPublicities(filtered);
-
-    }, [servicosData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {

@@ -10,6 +10,7 @@ import {
 import { AuthContext } from "@/context/auth";
 import PrivateRoute from "./PrivateRoutes.routes";
 import { Spinner } from "@/components/utils/spinner";
+import { DetailsUser } from "@/hooks/getDetails";
 import { Toaster } from "sonner";
 import Bancos from "@/pages/bancos";
 import CargosPermissoes from "@/pages/cargosPermissoes";
@@ -30,7 +31,6 @@ import GestaoDeNiveis from "@/pages/niveis";
 import Movimentos from "@/pages/movimentos";
 import NotFoundPage from "@/pages/notFoundPage";
 import OTPs from "@/pages/OTPs";
-import Pagamentos from "@/pages/pagamentos";
 import RedefinePalavraPasse from "@/pages/redefine_palavra_passe";
 import Servicos from "@/pages/servicos";
 import TranferenciaSomoney from "@/pages/transferencia_somoney";
@@ -41,10 +41,17 @@ import Agentes from "@/pages/agentes";
 import SaldoPorUsuario from "@/pages/saldo_por_usuario";
 import Camapnhas from "@/pages/campanhas";
 import Indicacoes from "@/pages/indicacoes";
+import ListaDeConfiguracoes from "@/pages/listaDeConfigs";
+import Webhooks from "@/pages/webhooks";
+import VisaoGeral from "@/pages/visauGeral";
+import GestaoDaConta from "@/pages/gestãoDaConta";
+import PagamentosPage from "@/pages/pagamentos";
 
 export const Routers = () => {
     const { isAuthenticated, loading } = useContext(AuthContext)
-    if (loading) {
+    const { isLoading } = DetailsUser();
+    
+    if (loading || isLoading) {
         return (
             <div className="w-full h-screen flex items-center justify-center text-[#143163] space-x-2">
                 <Spinner color="#143163" width="60" height="60" /><p>A carregar...</p>
@@ -87,10 +94,14 @@ export const Routers = () => {
 
                         {/* operacoes */}
                         <Route path="/transferencias-somoney" element={<TranferenciaSomoney />} />
-                        <Route path="/pagamentos" element={<Pagamentos />} />
+                        <Route path="/pagamentos" element={<PagamentosPage />} />
+                        <Route path="/pagamentos-services" element={<Navigate to="/pagamentos" replace />} />
                         <Route path="/depositos" element={<Depositos />} />
-                        <Route path="/pagamentos-referencia" element={<Navigate to="/depositos?tab=referencia" replace />} />
+                        <Route path="/pagamentos-referencia" element={<Navigate to="/pagamentos?tab=referencia" replace />} />
+                        <Route path="/pagamentos-referencias" element={<Navigate to="/pagamentos?tab=referencia" replace />} />
+                        <Route path="/deposito-referencia" element={<Navigate to="/depositos?tab=referencia" replace />} />
                         <Route path="/pagamentos-gpo" element={<Navigate to="/depositos?tab=gpo" replace />} />
+                        <Route path="/deposito-gpo" element={<Navigate to="/depositos?tab=gpo" replace />} />
                         <Route path="/levantamentos" element={<Levantamentos />} />
                         <Route path="/movimentos" element={<Movimentos />} />
 
@@ -102,12 +113,14 @@ export const Routers = () => {
                         <Route path="/saldo-por-usuario" element={<SaldoPorUsuario/>}/>
 
                         {/* compiliance e antifraude */}
-                        <Route path="/alertas" element={<Dashboard />} />
-                        <Route path="/usuarios-bloqueados" element={<Dashboard />} />
+                        {/* <Route path="/alertas" element={<Dashboard />} /> */}
+                        {/* <Route path="/usuarios-bloqueados" element={<Dashboard />} /> */}
 
                         {/* administracao e configuracoes */}
                         <Route path="/cargos-permissoes" element={<CargosPermissoes />} />
                         <Route path="/usuarios-backoffice" element={<UsuariosBackOffice />} />
+                        <Route path="/config-de-empresas" element={<ListaDeConfiguracoes />} />
+                        <Route path="/webhooks" element={<Webhooks />} />
                         <Route path="/servicos" element={<Servicos />} />
                         <Route path="/bancos" element={<Bancos />} />
                         {/* <Route path="/margens" element={<Margens />} /> */}
@@ -118,7 +131,8 @@ export const Routers = () => {
                         <Route path="/perfil" element={<MeuPerfil />} />
                         <Route path="/campanhas" element={<Camapnhas />} />
                          <Route path="/indicacoes" element={<Indicacoes />} />
-                        
+                         <Route path="dashboard_usuario" element={<VisaoGeral />} />
+                         <Route path="gestao-da-conta" element={<GestaoDaConta/>} />
 
                     </Route>
 

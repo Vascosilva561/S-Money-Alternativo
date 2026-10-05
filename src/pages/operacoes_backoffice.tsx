@@ -1,55 +1,20 @@
 import { api } from "@/api"
-import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
-import type { Pagamentos } from "@/types/pagamentos"
+import { useMemo, useState } from "react"
 import type { Logs } from "@/types/logs"
 import { StatusLogsColor } from "@/components/utils/getLogsStatusCOlor"
-// import DetalhesLogs from "@/components/logs/details"
-// import ExportarLogs from "@/components/logs/export"
-// import FilterLogs from "@/components/logs/filter"
 import { Spinner } from "@/components/utils/spinner"
 import { TableStateRow } from "@/components/ui/table-state-row"
 import { formatDateTime } from "@/components/utils/formmat"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 
 
-type LogsLocal = {
-    user_name: string
-    cargo: string
-    accao: string
-    recurso_afetado: string
-    status: string
-    created_at: any
-    dados: {
-
-        id: string;
-        accao: string;
-        recurso_afetado: string;
-        valor: string;
-        justificativa: string | null;
-        ip_address: string;
-        canal: string;
-        cargo: string;
-        user_name: string;
-        created_at: string;
-        updated_at: string;
-        status: string
-
-    }
-}
-
 export default function Logs() {
 
-    const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [usersData, setUsersData] = useState<LogsLocal[]>([])
-    const [filteredDataUsers, setFilteredUsersData] = useState<Logs[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [_filterModalIsOpen, _setFilterModalIsOpen] = useState(false)
-    const [_detailsModalIsOpen, setDetailsModalIsOpen] = useState(false)
-    const [_itemSelected, setItemSelected] = useState<Logs | undefined>()
     const [tipoDeConta, _setTipoDeConta] = useState("User")
     const [estadoDoPagamento, _setEstadoDoPagamento] = useState("")
     const [servico, _setServico] = useState("")
@@ -79,31 +44,21 @@ export default function Logs() {
                 servico: servico,
                 recurso_afetado: recursoAfetado
             })?.toString()
-            const urlLogs = isFiltered ? `/front/loggers?per_page=${perPage}&page=${page}&${Params}` : `/front/loggers?per_page=${perPage}&page=${page}`
-            console.log(urlLogs)
+            const urlLogs = isFiltered ? `/front/loggers?per_page=100&page=${page}&${Params}` : `/front/loggers?per_page=100&page=${page}`
+
             const { data } = await api.get(urlLogs)
 
-            //setIsFiltered(false)
-            setFilteredUsersData(data?.dados)
-            setUsersData(data?.dados)
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
         }
     }
 
-    const { data, isFetching, isLoading } = useQuery<Pagamentos>({
-        queryKey: ['ListaDeLogs', currentPage, perPage, isFiltered],
+    const { data, isFetching, isLoading } = useQuery<Logs>({
+        queryKey: ['ListaDeLogs', currentPage, 100, isFiltered],
         queryFn: () => getPayments(currentPage),
         placeholderData: keepPreviousData,
     })
-
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setUsersData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -115,43 +70,31 @@ export default function Logs() {
         }
     };
 
-    useEffect(() => {
-        if (!usersData || usersData?.length === 0) {
-            setFilteredUsersData([]);
-            return;
+    const filteredUsersData = useMemo(() => {
+        const logs = data?.dados ?? [];
+
+        if (!searchInput.trim()) {
+            return logs;
         }
 
-        if (!searchInput) {
-            setFilteredUsersData(usersData);
-            return;
-        }
+        const normalizedSearch = searchInput.toLowerCase().trim();
 
-        const searchTerm = searchInput?.toLowerCase();
-
-        const filtered = usersData?.filter((item) => {
-            // Se não tiver termo de busca, retorna todos
-            if (!searchTerm) return true;
-
-            // Normaliza o termo de busca
-            const normalizedSearch = searchTerm?.toLowerCase().trim();
-
-            // Busca por data/hora
+        return logs.filter((item) => {
             const date = item?.created_at
-                ? new Date(item?.created_at)?.toLocaleDateString('pt-BR', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                }).toLowerCase()
-                : '';
+                ? new Date(item.created_at)
+                    .toLocaleString("pt-BR", {
+                        dateStyle: "short",
+                        timeStyle: "medium",
+                    })
+                    .toLowerCase()
+                : "";
 
-            // Busca por campos da tabela
-            const userName = String(item?.user_name || '')?.toLowerCase();
-            const cargo = String(item?.cargo || '')?.toLowerCase();
-            const accao = String(item?.accao || '')?.toLowerCase();
-            const recurso = String(item?.recurso_afetado || '')?.toLowerCase();
-            const status = item?.status?.toLowerCase();
+            const userName = String(item?.user_name ?? "").toLowerCase();
+            const cargo = String(item?.cargo ?? "").toLowerCase();
+            const accao = String(item?.accao ?? "").toLowerCase();
+            const recurso = String(item?.recurso_afetado ?? "").toLowerCase();
+            const status = String(item?.status ?? "").toLowerCase();
 
-            // Verifica se algum campo inclui o termo de busca
             return (
                 date.includes(normalizedSearch) ||
                 userName.includes(normalizedSearch) ||
@@ -161,10 +104,7 @@ export default function Logs() {
                 status.includes(normalizedSearch)
             );
         });
-
-        setFilteredUsersData(filtered);
-
-    }, [usersData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
+    }, [data?.dados, searchInput]);
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {
@@ -198,7 +138,7 @@ export default function Logs() {
     };
 
     const totalItems = data?.total || 0; // Total de registros da API
-    const totalPages = Math.ceil(totalItems / Number(perPage));
+    const totalPages = Math.ceil(totalItems / 100);
     const paginationRange = generatePaginationRange(totalPages, currentPage);
 
     const handlePageChange = (page: number) => {
@@ -213,28 +153,9 @@ export default function Logs() {
         if (currentPage > 1) setCurrentPage(prev => prev - 1);
     };
 
-    // const limparFiltro = () => {
-    //     setShowClearFilter(false)
-    //     setQueryParams({
-    //         ...queryParams,
-    //         id: "",
-    //         users_name: "",
-    //         account_type: "",
-    //         dataInicial: "",
-    //         dataFinal: "",
-
-    //     })
-    //     setIsFiltered(false)
-    //     setUsuario("")
-    //     setEstadoDoPagamento("")
-    //     setTipoDeConta("User")
-    //     setServico("")
-    //     setTimeout(() => refetch(), 0)
-    // }
-
     return (
         <>
-            {/* modal para adicionar 
+            {/* modal para adicionar
             <ExportarLogs onClose={() => setAddModalIsOpen(false)} isOpen={addModalIsOpen} />*/}
 
             {/* modal para filtrar */}
@@ -337,8 +258,8 @@ export default function Logs() {
                                 {isLoading ?
                                     <TableStateRow colSpan={8} state="loading" message="A carregar logs..." />
                                     :
-                                    filteredDataUsers.length > 0 ? filteredDataUsers.map((item: any) =>
-                                        <tr className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163] ">
+                                    filteredUsersData.length > 0 ? filteredUsersData.map((item: any) =>
+                                        <tr key={item?.id} className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163] ">
                                             {/* <td className="text-start py-2 px-3">{item?.id}</td> */}
                                             <td className="ui-date-column text-center py-2 px-3">
                                                 <div className="flex w-full items-center justify-center space-x-1">
@@ -371,7 +292,7 @@ export default function Logs() {
                                             <td className="text-start py-2 p-1">
                                                 <div className="flex items-center space-x-2">
                                                     {/*detalhes */}
-                                                    <TableActionButton action="view" onClick={() => { setDetailsModalIsOpen(true), setItemSelected(item) }} />
+                                                    <CopyTextButton value={item?.id} label="ID do registo" />
                                                 </div>
                                             </td>
                                         </tr>

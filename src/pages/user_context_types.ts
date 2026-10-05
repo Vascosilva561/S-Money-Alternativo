@@ -20,6 +20,8 @@ export type UserContextAccount = {
     city?: string
     nacionalidade?: string
     country?: string
+    birthday?: string
+    address?: string
   }
 }
 

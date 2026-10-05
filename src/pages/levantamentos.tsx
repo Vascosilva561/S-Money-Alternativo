@@ -22,8 +22,11 @@ import ModalConfirmar from "@/components/levantamentos/modalConfirmar"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { RefreshButton } from "@/components/ui/refresh-button"
 import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
+import { useSearchParams } from "react-router"
 
 export default function Levantamentos() {
+    const [searchParams] = useSearchParams()
+    const nameUserSearch = searchParams.get("user_name_phone")
 
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
@@ -54,7 +57,7 @@ export default function Levantamentos() {
     async function getLevantamento(page: number) {
         try {
             const UsersParams = new URLSearchParams({
-                user_name_phone: queryParams.name,
+                user_name_phone: (nameUserSearch || queryParams.name) || "",
                 iban: queryParams.iban,
                 account_type: tipoDeConta,
                 montante_de: queryParams.valor_de,

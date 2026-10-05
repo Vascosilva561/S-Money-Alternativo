@@ -1,6 +1,6 @@
 import { api } from "@/api"
 import { Spinner } from "@/components/utils/spinner"
-import { CircleUserRound, FileText, Phone, ShieldAlert, ShieldCheck, ShieldQuestion, ShieldX } from "lucide-react"
+import { CircleUserRound, Eye, EyeOff, FileText, Phone, ShieldAlert, ShieldCheck, ShieldQuestion, ShieldX } from "lucide-react"
 import { Navigate, Outlet, useLocation, useParams } from "react-router"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -8,6 +8,7 @@ import { useUserContext, type UserContextAccount } from "@/pages/user_context_ty
 import { statusAccount } from "@/components/utils/getColorStatusAccount"
 import { statusUserColor } from "@/components/utils/getSituacaoColor"
 import { getLevelBadgeName, LevelBadgeIcon } from "@/components/gestaoDeContas/level-badge"
+import { formatCurrency } from "@/components/utils/formmat"
 
 type UserContextLocationState = {
   user?: UserContextAccount
@@ -96,6 +97,11 @@ export function UserContextLayout() {
   const [contextUser, setContextUser] = useState<{ userId: string; user: UserContextAccount } | null>(() =>
     navigationState?.user && userId ? { userId, user: navigationState.user } : null,
   )
+  const [isBalanceVisible, setIsBalanceVisible] = useState(false)
+
+  useEffect(() => {
+    setIsBalanceVisible(false)
+  }, [userId])
 
   useEffect(() => {
     if (navigationState?.user && userId) {
@@ -106,7 +112,7 @@ export function UserContextLayout() {
   // Keep the account received when entering the context as a fallback for
   // contextual navigation that does not carry location.state forward.
   const selectedUser = navigationState?.user
-    ?? (contextUser?.userId === userId ? contextUser.user : undefined)
+    ?? (contextUser?.userId === userId ? contextUser?.user : undefined)
   const accountType = selectedUser?.account_type === "Merchant" || selectedUser?.business_name ? "merchants" : "users"
 
   const userQuery = useQuery({
@@ -161,7 +167,23 @@ export function UserContextLayout() {
                 {getAccountLabel(user)}
               </span>
             </div>
-            <p className="mt-1 text-sm text-[#6B7280]">ID: {String(user?.id ?? userId)}</p>
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-semibold text-[#143163]">Saldo disponível:</span>
+              <span className="font-medium tabular-nums text-[#4B5563]">
+                {isBalanceVisible ? formatCurrency(user?.balance) : "•••••• Kz"}
+              </span>
+              <button
+                type="button"
+                aria-label={isBalanceVisible ? "Ocultar saldo disponível" : "Mostrar saldo disponível"}
+                aria-pressed={isBalanceVisible}
+                onClick={() => setIsBalanceVisible((visible) => !visible)}
+                className="grid size-7 shrink-0 place-items-center rounded-md text-[#143163] transition-colors hover:bg-[#F1F5FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] focus-visible:ring-offset-1"
+              >
+                {isBalanceVisible
+                  ? <EyeOff className="size-4" aria-hidden="true" />
+                  : <Eye className="size-4" aria-hidden="true" />}
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#4B5563]">
@@ -171,7 +193,7 @@ export function UserContextLayout() {
             </div>
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-[#143163]" aria-hidden="true" />
-              <span><strong className="font-semibold text-[#143163]">Documento:</strong> {user?.bi_number || user?.nif || "—"}</span>
+              <span><strong className="font-semibold text-[#143163]">Documento de identificação:</strong> {user?.bi_number || user?.nif || "—"}</span>
             </div>
             <span className={`ui-status-tag inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${hasKnownStatus ? getStatusClasses(status) : "bg-[#F2F4F7] text-[#667085]"}`}>
               <StatusIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />

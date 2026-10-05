@@ -91,7 +91,7 @@ export default function DetailsUsuario({ onClose, isOpen, itemSelected }: props)
                                     <p className="h-5">{itemSelected?.user_document?.nacionalidade}</p>
                                 </div>}
                                 {itemSelected?.account_type === "User" ?<div className="w-full flex justify-between items-center">
-                                    <p>{itemSelected?.user_document?.nacionalidade === "Nacional" ? "Nº do Bilhete de Identidade:" : "Nº do Passaporte:"}</p>
+                                    <p>Documento de identificação:</p>
                                     <p className="h-5 font-semibold">{itemSelected?.bi_number}</p>
                                 </div>:
                                 <div className="w-full flex justify-between items-center">

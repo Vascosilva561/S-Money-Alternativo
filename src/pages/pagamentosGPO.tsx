@@ -14,6 +14,7 @@ import { TableStateRow } from "@/components/ui/table-state-row"
 import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { RefreshButton } from "@/components/ui/refresh-button"
+import { useSearchParams } from "react-router"
 
 export default function Depositos() {
 
@@ -31,7 +32,8 @@ export default function Depositos() {
     const [tipoDeConta, setTipoDeConta] = useState("User")
     const [status, setStatus] = useState("ACCEPTED")
     const [canal, setCanal] = useState("")
-
+    const [searchParams] = useSearchParams();
+    const nameUserSearch = searchParams.get("user_name_phone")
 
     const [queryParams, setQueryParams] = useState({
         user_name_phone: "",
@@ -50,7 +52,7 @@ export default function Depositos() {
             //const url = `/front/wallets?per_page=${perPage}&page=${page}`
             const Params = new URLSearchParams({
                 status: status,
-                user_name_phone: queryParams?.user_name_phone,
+                user_name_phone: (nameUserSearch || queryParams?.user_name_phone) || "",
                 account_type: tipoDeConta,
                 data_inicio: queryParams?.dataInicial,
                 data_fim: queryParams?.dataFinal,
@@ -93,7 +95,7 @@ export default function Depositos() {
             setSearchInput(params || "");
         }
     };
-    
+
     useEffect(() => {
         if (!usersData || usersData.length === 0) {
             setFilteredUsersData([]);

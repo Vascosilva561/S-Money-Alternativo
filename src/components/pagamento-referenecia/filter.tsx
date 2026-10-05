@@ -1,140 +1,197 @@
 import { Button } from "@/components/ui/button"
 import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetHeader,
-} from "@/components/ui/sheet"
-import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { tipo_de_Terminal } from "../utils/origemMovimento"
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetHeader,
+} from "@/components/ui/sheet"
+import { X } from "lucide-react"
 
-
-type props = {
-    isOpen: boolean,
-    onClose: () => void,
-    queryParams: any,
-    setQueryParams: (e: any) => void
-    filter: (currentPage: number) => void
-    setIsFiltered: (e: any) => void
-    setShowFilter: (e: any) => void
-    
-    setEstadoDoPagamento: (value: string) => void,
-    estadoDoPagamento: string,
-    channel: string,
-    setChannel: (value:string)=>void,
-
+export type PaymentFilters = {
+    payment_reference: string
+    payment_status: string
+    mft_status: string
+    prt_status: string
+    payment_id: string
+    start_date: string
+    end_date: string
+    limit: number
 }
 
+type Props = {
+    isOpen: boolean
+    onClose: () => void
+    queryParams: PaymentFilters
+    setQueryParams: React.Dispatch<React.SetStateAction<PaymentFilters>>
+    filter: (cursor?: string) => void
+    setIsFiltered: (value: boolean) => void
+    setShowFilter: (value: boolean) => void
+    setCursor: React.Dispatch<React.SetStateAction<string>>
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>
+    setCursorHistory: React.Dispatch<React.SetStateAction<string[]>>
+}
 
-export default function FilterPaymentsReference({ onClose, isOpen, queryParams, setQueryParams,channel, setChannel,
-    filter, setIsFiltered, setShowFilter, setEstadoDoPagamento, estadoDoPagamento,
+export default function FilterPaymentsReference({
+    onClose,
+    isOpen,
+    queryParams,
+    setQueryParams,
+    filter,
+    setIsFiltered,
+    setShowFilter,
+    setCursor,
+    setCurrentPage,
+    setCursorHistory,
+}: Props) {
+    const hasFilter = () =>
+        queryParams.payment_reference !== "" ||
+        queryParams.payment_status !== "" ||
+        queryParams.mft_status !== "" ||
+        queryParams.prt_status !== "" ||
+        queryParams.payment_id !== "" ||
+        queryParams.start_date !== "" ||
+        queryParams.end_date !== ""
 
-}: props) {
-
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.users_name !== "" || queryParams.reference !== "" ||
-            queryParams.dataInicial !== "" || estadoDoPagamento !== "" || queryParams.dataFinal !== "" || channel !== ""
-        ) {
-            setShowFilter(true)
-        }
+    const handleFilter = () => {
+        setIsFiltered(true)
+        setCursor("")
+        setCurrentPage(1)
+        setCursorHistory([""])
+        setShowFilter(hasFilter())
+        filter("")
     }
 
     return (
-        <>
-            <Sheet onOpenChange={onClose} open={isOpen} >
+        <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
+            <SheetContent className="ui-filter-sheet-panel w-full overflow-y-auto p-5 sm:max-w-[440px] sm:p-6">
+                <div className="flex w-full items-start justify-between gap-4 border-b border-[#E5EBF4] pb-4">
+                    <SheetHeader
+                        className="p-0 text-lg font-semibold text-[#143163]"
+                        description="Defina os critérios que pretende aplicar para refinar a lista."
+                    >
+                        Filtrar Dados
+                    </SheetHeader>
+                    <SheetClose
+                        aria-label="Fechar filtros"
+                        className="rounded p-2 text-[#143163] transition-colors hover:bg-[#EAF6F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF]"
+                    >
+                        <X className="size-5" aria-hidden="true" />
+                    </SheetClose>
+                </div>
 
-                <SheetContent className="ui-filter-sheet-panel w-full overflow-hidden p-5 sm:max-w-[440px] sm:p-6">
-                    <div className="flex items-start justify-between gap-4 w-full border-b border-[#E5EBF4] pb-4">
-                        <SheetHeader className="text-[#143163] font-semibold text-lg p-0" description="Defina os critérios que pretende aplicar para refinar a lista.">Filtrar Dados</SheetHeader>
-                        <SheetClose aria-label="Fechar filtros" className=" cursor-pointer bg-[#DBDEE3] hover:bg-[#C5C9CE] rounded duration-300"><svg width="25" height="25" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="25" height="25" rx="8" />
-                            <path d="M29.7067 28.2943C30.0973 28.685 30.0973 29.3183 29.7067 29.709C29.512 29.9037 29.256 30.0023 29 30.0023C28.744 30.0023 28.488 29.905 28.2933 29.709L21 22.4156L13.7067 29.709C13.512 29.9037 13.256 30.0023 13 30.0023C12.744 30.0023 12.488 29.905 12.2933 29.709C11.9027 29.3183 11.9027 28.685 12.2933 28.2943L19.5867 21.001L12.2933 13.7077C11.9027 13.317 11.9027 12.6837 12.2933 12.293C12.684 11.9023 13.3173 11.9023 13.708 12.293L21.0013 19.5864L28.2946 12.293C28.6853 11.9023 29.3187 11.9023 29.7093 12.293C30.1 12.6837 30.1 13.317 29.7093 13.7077L22.416 21.001L29.7067 28.2943Z" fill="#143163" stroke="#143163" />
-                        </svg>
-                        </SheetClose>
+                <div className="space-y-5 overflow-y-auto py-5">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="payment-id" className="text-sm font-semibold text-[#143163]">ID do Pagamento</label>
+                        <input
+                            id="payment-id"
+                            type="text"
+                            value={queryParams.payment_id}
+                            onChange={(event) => setQueryParams((prev) => ({ ...prev, payment_id: event.target.value }))}
+                            className="ui-control h-10 rounded-lg border border-[#C9D8E9] px-3 text-sm text-[#143163] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#48B9FF]/15"
+                        />
                     </div>
 
-                    <div className="">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="payment-reference" className="text-sm font-semibold text-[#143163]">Referência do Pagamento</label>
+                        <input
+                            id="payment-reference"
+                            type="text"
+                            value={queryParams.payment_reference}
+                            onChange={(event) => setQueryParams((prev) => ({ ...prev, payment_reference: event.target.value }))}
+                            className="ui-control h-10 rounded-lg border border-[#C9D8E9] px-3 text-sm text-[#143163] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#48B9FF]/15"
+                        />
+                    </div>
 
-                        
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-semibold text-[#143163]">Estado do Pagamento</label>
+                        <Select value={queryParams.payment_status} onValueChange={(value) => setQueryParams((prev) => ({ ...prev, payment_status: value }))}>
+                            <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="SUCCESS">Sucesso</SelectItem>
+                                <SelectItem value="ERROR">Falhou</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                        <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-sm">Utilizador</label>
-                            <input type="email" value={queryParams.users_name} onChange={(e) => setQueryParams({ ...queryParams, users_name: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-semibold text-[#143163]">Estado MFT</label>
+                        <Select value={queryParams.mft_status} onValueChange={(value) => setQueryParams((prev) => ({ ...prev, mft_status: value }))}>
+                            <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="SUCCESS">Sucesso</SelectItem>
+                                <SelectItem value="ERROR">Falhou</SelectItem>
+                                <SelectItem value="PENDING">Pendente</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-semibold text-[#143163]">Estado PRT</label>
+                        <Select value={queryParams.prt_status} onValueChange={(value) => setQueryParams((prev) => ({ ...prev, prt_status: value }))}>
+                            <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="SUCCESS">Sucesso</SelectItem>
+                                <SelectItem value="ERROR">Falhou</SelectItem>
+                                <SelectItem value="PENDING">Pendente</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="payment-start-date" className="text-sm font-semibold text-[#143163]">Data Inicial</label>
+                            <input
+                                id="payment-start-date"
+                                type="date"
+                                value={queryParams.start_date}
+                                onChange={(event) => setQueryParams((prev) => ({ ...prev, start_date: event.target.value }))}
+                                className="ui-control h-10 rounded-lg border border-[#C9D8E9] px-3 text-sm text-[#143163] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#48B9FF]/15"
+                            />
                         </div>
-
-                        <div className="flex flex-col space-y-2 mt-6 w-full">
-                            <label className="text-[#143163] font-semibold text-sm">Referência</label>
-                            <input type="text" value={queryParams.reference} onChange={(e) => setQueryParams({ ...queryParams, reference: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="payment-end-date" className="text-sm font-semibold text-[#143163]">Data Final</label>
+                            <input
+                                id="payment-end-date"
+                                type="date"
+                                value={queryParams.end_date}
+                                onChange={(event) => setQueryParams((prev) => ({ ...prev, end_date: event.target.value }))}
+                                className="ui-control h-10 rounded-lg border border-[#C9D8E9] px-3 text-sm text-[#143163] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#48B9FF]/15"
+                            />
                         </div>
+                    </div>
 
-                        <div className="flex justify-between space-x-2">
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-semibold text-[#143163]">Limite de resultados</label>
+                        <Select
+                            value={String(queryParams.limit)}
+                            onValueChange={(value) => setQueryParams((prev) => ({ ...prev, limit: Number(value) }))}
+                        >
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="10">10</SelectItem>
+                                <SelectItem value="20">20</SelectItem>
+                                <SelectItem value="50">50</SelectItem>
+                                <SelectItem value="100">100</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
 
-                            <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Estado do Pagamento</label>
-                                <Select onValueChange={setEstadoDoPagamento} value={estadoDoPagamento}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Todos"/>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            <SelectItem value="SUCCESS">Sucesso</SelectItem>
-                                            <SelectItem value="ERROR">Falhou</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                            </div>
-                            <div className="flex justify-between space-x-2 w-full items-center">
-                                <div className="flex flex-col space-y-2 mt-5  w-full">
-                                    <label className="text-[#143163] font-semibold text-sm">Canal</label>
-                                    <Select onValueChange={setChannel} value={channel}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Todos"/>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            {tipo_de_Terminal?.map((item:any)=>
-                                            <SelectItem value={item?.value}>{item?.description}</SelectItem>)}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div className="flex justify-between space-x-2">
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Inicial</label>
-                                <input type="date" value={queryParams.dataInicial} onChange={(e) => setQueryParams({ ...queryParams, dataInicial: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Final</label>
-                                <input type="date" value={queryParams.dataFinal} onChange={(e) => setQueryParams({ ...queryParams, dataFinal: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                        </div>
-
-                        <SheetClose asChild>
-                            <Button onClick={() => {
-                            setIsFiltered(true)
-                            mostraLimparFiltro()
-                            filter(1)
-                        }} className="h-11 w-full rounded-lg bg-[#143163] text-white hover:bg-[#1D467F]"
-                            type="button" variant="brand">
+                <div className="mt-auto border-t border-[#E5EBF4] pt-4">
+                    <SheetClose asChild>
+                        <Button onClick={handleFilter} className="h-11 w-full rounded-lg" type="button" variant="brand">
                             Filtrar
                         </Button>
-                        </SheetClose>
-                    </div>
-
-                </SheetContent>
-
-            </Sheet>
-        </>
+                    </SheetClose>
+                </div>
+            </SheetContent>
+        </Sheet>
     )
 }

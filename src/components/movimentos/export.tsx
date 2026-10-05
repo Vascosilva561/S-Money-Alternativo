@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { X } from "lucide-react"
+import { LoaderCircle, X } from "lucide-react"
 import {
     Select,
     SelectContent,
@@ -8,6 +8,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { DateField, FormField, TextField } from "@/components/ui/form-field"
 import { isAxiosError } from "axios"
 import { toast } from "sonner"
 import { useState } from "react"
@@ -104,116 +105,99 @@ export default function ExportarMovimentos({ onClose, isOpen }: props) {
                         <SheetClose aria-label="Fechar exportação" className="ui-export-close"><X className="size-4" aria-hidden="true" /></SheetClose>
                     </SheetHeader>
 
-                <form className="" onSubmit={agendarRelatorio}>
-
-                        {/*<div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold ">ID da Transação</label>
-                            <input type="text" value={queryParams.name} onChange={(e) => setQueryParams({ ...queryParams, name: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>*/}
-
-                       <div className="flex flex-col space-y-2 mt-6 w-full">
-                            <label className="text-[#143163] font-semibold text-sm">Tipo de Conta</label>
-                            <Select onValueChange={setTipoDeConta} value={tipoDeConta}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Todas"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="User">Particular</SelectItem>
-                                    <SelectItem value="Merchant">Empresa</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="flex justify-between space-x-2 w-full items-center">
-                            <div className="flex flex-col space-y-2 mt-5  w-full">
-                                <label className="text-[#143163] font-semibold text-sm">Tipo de Movimento</label>
-                                <Select onValueChange={setStatus} value={status}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Todos" />
+                    <form onSubmit={agendarRelatorio}>
+                        <div className="ui-export-fields">
+                            <FormField label="Tipo de conta">
+                                <Select onValueChange={setTipoDeConta} value={tipoDeConta}>
+                                    <SelectTrigger className="w-full" aria-label="Tipo de conta">
+                                        <SelectValue placeholder="Todas" />
                                     </SelectTrigger>
-                                    <SelectContent >
-                                        <SelectItem value="ACCEPTED">Concluido</SelectItem>
-                                        <SelectItem value="REJECTED">Recusado </SelectItem>
+                                    <SelectContent>
+                                        <SelectItem value="User">Particular</SelectItem>
+                                        <SelectItem value="Merchant">Empresa</SelectItem>
                                     </SelectContent>
                                 </Select>
-                            </div>
-                            <div className="flex flex-col space-y-2 mt-5  w-full">
-                                <label className="text-[#143163] font-semibold text-sm">Tipo de Transação</label>
-                                <Select onValueChange={setStatus} value={status}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Todos" />
-                                    </SelectTrigger>
-                                    <SelectContent >
-                                        <SelectItem value="ACCEPTED">Concluido</SelectItem>
-                                        <SelectItem value="REJECTED">Recusado </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
+                            </FormField>
 
-                        <div className="flex justify-between space-x-2 items-center">
-
-                            <div className="flex flex-col space-y-2 mt-5 w-full min-w-0">
-                                <label className="text-[#143163] font-semibold text-[14px]">Valor (De)</label>
-                                <input type="number" value={queryParams.valor_de} onChange={(e) => setQueryParams({ ...queryParams, valor_de: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                            <div className="ui-export-field-row">
+                                <FormField label="Tipo de movimento">
+                                    <Select onValueChange={setStatus} value={status}>
+                                        <SelectTrigger className="w-full" aria-label="Tipo de movimento">
+                                            <SelectValue placeholder="Todos" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="ACCEPTED">Concluído</SelectItem>
+                                            <SelectItem value="REJECTED">Recusado</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormField>
+                                <FormField label="Tipo de transação">
+                                    <Select onValueChange={setStatus} value={status}>
+                                        <SelectTrigger className="w-full" aria-label="Tipo de transação">
+                                            <SelectValue placeholder="Todos" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="ACCEPTED">Concluído</SelectItem>
+                                            <SelectItem value="REJECTED">Recusado</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormField>
                             </div>
-                            <div className="flex justify-between space-x-2 w-full items-center min-w-0">
-                                <div className="flex flex-col space-y-2 mt-5  w-full">
-                                    <label className="text-[#143163] font-semibold text-sm">Valor (Até)</label>
-                                    <input type="number" value={queryParams.valor_ate} onChange={(e) => setQueryParams({ ...queryParams, valor_ate: e.target.value })}
-                                        className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                                </div>
+
+                            <div className="ui-export-field-row">
+                                <TextField
+                                    label="Valor (de)"
+                                    type="number"
+                                    value={queryParams.valor_de}
+                                    onChange={(event) => setQueryParams({ ...queryParams, valor_de: event.target.value })}
+                                />
+                                <TextField
+                                    label="Valor (até)"
+                                    type="number"
+                                    value={queryParams.valor_ate}
+                                    onChange={(event) => setQueryParams({ ...queryParams, valor_ate: event.target.value })}
+                                />
                             </div>
-                        </div>
 
-                        <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-sm">Utilizador (Nome/Telemóvel)</label>
-                            <input type="email" value={queryParams.user_name_phone} onChange={(e) => setQueryParams({ ...queryParams, user_name_phone: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>
+                            <TextField
+                                label="Utilizador (nome/telemóvel)"
+                                type="text"
+                                value={queryParams.user_name_phone}
+                                onChange={(event) => setQueryParams({ ...queryParams, user_name_phone: event.target.value })}
+                            />
 
-                        <div className="flex justify-between space-x-2 w-full items-center">
-                            <div className="flex flex-col space-y-2 mt-5  w-full">
-                                <label className="text-[#143163] font-semibold text-sm">Estado</label>
+                            <FormField label="Responsável">
                                 <Select onValueChange={setResponsavel} value={responsavel}>
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-full" aria-label="Responsável">
                                         <SelectValue placeholder="Selecione..." />
                                     </SelectTrigger>
-                                    <SelectContent >
+                                    <SelectContent>
                                         {data?.dados?.map((item: any) =>
-                                            <SelectItem value={item?.name}>{item?.name}</SelectItem>
-                                        )
-                                        }
+                                            <SelectItem key={item?.name} value={item?.name}>{item?.name}</SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </FormField>
 
-                        </div>
-
-                        <div className="flex justify-between space-x-2">
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Inicial</label>
-                                <input type="date" value={queryParams.dataInicial} onChange={(e) => setQueryParams({ ...queryParams, dataInicial: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Final</label>
-                                <input type="date" value={queryParams.dataFinal} onChange={(e) => setQueryParams({ ...queryParams, dataFinal: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                            <div className="ui-export-field-row">
+                                <DateField
+                                    label="Data inicial"
+                                    value={queryParams.dataInicial}
+                                    onChange={(event) => setQueryParams({ ...queryParams, dataInicial: event.target.value })}
+                                />
+                                <DateField
+                                    label="Data final"
+                                    value={queryParams.dataFinal}
+                                    onChange={(event) => setQueryParams({ ...queryParams, dataFinal: event.target.value })}
+                                />
                             </div>
                         </div>
 
                         <SheetFooter className="ui-export-footer">
-                                    <Button disabled={loading ? true : false} className="ui-export-submit"
-                            type="submit" variant="brand">
-                            {loading ?
-                                <div className="flex justify-center items-center">
-                                    <div className="w-6 h-6 rounded-full border-1 border-t-transparent border-[#143163] animate-spin"></div>
-                                </div> : "Agendar"
-                            }
-                        </Button>
-                                </SheetFooter>
+                            <Button disabled={loading} className="ui-export-submit" type="submit" variant="brand">
+                                {loading ? <><LoaderCircle className="size-4 animate-spin" aria-hidden="true" /><span>A agendar...</span></> : "Agendar"}
+                            </Button>
+                        </SheetFooter>
                     </form>
 
                 </SheetContent>

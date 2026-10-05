@@ -318,7 +318,7 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   margin-top: 0 !important;
 }
 
-.ui-data-page button[class*="bg-[#EAF6F8]"] {
+.ui-data-page button[class*="bg-[#EAF6F8]"]:not([data-action]) {
   min-height: 40px;
   align-items: center;
   border: 1px solid #ADCBD0;
@@ -330,7 +330,7 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
-.ui-data-page button[class*="bg-[#EAF6F8]"]:hover {
+.ui-data-page button[class*="bg-[#EAF6F8]"]:not([data-action]):hover {
   border-color: #17CFDA;
   background: #D8F4F5;
 }
@@ -348,7 +348,7 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   display: none;
 }
 
-.ui-data-page button[class*="bg-[#EAF6F8]"] svg {
+.ui-data-page button[class*="bg-[#EAF6F8]"]:not([data-action]) svg {
   height: 16px;
   width: 16px;
 }
@@ -640,6 +640,10 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   max-width: 100%;
 }
 
+.ui-payment-tabs {
+  width: min(580px, 100%);
+}
+
 .deposit-tabs-panel {
   position: relative;
 }
@@ -655,6 +659,28 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   top: -1px;
   right: 0;
   left: min(460px, 100%);
+  z-index: 2;
+  height: 1px;
+  background: #D7E2F2;
+  content: "";
+  pointer-events: none;
+}
+
+.payment-tabs-panel {
+  position: relative;
+}
+
+.payment-tabs-panel > .ui-data-page {
+  position: relative;
+  border-top-color: transparent !important;
+  border-top-left-radius: 0 !important;
+}
+
+.payment-tabs-panel > .ui-data-page::before {
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: min(580px, 100%);
   z-index: 2;
   height: 1px;
   background: #D7E2F2;
@@ -703,6 +729,30 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
    edge flush only for the larger tab sets that use the full-width treatment. */
 .ui-tabs:has(> button:nth-child(4)) + .ui-data-page {
   border-top-right-radius: 0 !important;
+}
+
+.ui-tabs.ui-company-tabs {
+  width: min(600px, 100%);
+}
+
+.ui-tabs.ui-company-tabs + .ui-data-page::before {
+  left: min(600px, 100%);
+}
+
+.ui-company-tabs > button {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .ui-tabs.ui-company-tabs {
+    width: 100%;
+  }
+
+  .ui-company-tabs > button {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+    font-size: 12px;
+  }
 }
 
 .ui-context-layout > section,
@@ -2149,18 +2199,18 @@ table tbody td.ui-preserve-cell .ui-full-value {
   .ui-user-management-table.ui-particular-account thead th:nth-child(1) { width: 18% !important; }
   .ui-user-management-table.ui-particular-account thead th:nth-child(2) { width: 19% !important; }
   .ui-user-management-table.ui-particular-account thead th:nth-child(3) { width: 21% !important; }
-  .ui-user-management-table.ui-particular-account thead th:nth-child(7) { width: 9% !important; }
-  .ui-user-management-table.ui-particular-account thead th:nth-child(8) { width: 12% !important; }
-  .ui-user-management-table.ui-particular-account thead th:nth-child(9) { width: 8% !important; }
-  .ui-user-management-table.ui-particular-account thead th:nth-child(10) { width: 13% !important; }
+  .ui-user-management-table.ui-particular-account thead th:nth-child(6) { width: 9% !important; }
+  .ui-user-management-table.ui-particular-account thead th:nth-child(7) { width: 12% !important; }
+  .ui-user-management-table.ui-particular-account thead th:nth-child(8) { width: 8% !important; }
+  .ui-user-management-table.ui-particular-account thead th:nth-child(9) { width: 13% !important; }
 
   .ui-user-management-table.ui-business-account thead th:nth-child(1) { width: 14% !important; }
   .ui-user-management-table.ui-business-account thead th:nth-child(2) { width: 20% !important; }
   .ui-user-management-table.ui-business-account thead th:nth-child(3) { width: 20% !important; }
-  .ui-user-management-table.ui-business-account thead th:nth-child(7) { width: 9% !important; }
-  .ui-user-management-table.ui-business-account thead th:nth-child(8) { width: 12% !important; }
-  .ui-user-management-table.ui-business-account thead th:nth-child(9) { width: 8% !important; }
-  .ui-user-management-table.ui-business-account thead th:nth-child(10) { width: 17% !important; }
+  .ui-user-management-table.ui-business-account thead th:nth-child(5) { width: 9% !important; }
+  .ui-user-management-table.ui-business-account thead th:nth-child(6) { width: 12% !important; }
+  .ui-user-management-table.ui-business-account thead th:nth-child(7) { width: 8% !important; }
+  .ui-user-management-table.ui-business-account thead th:nth-child(8) { width: 17% !important; }
 
   .ui-account-validation-table thead th:nth-child(1) { width: 14% !important; }
   .ui-account-validation-table thead th:nth-child(2) { width: 24% !important; }
@@ -3988,25 +4038,25 @@ div:has(> .ui-inline-validation) > textarea {
   flex-direction: column;
 }
 
-.ui-export-sheet > form > div:first-child {
+.ui-export-sheet > form > .ui-export-fields {
   display: flex;
   min-height: 0;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--field-row-gap);
 }
 
-.ui-export-sheet[data-slot="sheet-content"] > form div.flex.flex-col:has(> label),
-.ui-export-sheet .ui-field {
-  margin-top: 0 !important;
+.ui-export-sheet .ui-export-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--field-column-gap);
+  row-gap: var(--field-row-gap);
+  align-items: start;
 }
 
-.ui-export-sheet > form div.flex:has(> div > label) {
-  margin-top: 0 !important;
-}
-
-.ui-export-sheet > form div.flex:has(> div > label) > div {
-  margin-top: 0 !important;
+.ui-export-sheet .ui-export-fields > .ui-field,
+.ui-export-sheet .ui-export-field-row > .ui-field {
+  margin: 0 !important;
 }
 
 .ui-export-sheet > .grid {
@@ -4110,6 +4160,17 @@ div:has(> .ui-inline-validation) > textarea {
   border-radius: 8px !important;
 }
 
+.ui-sheet-content [data-slot="sheet-footer"].ui-edit-sheet-footer--horizontal {
+  flex-direction: row !important;
+  gap: 12px !important;
+}
+
+.ui-sheet-content [data-slot="sheet-footer"].ui-edit-sheet-footer--horizontal > button {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
 .ui-sheet-content [data-slot="sheet-footer"] > button:last-child,
 .ui-dialog-content [data-slot="dialog-footer"] > button:last-child {
   border: 1px solid #143163 !important;
@@ -4157,6 +4218,29 @@ div:has(> .ui-inline-validation) > textarea {
   border-color: #1D467F !important;
   background: #1D467F !important;
   color: #FFFFFF !important;
+}
+
+/* Delete confirmations keep actions together and preserve the destructive color. */
+.ui-dialog-content.ui-confirm-delete-dialog [data-slot="dialog-footer"].ui-confirm-delete-footer {
+  flex-direction: row !important;
+  gap: 12px !important;
+}
+
+.ui-dialog-content.ui-confirm-delete-dialog [data-slot="dialog-footer"].ui-confirm-delete-footer > button {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+.ui-dialog-content.ui-confirm-delete-dialog [data-slot="dialog-footer"].ui-confirm-delete-footer > button.ui-confirm-delete-action {
+  border: 1px solid #B42318 !important;
+  background: #B42318 !important;
+  color: #FFFFFF !important;
+}
+
+.ui-dialog-content.ui-confirm-delete-dialog [data-slot="dialog-footer"].ui-confirm-delete-footer > button.ui-confirm-delete-action:hover:not(:disabled) {
+  border-color: #912018 !important;
+  background: #912018 !important;
 }
 
 .ui-sheet-content button[type="submit"]:not(.ui-inline-validation),
@@ -4248,7 +4332,7 @@ div:has(> .ui-inline-validation) > textarea {
 
 .ui-detail-sheet.ui-detail-sheet--structured > .ui-detail-sheet-footer {
   flex: 0 0 auto;
-  margin-top: 0;
+  margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid #E5EBF4;
   background: #FFFFFF;

@@ -15,6 +15,7 @@ import { formatCurrency } from "@/components/utils/formmat"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { TableStateRow } from "@/components/ui/table-state-row"
 import { RefreshButton } from "@/components/ui/refresh-button"
+import { useSearchParams } from "react-router"
 
 export default function SaldoPorUsuario() {
 
@@ -40,6 +41,8 @@ export default function SaldoPorUsuario() {
     const [nivelParam, setNivelParam] = useState("") // filtro para o nivel da conta
     const [nacionalidadeParam, setNacionalidadeParam] = useState("")
     const [isFiltered, setIsFiltered] = useState(false) // estado para verificar se há filtro
+    const [searchParams] = useSearchParams();
+    const nameUserSearch = searchParams.get("name")
 
 
     async function getUsers(page: number) {
@@ -47,7 +50,7 @@ export default function SaldoPorUsuario() {
             const urlUsers = isFiltered ? `/front/${particularAccount ? "balance_users" : "balance_merchants"
                 }?per_page=${perPage}&page=${page}&name=${queryParams?.name}&status=${queryParams?.status === "Todos" ? "" : queryParams?.status}&phone_number=${queryParams?.phone_number || queryParams?.nif}&balance=${queryParams?.balance}` :
                 `/front/${particularAccount ? "balance_users" : "balance_merchants"
-                }?per_page=${perPage}&page=${page}`;
+                }?per_page=${perPage}&page=${page}${nameUserSearch && `&name=${nameUserSearch}`}`;
 
             const totalSaldoURL = `/front/sum_balance_${particularAccount ? "users" : "merchants"}`; //sum_balance_merchants
 

@@ -3,7 +3,7 @@ import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import type { Pagamentos } from "@/types/pagamentos"
 import { Categoria } from "@/components/utils/categoria"
 import ListaProdutos from "@/components/servicos/listProducts"
@@ -22,8 +22,6 @@ export default function UsuariosBackOffice() {
 
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [servicosData, setServicosData] = useState<UsersBackOffice[]>([])
-    const [filteredDataUsers, setFilteredUsersData] = useState<UsersBackOffice[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [addUserModalIsOpen, setAddUserModalIsOpen] = useState(false)
@@ -55,9 +53,7 @@ export default function UsuariosBackOffice() {
             console.log(urlUserBackoffice)
             const { data } = await api.get(urlUserBackoffice)
 
-            //setIsFiltered(false)
-            setFilteredUsersData(data?.dados)
-            setServicosData(data?.dados)
+
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
@@ -70,13 +66,6 @@ export default function UsuariosBackOffice() {
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setServicosData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
-
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
         // Permite espaços no meio, mas evita strings só com espaços
@@ -87,37 +76,41 @@ export default function UsuariosBackOffice() {
         }
     };
 
-    useEffect(() => {
-        if (!servicosData || servicosData?.length === 0) {
-            setFilteredUsersData([]);
-            return;
+    const filteredUsersData = useMemo(() => {
+        if (!data?.dados?.length) {
+            return [];
         }
 
-        if (!searchInput) {
-            setFilteredUsersData(servicosData);
-            return;
+        const normalizedSearch = searchInput.trim().toLowerCase();
+
+        if (!normalizedSearch) {
+            return data.dados;
         }
 
-        const searchTerm = searchInput?.toLowerCase();
-
-        const filtered = servicosData?.filter((item) => {
-            // Se não houver termo de busca, mostra todos
-            if (!searchTerm) return true;
-
-            // Normaliza o termo de busca
-            const normalizedSearch = searchTerm.toLowerCase().trim();
-
+        return data.dados.filter((item: any) => {
             // Campos da tabela
-            const partnerId = String(item?.name || '').toLowerCase();
-            const name = String(item?.name || '').toLowerCase();
-            const categoryLabel = Categoria(item?.name)?.toLowerCase() || '';
-            const statusLabel = (item?.name === "ENABLED" ? "Activo" : "Inativo").toLowerCase();
+            const partnerId = String(
+                item?.name || ""
+            ).toLowerCase();
 
-            // Campos fixos (comissão e plataforma) – opcionais para busca
-            const comissao = '2%';
-            const plataforma = 'pagasó'; // valor fixo
+            const name = String(
+                item?.name || ""
+            ).toLowerCase();
 
-            // Inclui campos fixos na busca, se desejar
+            const categoryLabel =
+                Categoria(item?.name)?.toLowerCase() || "";
+
+            const statusLabel =
+                (
+                    item?.name === "ENABLED"
+                        ? "Activo"
+                        : "Inativo"
+                ).toLowerCase();
+
+            // Campos fixos
+            const comissao = "2%";
+            const plataforma = "pagasó";
+
             return (
                 partnerId.includes(normalizedSearch) ||
                 name.includes(normalizedSearch) ||
@@ -127,10 +120,7 @@ export default function UsuariosBackOffice() {
                 plataforma.includes(normalizedSearch)
             );
         });
-
-        setFilteredUsersData(filtered);
-
-    }, [servicosData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
+    }, [data?.dados, searchInput]);// Atualiza ao mudar salesData ou searchTerm
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {
@@ -306,14 +296,14 @@ export default function UsuariosBackOffice() {
 
                                         {isLoading ?
                                             <TableStateRow colSpan={6} state="loading" message="A carregar utilizadores backoffice..." /> :
-                                            filteredDataUsers.length > 0 ? filteredDataUsers.map((item: any) =>
+                                            filteredUsersData.length > 0 ? filteredUsersData.map((item: any) =>
                                                 <tr className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163] ">
 
                                                     <td className="text-start py-2 px-3">
                                                         <div className="flex items-center space-x-1">
                                                             <span className="ui-avatar hidden lg:flex shrink-0 items-center justify-center text-[#143163] overflow-hidden font-semibold bg-[#F5F6FA] text-[12px]">
                                                                 {/* <img src={`${item?.photo}`} alt="imgem" className="w-8 h-8 rounded-full object-cover" /> */}
-                                                               <UserAvatar photo={item?.photo}/>
+                                                                <UserAvatar photo={item?.photo} />
                                                             </span>
                                                             <p className="font-semibold">{item?.name}</p>
                                                         </div>
