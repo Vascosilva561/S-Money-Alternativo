@@ -103,13 +103,7 @@ export default function CriacaoValidacaoContas() {
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setUsersData(data?.dados?.slice(0, Number(perPage)));
-
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
+   
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -353,7 +347,7 @@ export default function CriacaoValidacaoContas() {
                                     <th className={` px-3 py-2 ${particularAccount ? "w-[10%] text-start" : "w-[15%] text-start"}`}>{particularAccount ? "Telefone" : "Email"}</th>
                                     <th className="text-start px-4 py-2 w-[12%]">{particularAccount ? "Utilizador" : "Empresa"}</th>
                                     <th className="ui-date-column text-center px-4 py-2 w-[10%]">Data de Criação</th>
-                                    <th className={` px- py-2 ${particularAccount ? "w-[15%] text-start" : "w-[10%] text-start"}`}>{particularAccount ? "Bilhete de Identidade" : "NIF"}</th>
+                                    <th className={` px- py-2 ${particularAccount ? "w-[15%] text-start" : "w-[10%] text-start"}`}>{particularAccount ? "Documento de identificação" : "NIF"}</th>
                                     <th className="ui-location-column text-start px-3 py-2 w-[10%]">Nacionalidade</th>
                                     <th className="ui-location-column text-start px-3 py-2 w-[10%]">Província</th>
                                     <th className="ui-location-column text-start px-3 py-2 w-[10%]">Município</th>
@@ -386,7 +380,10 @@ export default function CriacaoValidacaoContas() {
                                             <td className="ui-location-column text-start py-2 px-3" title={item?.user_document?.city || "N/A"}>{item?.user_document?.city || "N/A"}</td>
                                             <td className="text-start py-2 px-3"><LevelBadge level={item?.level} /></td>
                                             <td className={`text-start py-2`}>
-                                                <span className={`w-6 h-6 rounded-full pr-4 pl-4 py-1 ml-4 ${statusAccount(item?.status_validate)}`}>{item?.status_validate==="PENDING"?"Pendente":item?.status_validate}</span></td>
+                                                <span className={`w-6 h-6 rounded-full pr-4 pl-4 py-1 ml-4 
+                                                    ${statusAccount(item?.status_validate)}`}>{item?.status_validate === "PENDING" ? "Pendente" : item?.status_validate}
+                                                </span>
+                                            </td>
                                             <td className="text-start py-2">
 
                                                 <TableActionButton

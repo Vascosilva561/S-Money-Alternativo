@@ -84,7 +84,7 @@ function CommonRows({ item, amount }: { item: MovementRecord; amount: unknown })
     { label: "Valor", value: formatMoney(amount) },
     {
       label: "Estado",
-      value: <span className={"inline-flex rounded-full px-3 py-1 text-xs font-semibold " + statusClass}>{movementStatus}</span>,
+      value: <span className={"ui-status-tag " + statusClass}>{movementStatus}</span>,
     },
     { label: "Data", value: formatDate(item.created_at) },
     { label: "Origem", value: text(PegaOrigemMovimento(item)) },

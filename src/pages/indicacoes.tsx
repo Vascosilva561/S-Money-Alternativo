@@ -7,9 +7,9 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import ListaProdutos from "@/components/servicos/listProducts"
 import type { ReferralItem, ReferralResponse } from "@/types/Indicacoes"
+import type { ConfigTypeResponse, ProgramaIndicacao } from "@/types/configurations"
 import DetailsIndicacoes from "@/components/indicacoes&Config/details"
 import Configurar from "@/components/indicacoes&Config/configurar"
-import type { ConfigTypeResponse, ProgramaIndicacao } from "@/types/configurations"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import ModalEliminarConfig from "@/components/indicacoes&Config/eliminar"
 import EditarConfig from "@/components/indicacoes&Config/edit"
@@ -130,28 +130,27 @@ export default function Indicacoes() {
     }, [referralData?.dados, searchInput]);
 
     const filteredConfig = useMemo<ProgramaIndicacao[]>(() => {
-        const lista = configData?.dados ?? [];
-        if (lista.length === 0) return [];
+        const lista = configData?.dados ?? []
+        const search = searchInput?.trim().toLowerCase() ?? ""
 
-        const normalizedSearch = searchInput?.toLowerCase().trim() ?? "";
-        if (!normalizedSearch) return lista;
+        if (!search) return lista
 
-        return lista.filter((item: ProgramaIndicacao) => {
-            const name = item?.name?.toLowerCase() ?? "";
-            const description = item?.description?.toLowerCase() ?? "";
-            const startDate = String(item?.start_date ?? "").toLowerCase();
-            const endDate = String(item?.end_date ?? "").toLowerCase();
-            const status = item?.active ? "ativo" : "inativo";
+        return lista.filter((item) => {
+            const searchableFields = [
+                item.name,
+                item.description,
+                item.start_date,
+                item.end_date,
+                item.reward_amount,
+                item.budget,
+                item.active ? "ativo" : "inativo",
+            ]
 
-            return (
-                name.includes(normalizedSearch) ||
-                description.includes(normalizedSearch) ||
-                startDate.includes(normalizedSearch) ||
-                endDate.includes(normalizedSearch) ||
-                status.includes(normalizedSearch)
-            );
-        });
-    }, [configData?.dados, searchInput]);
+            return searchableFields.some((field) =>
+                String(field ?? "").toLowerCase().includes(search)
+            )
+        })
+    }, [configData?.dados, searchInput])
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {

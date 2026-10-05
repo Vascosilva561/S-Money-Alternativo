@@ -15,16 +15,17 @@ import { TableStateRow } from "@/components/ui/table-state-row"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { RefreshButton } from "@/components/ui/refresh-button"
 import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
+import { useSearchParams } from "react-router"
+import { useSelectedAccount } from "@/context/selectedAccountCntext"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function TranferenciaSomoney() {
 
-    const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
     const [usersData, setUsersData] = useState<Transactions[]>([])
     const [filteredDataUsers, setFilteredUsersData] = useState<Transactions[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [particularAccount, _setParticularAccount] = useState(true)
-
     const [addModalIsOpen, setAddModalIsOpen] = useState(false)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [detailsModalIsOpen, setDetailsModalIsOpen] = useState(false)
@@ -44,9 +45,10 @@ export default function TranferenciaSomoney() {
         dataFinal: "",
 
     })
-
     const [isFiltered, setIsFiltered] = useState(false) // estado para verificar se há filtro
-    //const [responsavelOperacao, setResponsavelOperacao] = useState("")
+    const [searchParams] = useSearchParams();
+    const userNameSearch = searchParams.get("sender_name");
+    const { account } = useSelectedAccount()
 
     async function getUsers(page: number) {
         try {
@@ -58,14 +60,12 @@ export default function TranferenciaSomoney() {
                 data_inicio: queryParams?.dataInicial,
                 data_fim: queryParams?.dataFinal,
                 receiver_name: queryParams?.destinatario,
-                sender_name: queryParams?.remetente,
+                sender_name: (userNameSearch || queryParams?.remetente) || "",
                 valor_de: queryParams?.valorDe,
                 valor_ate: queryParams?.valorAte
 
-
-
             })?.toString()
-            const urlTransactions = `/front/transaction?per_page=${perPage}&page=${page}&${Params}`
+            const urlTransactions = `/front/transaction?per_page=100&page=${page}&${Params}`
             const { data } = await api.get(urlTransactions)
 
             setIsFiltered(false)
@@ -78,18 +78,10 @@ export default function TranferenciaSomoney() {
     }
 
     const { data, refetch, isLoading, isFetching } = useQuery<Transactions>({
-        queryKey: ['listaDeTransacoes', currentPage, perPage, isFiltered],
+        queryKey: ['listaDeTransacoes', currentPage, 100, isFiltered],
         queryFn: () => getUsers(currentPage),
         placeholderData: keepPreviousData,
     })
-
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setUsersData(data?.dados?.slice(0, Number(perPage)));
-
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -168,7 +160,7 @@ export default function TranferenciaSomoney() {
     };
 
     const totalItems = data?.total || 0; // Total de registros da API
-    const totalPages = Math.ceil(totalItems / Number(perPage));
+    const totalPages = Math.ceil(totalItems / 100);
     const paginationRange = generatePaginationRange(totalPages, currentPage);
 
     const handlePageChange = (page: number) => {
@@ -195,7 +187,7 @@ export default function TranferenciaSomoney() {
             dataInicial: "",
             dataFinal: ""
         })
-        
+
         setEstadoDaTransacao("PAID")
         setTipoDeContaRecebido("User")
         setTipoDeContaEnviado("User")
@@ -211,7 +203,7 @@ export default function TranferenciaSomoney() {
             <FilterTransactions
                 setShowFilter={setShowClearFilter}
                 filter={getUsers}
-                setCurrentPage={()=>setCurrentPage(1)}
+                setCurrentPage={() => setCurrentPage(1)}
                 setIsFiltered={setIsFiltered}
                 onClose={() => setFilterModalIsOpen(false)}
                 isOpen={filterModalIsOpen}
@@ -232,14 +224,21 @@ export default function TranferenciaSomoney() {
             <section className="ui-data-page bg-white rounded-lg h-fit text-sm shadow-[0px_0px_13px_0px_rgba(207,_215,_229,_0.67)] border-2  border-[#C8D7EF]">
 
                 <div className="flex flex-col p-5">
-                    <div className="flex space-x-4">
-                        <button onClick={() => setAddModalIsOpen(true)} type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
-                         hover:bg-[#17CFDA] hover:ring-[#17CFDA] rounded-[5px] duration-300 font-semibold  flex space-x-2 items-center">
+                    <div className="flex space-x-4 justify-between mt-4">
+                        <div className="flex space-x-2">
+                            {!account &&
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+
+                                        <button onClick={() => setAddModalIsOpen(true)} type="button" className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg bg-[#143163] px-4 font-semibold text-white shadow-sm transition-colors hover:bg-[#1D467F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] focus-visible:ring-offset-2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.9231 6.15077V5.84615C18.9231 3.36615 17.5569 2 15.0769 2H4.82051C3.26462 2 2 3.26462 2 4.82051V18.1538C2 20.6338 3.36615 22 5.84615 22H18.1538C20.6338 22 22 20.6338 22 18.1538V9.94872C22 7.73846 20.9149 6.41333 18.9231 6.15077ZM20.4615 15.8462H16.6154C15.6256 15.8462 14.8205 15.041 14.8205 14.0513C14.8205 13.0615 15.6256 12.2564 16.6154 12.2564H20.4615V15.8462ZM4.82051 3.53846H15.0769C16.6944 3.53846 17.3846 4.22872 17.3846 5.84615V6.10256H4.82051C4.11385 6.10256 3.53846 5.52718 3.53846 4.82051C3.53846 4.11385 4.11385 3.53846 4.82051 3.53846ZM18.1538 20.4615H5.84615C4.22872 20.4615 3.53846 19.7713 3.53846 18.1538V7.33228C3.92308 7.5292 4.35897 7.64103 4.82051 7.64103H18.1538C19.7713 7.64103 20.4615 8.33128 20.4615 9.94872V10.7179H16.6154C14.7774 10.7179 13.2821 12.2133 13.2821 14.0513C13.2821 15.8892 14.7774 17.3846 16.6154 17.3846H20.4615V18.1538C20.4615 19.7713 19.7713 20.4615 18.1538 20.4615ZM17.1385 13.0256H17.1487C17.7159 13.0256 18.1744 13.4851 18.1744 14.0513C18.1744 14.6174 17.7159 15.0769 17.1487 15.0769C16.5826 15.0769 16.118 14.6174 16.118 14.0513C16.118 13.4851 16.5723 13.0256 17.1385 13.0256Z" fill="#143163" />
+                                <path d="M18.9231 6.15077V5.84615C18.9231 3.36615 17.5569 2 15.0769 2H4.82051C3.26462 2 2 3.26462 2 4.82051V18.1538C2 20.6338 3.36615 22 5.84615 22H18.1538C20.6338 22 22 20.6338 22 18.1538V9.94872C22 7.73846 20.9149 6.41333 18.9231 6.15077ZM20.4615 15.8462H16.6154C15.6256 15.8462 14.8205 15.041 14.8205 14.0513C14.8205 13.0615 15.6256 12.2564 16.6154 12.2564H20.4615V15.8462ZM4.82051 3.53846H15.0769C16.6944 3.53846 17.3846 4.22872 17.3846 5.84615V6.10256H4.82051C4.11385 6.10256 3.53846 5.52718 3.53846 4.82051C3.53846 4.11385 4.11385 3.53846 4.82051 3.53846ZM18.1538 20.4615H5.84615C4.22872 20.4615 3.53846 19.7713 3.53846 18.1538V7.33228C3.92308 7.5292 4.35897 7.64103 4.82051 7.64103H18.1538C19.7713 7.64103 20.4615 8.33128 20.4615 9.94872V10.7179H16.6154C14.7774 10.7179 13.2821 12.2133 13.2821 14.0513C13.2821 15.8892 14.7774 17.3846 16.6154 17.3846H20.4615V18.1538C20.4615 19.7713 19.7713 20.4615 18.1538 20.4615ZM17.1385 13.0256H17.1487C17.7159 13.0256 18.1744 13.4851 18.1744 14.0513C18.1744 14.6174 17.7159 15.0769 17.1487 15.0769C16.5826 15.0769 16.118 14.6174 16.118 14.0513C16.118 13.4851 16.5723 13.0256 17.1385 13.0256Z" fill="currentColor" />
                             </svg>
                             <span>Transferir</span>
                         </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Transferir</TooltipContent>
+                                </Tooltip>}
                         <button onClick={() => setFilterModalIsOpen(true)} type="button" aria-label="Filtrar" className="ui-filter-trigger" title="Filtrar">
                                     <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 5h16l-6.5 7v5l-3 2v-7L4 5z" /></svg>
                                 </button>
@@ -253,6 +252,7 @@ export default function TranferenciaSomoney() {
                                 <span>Limpar Filtro</span>
                             </button>
                         }
+                    </div>
                     </div>
 
                     <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
@@ -279,6 +279,8 @@ export default function TranferenciaSomoney() {
                             </div>
                         </div>
                     </div>
+
+
 
                     {/* Tabela */}
                     <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">

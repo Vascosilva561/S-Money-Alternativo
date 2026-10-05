@@ -162,8 +162,8 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
                     </SheetHeader>
 
                 <form onSubmit={agendarRelatorio}>
-                            <div>
-                                <div className="flex flex-col space-y-2 mt-6 w-full">
+                            <div className="ui-export-fields">
+                                <div className="ui-field">
                                     <label className="text-[#143163] font-semibold text-[14px]">Situação do utilizador</label>
                                     <Select onValueChange={setSituacaoUser} value={situacaoUser}>
                                         <SelectTrigger className=" w-full">
@@ -176,8 +176,8 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
                                     </Select>
                                 </div>
 
-                                <div className="flex justify-between space-x-2">
-                                    <div className="flex flex-col space-y-2 mt-6 w-full ">
+                                <div className="ui-export-field-row">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Estado do Conta</label>
                                         <Select onValueChange={setStatus} value={status}>
                                             <SelectTrigger className="w-full">
@@ -191,7 +191,7 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="flex flex-col space-y-2 mt-6 w-full">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Nível da Conta</label>
                                         <Select onValueChange={setLevel} value={level}>
                                             <SelectTrigger className="w-full">
@@ -213,8 +213,8 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
                                         </Select>
                                     </div>
                                 </div>
-                                <div className="flex justify-between space-x-2">
-                                    <div className="flex flex-col space-y-2 mt-6 w-full">
+                                <div className="ui-export-field-row">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Província</label>
                                         <select value={formData.provincia_id} onChange={(e) => setFormData({ ...formData, provincia_id: e.target.value })}
                                             className="p-2 ring-1 rounded-[8px] ring-[#ADCBD0] focus:ring-[#7D8CA6] text-[#143163] text-sm">
@@ -227,7 +227,7 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
 
                                         </select>
                                     </div>
-                                    <div className="flex flex-col space-y-2 mt-6 w-full">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Município</label>
                                         <select value={formData.municipio} onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
                                             className="p-2 ring-1 rounded-[8px] ring-[#ADCBD0] focus:ring-[#7D8CA6] text-[#143163] text-sm">
@@ -240,13 +240,13 @@ export default function Exportar({ onClose, isOpen, typeAccount, initialFilters 
                                         </select>
                                     </div>
                                 </div>
-                                <div className="flex justify-between space-x-2">
-                                    <div className="flex flex-col space-y-2 mt-6 w-full ">
+                                <div className="ui-export-field-row">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Data Inicial</label>
                                         <input type="datetime-local" value={dataInicial} onChange={(e) => setDataInicial(e.target.value)}
                                             className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                                     </div>
-                                    <div className="flex flex-col space-y-2 mt-6 w-full">
+                                    <div className="ui-field">
                                         <label className="text-[#143163] font-semibold text-[14px]">Data Final</label>
                                         <input type="datetime-local" value={dataFinal} onChange={(e) => setDataFinal(e.target.value)}
                                             className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />

@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import UserContextSidebar from "@/components/layout/UserContextSidebar";
 import { Toaster } from "../ui/sonner";
 import { useLocation } from "react-router";
+import { useEffect, useRef } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,11 +13,18 @@ interface LayoutProps {
 function LayoutContent({ children }: LayoutProps) {
   const { state } = useSidebar();
   const location = useLocation();
+  const mainRef = useRef<HTMLElement>(null)
   const anoAtual = new Date().getFullYear();
   const userContextMatch = location.pathname.match(/^\/gestao-de-utilizadores\/([^/]+)/)
   const isUserContext = Boolean(userContextMatch)
   const userId = userContextMatch?.[1] ?? ""
 
+  useEffect(() => {
+    mainRef.current?.scrollTo({
+      top: 0,
+      behavior: "instant",
+    })
+  }, [location.pathname])
   return (
     <div className="flex h-svh w-full overflow-hidden bg-[#F6F5FA]">
       {/* Sidebar */}
@@ -27,12 +35,14 @@ function LayoutContent({ children }: LayoutProps) {
       </aside>
 
       {/* Conteúdo principal */}
-      <main className="relative h-svh min-w-0 flex-1 overflow-y-auto bg-[#F6F5FA]">
+      <main ref={mainRef} className="relative h-svh min-w-0 flex-1 overflow-y-auto bg-[#F6F5FA]">
         <div className="sticky right-0 top-0 z-20 w-full">
           <Header />
         </div>
 
-        <div className="p-4 lg:p-8">{children}</div>
+        <div className="p-4 lg:p-8">
+          {children}
+        </div>
         <p className="px-4 pb-4 text-sm text-[#4B5563] lg:px-8">
           © {anoAtual} Sómoney, Todos os direitos reservados.
         </p>

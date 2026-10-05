@@ -28,14 +28,11 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
         rewardAmount: "",
         budget: "",
         active: true,
-        codigo: "",
-        tipo: "indicacao",
     })
     const [loading, setLoading] = useState(false)
 
     const clearInputs = () => {
         setFormData({
-            ...formData,
             title: "",
             description: "",
             startDate: "",
@@ -51,13 +48,12 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
     useEffect(() => {
         if (itemSelected) {
             setFormData({
-                ...formData,
-                title: itemSelected?.name,
-                description: itemSelected?.description,
-                startDate: itemSelected?.start_date,
-                endDate: itemSelected?.end_date,
-                rewardAmount: String(itemSelected?.reward_amount),
-                budget: String(itemSelected?.budget),
+                title: itemSelected.name,
+                description: itemSelected.description,
+                startDate: itemSelected.start_date,
+                endDate: itemSelected.end_date,
+                rewardAmount: String(itemSelected.reward_amount),
+                budget: String(itemSelected.budget),
                 active: itemSelected?.active,
             })
         }
@@ -70,7 +66,7 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
 
         try {
             const body = {
-                title: formData.title,
+                name: formData.title,
                 description: formData.description,
                 start_date: formData.startDate,
                 end_date: formData.endDate,
@@ -140,7 +136,7 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
 
 
                         <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-[14px]">Título</label>
+                            <label className="text-[#143163] font-semibold text-[14px]">Nome</label>
                             <input required type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                         </div>

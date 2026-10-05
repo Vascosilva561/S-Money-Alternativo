@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import type { Pagamentos } from "@/types/pagamentos"
 import ListaProdutos from "@/components/servicos/listProducts"
 import type { Bancos } from "@/types/bancos"
 import ModalEliminar from "@/components/bancos/modalElimanr"
@@ -65,18 +64,12 @@ export default function Bancos() {
         }
     }
 
-    const { data, refetch, isFetching, isLoading } = useQuery<Pagamentos>({
+    const { data, refetch, isFetching, isLoading } = useQuery({
         queryKey: ['ListaDeBancos', currentPage, perPage, isFiltered],
         queryFn: () => getPayments(currentPage),
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setServicosData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -89,13 +82,13 @@ export default function Bancos() {
     };
 
     useEffect(() => {
-        if (!servicosData || servicosData?.length === 0) {
+        if (!data?.dados || data?.dados?.length === 0) {
             setFilteredUsersData([]);
             return;
         }
 
         if (!searchInput) {
-            setFilteredUsersData(servicosData);
+            setFilteredUsersData(data?.dados);
             return;
         }
 

@@ -11,7 +11,8 @@ import { Eye, FileText, Pencil, Search } from "lucide-react"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { useMemo, useState } from "react"
 import { useUserContext } from "@/pages/user_context_types"
-import { formatDateTime } from "@/components/utils/formmat"
+import { formatDate, formatDateTime } from "@/components/utils/formmat"
+import { statusAccount } from "@/components/utils/getColorStatusAccount"
 import { Button } from "@/components/ui/button"
 import { ReportHistoryPanel, userContextReportCategories } from "@/components/reports/report-history-panel"
 
@@ -25,6 +26,18 @@ function getValue(row: OtpRow, key: string) {
 function getDate(value: unknown) {
   if (typeof value !== "string" || !value) return "—"
   return formatDateTime(value, value)
+}
+
+function getValidationStatusLabel(value?: string) {
+  if (!value?.trim()) return "Por validar"
+
+  const status = value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[_-]+/g, " ")
+  if (status.includes("pend")) return "Pendente"
+  if (status.includes("nao valid") || status.includes("not valid") || status.includes("unvalid") || status === "invalid") return "Não validado"
+  if (status.includes("rejeit") || status.includes("reject") || status.includes("denied")) return "Rejeitado"
+  if (status.includes("valid") || status.includes("approv") || status.includes("accept")) return "Validado"
+
+  return value
 }
 
 export function UserContextOtps() {
@@ -170,10 +183,29 @@ export function UserContextAccountManagement() {
   const user = useUserContext()
   const [editOpen, setEditOpen] = useState(false)
   const [detailsOpen, setDetailsOpen] = useState(false)
-  const accountType = user.account_type !== "Merchant" && !user.business_name
+  const isIndividualAccount = user.account_type !== "Merchant" && !user.business_name
 
   const displayName = user.business_name || [user.first_name, user.last_name].filter(Boolean).join(" ") || "Utilizador"
-  const location = [user.user_document?.province, user.user_document?.city].filter(Boolean).join(" · ") || "Localização não disponível"
+  const location = [user.user_document?.address, user.user_document?.city, user.user_document?.province].filter(Boolean).join(" · ") || "—"
+  const nationality = user.user_document?.nacionalidade || user.user_document?.country || "—"
+  const accountDetails = isIndividualAccount
+    ? [
+        { label: "Utilizador", value: displayName },
+        { label: "Contacto", value: user.phone_number || "—" },
+        { label: "Documento de identificação", value: user.bi_number || user.nif || "—" },
+        { label: "Data de nascimento", value: formatDate(user.user_document?.birthday) },
+        { label: "Nacionalidade", value: nationality },
+        { label: "Morada", value: location },
+      ]
+    : [
+        { label: "Empresa", value: displayName },
+        { label: "NIF", value: user.nif || "—" },
+        { label: "Email", value: user.email || "—" },
+        { label: "Contacto", value: user.phone_number || "—" },
+        { label: "Endereço da sede", value: location },
+      ]
+  const validationStatusLabel = getValidationStatusLabel(user.status_validate)
+  const validationStatusClass = statusAccount(user.status_validate) ?? "bg-[#F2F4F7] text-[#667085]"
 
   return (
     <div className="ui-context-page space-y-5">
@@ -192,10 +224,13 @@ export function UserContextAccountManagement() {
             </div>
             <Pencil className="mt-0.5 h-5 w-5 shrink-0 text-[#143163]" aria-hidden="true" />
           </div>
-          <dl className="mt-2 divide-y divide-[#EEF2F7] text-sm">
-            <div className="flex items-start justify-between gap-4 py-3"><dt className="text-[#667085]">{user.business_name ? "Empresa" : "Utilizador"}</dt><dd className="max-w-[65%] break-words text-right font-medium text-[#143163]">{displayName}</dd></div>
-            <div className="flex items-start justify-between gap-4 py-3"><dt className="text-[#667085]">Contacto</dt><dd className="text-right font-medium text-[#143163]">{user.phone_number || "—"}</dd></div>
-            <div className="flex items-start justify-between gap-4 py-3"><dt className="text-[#667085]">Localização</dt><dd className="max-w-[65%] break-words text-right font-medium text-[#143163]">{location}</dd></div>
+          <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
+            {accountDetails.map(({ label, value }) => (
+              <div key={label} className="min-w-0 border-b border-[#EEF2F7] pb-3">
+                <dt className="text-xs font-medium text-[#667085]">{label}</dt>
+                <dd className="mt-1 break-words font-medium text-[#143163]">{value}</dd>
+              </div>
+            ))}
           </dl>
           <Button type="button" variant="brand" className="mt-3 h-10 rounded-lg" onClick={() => setEditOpen(true)}><Pencil aria-hidden="true" /> Editar dados</Button>
         </section>
@@ -208,12 +243,15 @@ export function UserContextAccountManagement() {
             </div>
             <FileText className="mt-0.5 h-5 w-5 shrink-0 text-[#143163]" aria-hidden="true" />
           </div>
-          <p className="mt-4 rounded-lg border border-[#E5EBF4] bg-[#F8FAFC] px-4 py-3 text-sm text-[#536176]">Estado actual: <strong className="font-semibold text-[#143163]">{user.status_validate || "Por validar"}</strong></p>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm" role="status">
+            <span className="text-[#667085]">Estado da conta:</span>
+            <span className={`ui-status-tag inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${validationStatusClass}`}>{validationStatusLabel}</span>
+          </div>
           <Button type="button" variant="brand" className="mt-4 h-10 rounded-lg" onClick={() => setDetailsOpen(true)}><Eye aria-hidden="true" /> Ver documentos e detalhes</Button>
         </section>
       </div>
 
-      <EditUsuario isOpen={editOpen} onClose={() => setEditOpen(false)} typeAccount={accountType} selectedItem={user} />
+      <EditUsuario isOpen={editOpen} onClose={() => setEditOpen(false)} typeAccount={isIndividualAccount} selectedItem={user} />
       <DetailsGestaoUsuario isOpen={detailsOpen} onClose={() => setDetailsOpen(false)} itemSelected={user} />
     </div>
   )

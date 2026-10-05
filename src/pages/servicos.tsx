@@ -2,7 +2,7 @@ import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import type { Pagamentos } from "@/types/pagamentos"
 import type { Servicos } from "@/types/servicos"
 import { Categoria } from "@/components/utils/categoria"
@@ -18,8 +18,6 @@ export default function Servicos() {
 
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [servicosData, setServicosData] = useState<Servicos[]>([])
-    const [filteredDataUsers, setFilteredUsersData] = useState<Servicos[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [detailsModalIsOpen, setDetailsModalIsOpen] = useState(false)
@@ -48,9 +46,7 @@ export default function Servicos() {
             //console.log(urlLogs)
             const { data } = await api.get(urlLogs)
 
-            //setIsFiltered(false)
-            setFilteredUsersData(data?.dados)
-            setServicosData(data?.dados)
+            
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
@@ -63,12 +59,7 @@ export default function Servicos() {
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setServicosData(data?.dados?.slice(0, Number(perPage)));
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
+   
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -80,50 +71,51 @@ export default function Servicos() {
         }
     };
 
-    useEffect(() => {
-        if (!servicosData || servicosData?.length === 0) {
-            setFilteredUsersData([]);
-            return;
-        }
+    const filteredUsersData = useMemo(() => {
+    if (!data?.dados?.length) {
+        return [];
+    }
 
-        if (!searchInput) {
-            setFilteredUsersData(servicosData);
-            return;
-        }
+    const normalizedSearch = searchInput.trim().toLowerCase();
 
-        const searchTerm = searchInput?.toLowerCase();
+    if (!normalizedSearch) {
+        return data?.dados;
+    }
 
-        const filtered = servicosData?.filter((item) => {
-            // Se não houver termo de busca, mostra todos
-            if (!searchTerm) return true;
+    return data?.dados.filter((item: any) => {
+        // Campos da tabela
+        const partnerId = String(
+            item?.partner_id || ""
+        ).toLowerCase();
 
-            // Normaliza o termo de busca
-            const normalizedSearch = searchTerm.toLowerCase().trim();
+        const name = String(
+            item?.name || ""
+        ).toLowerCase();
 
-            // Campos da tabela
-            const partnerId = String(item?.partner_id || '').toLowerCase();
-            const name = String(item?.name || '').toLowerCase();
-            const categoryLabel = Categoria(item?.category)?.toLowerCase() || '';
-            const statusLabel = (item?.status === "ENABLED" ? "Activo" : "Inativo").toLowerCase();
+        const categoryLabel =
+            Categoria(item?.category)?.toLowerCase() || "";
 
-            // Campos fixos (comissão e plataforma) – opcionais para busca
-            const comissao = '2%';
-            const plataforma = 'pagasó'; // valor fixo
+        const statusLabel =
+            (
+                item?.status === "ENABLED"
+                    ? "Activo"
+                    : "Inativo"
+            ).toLowerCase();
 
-            // Inclui campos fixos na busca, se desejar
-            return (
-                partnerId.includes(normalizedSearch) ||
-                name.includes(normalizedSearch) ||
-                categoryLabel.includes(normalizedSearch) ||
-                statusLabel.includes(normalizedSearch) ||
-                comissao.includes(normalizedSearch) ||
-                plataforma.includes(normalizedSearch)
-            );
-        });
+        // Campos fixos
+        const comissao = "2%";
+        const plataforma = "pagasó";
 
-        setFilteredUsersData(filtered);
-
-    }, [servicosData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
+        return (
+            partnerId.includes(normalizedSearch) ||
+            name.includes(normalizedSearch) ||
+            categoryLabel.includes(normalizedSearch) ||
+            statusLabel.includes(normalizedSearch) ||
+            comissao.includes(normalizedSearch) ||
+            plataforma.includes(normalizedSearch)
+        );
+    });
+}, [data, searchInput]); // Atualiza ao mudar salesData ou searchTerm
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {
@@ -289,7 +281,7 @@ export default function Servicos() {
 
                                         {isLoading ?
                                             <TableStateRow colSpan={8} state="loading" message="A carregar serviços..." /> :
-                                            filteredDataUsers.length > 0 ? filteredDataUsers.map((item: any) =>
+                                            filteredUsersData.length > 0 ? filteredUsersData.map((item: any) =>
                                                 <tr className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163] ">
                                                     {/* <td className="text-start py-2 px-3">{item?.id}</td> */}
                                                     <td className="text-start py-2 px-3 ">

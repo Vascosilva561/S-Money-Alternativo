@@ -1,10 +1,10 @@
 import * as React from "react"
-import { Eye, Pencil, Trash2, type LucideIcon } from "lucide-react"
+import { ArrowUpRight, Eye, Pencil, Trash2, type LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-export type TableAction = "view" | "edit" | "delete"
+export type TableAction = "view" | "context" | "edit" | "delete"
 
 const actionConfig: Record<TableAction, {
   label: string
@@ -17,6 +17,12 @@ const actionConfig: Record<TableAction, {
     icon: Eye,
     className: "bg-[#E8F0FF] text-[#2678F2] hover:bg-[#2678F2] hover:text-white",
     focusClassName: "focus-visible:ring-[#2678F2]",
+  },
+  context: {
+    label: "Abrir contexto do utilizador",
+    icon: ArrowUpRight,
+    className: "bg-[#F1E1FF] text-[#A10CF5] hover:bg-[#A10CF5] hover:text-white",
+    focusClassName: "focus-visible:ring-[#A10CF5]",
   },
   edit: {
     label: "Editar",
@@ -50,6 +56,7 @@ const TableActionButton = React.forwardRef<HTMLButtonElement, TableActionButtonP
           <button
             ref={ref}
             type={type}
+            data-action={action}
             aria-label={accessibleLabel}
             className={cn(
               "grid h-9 w-9 min-w-9 shrink-0 cursor-pointer place-items-center rounded-lg p-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",

@@ -1,6 +1,6 @@
 import { api } from "@/api"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import provinvia from "../components/json/provincias.json"
 import type { Users } from "@/types/users"
 import { getInitials } from "@/components/utils/getInitials"
@@ -8,6 +8,7 @@ import { statusUserColor } from "@/components/utils/getSituacaoColor"
 import { statusAccount } from "@/components/utils/getColorStatusAccount"
 import { getLevelBadgeName, LevelBadge } from "@/components/gestaoDeContas/level-badge"
 import EditUsuario from "@/components/gestaoDeContas/edit"
+import DetailsGestaoUsuario from "@/components/gestaoDeContas/details"
 import FilterCounts from "@/components/gestaoDeContas/filter"
 import Exportar, { type UserExportFilters } from "@/components/gestaoDeContas/export"
 import AdicionaUsuario from "@/components/criacaoValidacaoCOntas/adiciona"
@@ -25,8 +26,6 @@ export default function GestaoDeContas() {
     const navigate = useNavigate()
     const perPage = "100"
     const [searchInput, setSearchInput] = useState("")
-    const [usersData, setUsersData] = useState<Users[]>([])
-    const [filteredDataUsers, setFilteredUsersData] = useState<Users[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [particularAccount, setParticularAccount] = useState(true)
 
@@ -34,6 +33,7 @@ export default function GestaoDeContas() {
     const [exportModalIsOpen, setExportModalIsOpen] = useState(false)
     const [filterModalIsOpen, setFilterModalIsOpen] = useState(false)
     const [editModalIsOpen, setEditModalIsOpen] = useState(false)
+    const [detailsModalIsOpen, setDetailsModalIsOpen] = useState(false)
     const [showClearFilter, setShowClearFilter] = useState(false)
     const [itemSelected, setItemSelected] = useState<Users | undefined>()
     const [queryParams, setQueryParams] = useState({
@@ -118,8 +118,7 @@ export default function GestaoDeContas() {
 
 
             setIsFiltered(false)
-            setFilteredUsersData(data?.dados)
-            setUsersData(data?.dados)
+
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
@@ -132,13 +131,6 @@ export default function GestaoDeContas() {
         placeholderData: keepPreviousData,
     })
 
-    useEffect(() => {
-        if (Array.isArray(data?.dados) && data?.dados?.length) {
-            setUsersData(data?.dados?.slice(0, Number(perPage)));
-
-            setFilteredUsersData(data?.dados?.slice(0, Number(perPage))); // Adiciona os dados iniciais
-        }
-    }, [data, perPage]);
 
     const handleSearch = (params: string | undefined) => {
         // Permite espaços no meio, mas evita strings só com espaços
@@ -149,46 +141,38 @@ export default function GestaoDeContas() {
         }
     };
 
-    useEffect(() => {
-        if (!usersData || usersData.length === 0) {
-            setFilteredUsersData([]);
-            return;
-        }
+    const filteredUsersData = useMemo(() => {
+        const users = data?.dados ?? [];
+        const searchTerm = searchInput.trim().toLowerCase();
 
-        if (!searchInput) {
-            setFilteredUsersData(usersData);
-            return;
-        }
+        if (!searchTerm) return users;
 
-        const searchTerm = searchInput.toLowerCase();
+        return users.filter((item: any) => {
+            const fullName =
+                item.account_type === "User"
+                    ? `${item.first_name ?? ""} ${item.last_name ?? ""}`
+                    : item.business_name ?? ""
 
-        const filtered = usersData.filter((item: any) => {
-            const fullNameOrBusiness = item.account_type === "User"
-                ? `${item.first_name || ''} ${item.last_name || ''}`.toLowerCase()
-                : `${item.business_name || ''}`.toLowerCase();
+            const searchableFields = [
+                fullName,
+                item.phone_number,
+                item.email,
+                item.bi_number,
+                item.nif,
+                item.status,
+                item.user_document?.province,
+                item.level,
+                getLevelBadgeName(item.level),
+            ]
 
-            const phoneOrEmail = (item.phone_number || item.email || '').toLowerCase();
-
-            const biOrNif = (item.bi_number || item.nif || '').toString().toLowerCase();
-            const status = (item.status || '').toLowerCase();
-            const province = (item?.user_document?.province || '').toLowerCase();
-            const level = [item?.level, getLevelBadgeName(item?.level)].filter(Boolean).join(' ').toLowerCase();
-
-            return (
-                fullNameOrBusiness.includes(searchTerm) ||
-                phoneOrEmail.includes(searchTerm) ||
-                biOrNif.includes(searchTerm) ||
-                status.includes(searchTerm) ||
-                province.includes(searchTerm) ||
-                level.includes(searchTerm)
-            );
+            return searchableFields.some((field) =>
+                String(field ?? "")
+                    .trim()
+                    .toLowerCase()
+                    .includes(searchTerm)
+            )
         });
-
-
-
-        setFilteredUsersData(filtered);
-
-    }, [usersData, searchInput]); // Atualiza ao mudar salesData ou searchTerm
+    }, [data?.dados, searchInput]);
 
     const handleKeyDown = (event: any) => {
         if (event.key === "Enter" || event.key === 'Backspace') {
@@ -220,8 +204,6 @@ export default function GestaoDeContas() {
 
         return range;
     };
-
-
 
     const totalItems = data?.total || 0; // Total de registros da API
     const totalPages = Math.ceil(totalItems / Number(perPage));
@@ -262,7 +244,6 @@ export default function GestaoDeContas() {
         setStatusParam("")
         setTimeout(() => refetch(), 0);
     }
-
     return (
         <>
             {/* criação, validação e gestão pertencem ao mesmo contexto */}
@@ -272,6 +253,7 @@ export default function GestaoDeContas() {
             <Exportar onClose={() => setExportModalIsOpen(false)} isOpen={exportModalIsOpen} typeAccount={particularAccount} initialFilters={exportFilters} />
 
             <EditUsuario onClose={() => setEditModalIsOpen(false)} isOpen={editModalIsOpen} typeAccount={particularAccount} selectedItem={itemSelected} />
+            <DetailsGestaoUsuario onClose={() => setDetailsModalIsOpen(false)} isOpen={detailsModalIsOpen} itemSelected={itemSelected} />
 
             {/* modal para filtrar */}
             <FilterCounts
@@ -330,16 +312,6 @@ export default function GestaoDeContas() {
                             <Plus className="size-4" aria-hidden="true" />
                             <span>Adicionar</span>
                         </button>
-
-                        {/* <button onClick={() => setAddModalIsOpen(true)} type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
-                         hover:bg-[#17CFDA] hover:ring-[#17CFDA] rounded-[5px] duration-300 font-semibold  flex space-x-2 items-center">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.53 8.47L14.53 2.47C14.389 2.329 14.199 2.25 14 2.25H8C5.582 2.25 4.25 3.582 4.25 6V18C4.25 20.418 5.582 21.75 8 21.75H17C19.418 21.75 20.75 20.418 20.75 18V9C20.75 8.801 20.671 8.61 20.53 8.47ZM14.75 4.811L18.189 8.25H17C15.423 8.25 14.75 7.577 14.75 6V4.811ZM17 20.25H8C6.423 20.25 5.75 19.577 5.75 18V6C5.75 4.423 6.423 3.75 8 3.75H13.25V6C13.25 8.418 14.582 9.75 17 9.75H19.25V18C19.25 19.577 18.577 20.25 17 20.25ZM13.53 14.47C13.823 14.763 13.823 15.238 13.53 15.531L11.53 17.531C11.461 17.6 11.3779 17.655 11.2859 17.693C11.1939 17.731 11.097 17.751 10.999 17.751C10.901 17.751 10.8039 17.731 10.7119 17.693C10.6199 17.655 10.537 17.6 10.468 17.531L8.46802 15.531C8.17502 15.238 8.17502 14.763 8.46802 14.47C8.76102 14.177 9.23605 14.177 9.52905 14.47L10.249 15.19V12C10.249 11.586 10.585 11.25 10.999 11.25C11.413 11.25 11.749 11.586 11.749 12V15.189L12.469 14.469C12.763 14.177 13.237 14.177 13.53 14.47Z" fill="#143163" />
-                            </svg>
-
-                            <span>Exportar</span>
-
-                        </button> */}
                         <button onClick={() => setExportModalIsOpen(true)} type="button" className="order-4 inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-[#ADCBD0] bg-[#EAF6F8] px-4 font-semibold text-[#143163] transition-colors hover:border-[#17CFDA] hover:bg-[#D8F4F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] focus-visible:ring-offset-2">
                             <Download className="size-4" aria-hidden="true" />
                            <span>Exportar</span>
@@ -395,14 +367,13 @@ export default function GestaoDeContas() {
                             <thead className="h-12 bg-[#F5F7FB] text-xs font-semibold text-[#143163]">
                                 <tr className="text-[#143163]">
 
-                                    <th className={`px-4 text-left ${particularAccount ? "w-[10%]" : "w-[10%]"}`}>{particularAccount ? "Telefone" : "Email/Telefone"}</th>
-                                    <th className={`ui-account-name-column ${particularAccount ? "w-[13%]" : "w-[14%]"} px-4 text-left`}>{particularAccount ? "Utilizador" : "Empresa"}</th>
-                                    <th className={`px-4 text-left ${particularAccount ? "w-[14%]" : "w-[12%]"}`}>{particularAccount ? "Bilhete de Identidade" : "NIF"}</th>
-                                    <th className="ui-location-column w-[10%] px-4 text-left">Nacionalidade</th>
-                                    <th className="ui-location-column w-[8%] px-4 text-left">Província</th>
-                                    <th className="ui-location-column w-[8%] px-4 text-left">Município</th>
-                                    <th className="w-[7%] px-4 text-left" title="Nível da conta">Nível</th>
-                                    <th className={`${particularAccount ? "w-[10%]" : "w-[10%]"} px-4 text-left`} title="Estado de validação da conta">Estado da Conta</th>
+                                    <th className={`px-4 text-left ${particularAccount ? "w-[10%]" : "w-[13%]"}`}>{particularAccount ? "Telefone" : "Email/Telefone"}</th>
+                                    <th className={`ui-account-name-column ${particularAccount ? "w-[15%]" : "w-[19%]"} px-4 text-left`}>{particularAccount ? "Utilizador" : "Empresa"}</th>
+                                    <th className={`px-4 text-left ${particularAccount ? "w-[16%]" : "w-[17%]"}`}>{particularAccount ? "Documento de identificação" : "NIF"}</th>
+                                    {particularAccount && <th className="ui-location-column w-[11%] px-4 text-left">Nacionalidade</th>}
+                                    <th className={`ui-location-column ${particularAccount ? "w-[9%]" : "w-[10%]"} px-4 text-left`}>Província</th>
+                                    <th className="w-[8%] px-4 text-left" title="Nível da conta">Nível</th>
+                                    <th className={`${particularAccount ? "w-[11%]" : "w-[12%]"} px-4 text-left`} title="Estado de validação da conta">Estado da Conta</th>
                                     <th className="w-[8%] px-4 text-left" title="Situação do utilizador">Situação</th>
                                     <th className={`${particularAccount ? "w-[12%]" : "w-[13%]"} px-4 pr-5 text-left`}>
                                         <div className="flex justify-end">
@@ -415,12 +386,12 @@ export default function GestaoDeContas() {
                             <tbody className="text-[#143163]">
 
                                 {isLoading ? (
-                                    <TableStateRow colSpan={10} state="loading" message="A carregar utilizadores..." />
-                                ) : filteredDataUsers?.length > 0 ? filteredDataUsers.map((item: any) =>
+                                    <TableStateRow colSpan={particularAccount ? 9 : 8} state="loading" message="A carregar utilizadores..." />
+                                ) : filteredUsersData.length > 0 ? filteredUsersData.map((item: any) =>
                                         <tr key={item?.id} className="h-14 border-b border-[#EEF2F7] odd:bg-white even:bg-[#FBFCFE] transition-colors hover:bg-[#F5F9FF]">
                                             <td className={`whitespace-nowrap px-4 py-3 text-left ${particularAccount ? "ui-preserve-cell" : ""}`}>
-                                                <div className="flex min-w-0 items-center gap-1.5">
-                                                    <span className={particularAccount ? "ui-full-value min-w-0 flex-1" : "min-w-0 truncate"} title={item?.phone_number || item?.email || "N/A"}>{item?.phone_number || item?.email || "N/A"}</span>
+                                                <div className="flex w-fit max-w-full min-w-0 items-center gap-3">
+                                                    <span className={particularAccount ? "ui-full-value min-w-0" : "min-w-0 truncate"} title={item?.phone_number || item?.email || "N/A"}>{item?.phone_number || item?.email || "N/A"}</span>
                                                     <CopyTextButton
                                                         value={item?.phone_number || item?.email}
                                                         label={item?.phone_number ? "telefone" : "email"}
@@ -440,17 +411,16 @@ export default function GestaoDeContas() {
                                                 </div>
                                             </td>
                                             <td className="ui-preserve-cell px-4 py-3 text-left">
-                                                <div className="flex min-w-0 items-center gap-1.5">
-                                                    <span className="ui-full-value min-w-0 flex-1" title={item?.bi_number || item?.nif || "N/A"}>{item?.bi_number || item?.nif || "N/A"}</span>
+                                                <div className="flex w-fit max-w-full min-w-0 items-center gap-3">
+                                                    <span className="ui-full-value min-w-0" title={item?.bi_number || item?.nif || "N/A"}>{item?.bi_number || item?.nif || "N/A"}</span>
                                                     <CopyTextButton
                                                         value={item?.bi_number || item?.nif}
-                                                        label={particularAccount ? "bilhete de identidade" : "NIF"}
+                                                        label={particularAccount ? "documento de identificação" : "NIF"}
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="ui-location-column px-4 py-3 text-left" title={item?.user_document?.nacionalidade || item?.user_document?.country || "N/A"}>{item?.user_document?.nacionalidade || item?.user_document?.country || "N/A"}</td>
+                                            {particularAccount && <td className="ui-location-column px-4 py-3 text-left" title={item?.user_document?.nacionalidade || item?.user_document?.country || "N/A"}>{item?.user_document?.nacionalidade || item?.user_document?.country || "N/A"}</td>}
                                             <td className="ui-location-column px-4 py-3 text-left" title={item?.user_document?.province || "N/A"}>{item?.user_document?.province || "N/A"}</td>
-                                            <td className="ui-location-column px-4 py-3 text-left" title={item?.user_document?.city || "N/A"}>{item?.user_document?.city || "N/A"}</td>
                                             <td className="px-4 py-3 text-left">
                                                 <LevelBadge level={item?.level} />
                                             </td>
@@ -465,10 +435,17 @@ export default function GestaoDeContas() {
                                                     ((item?.status === "Inactivo" || item?.status === "Inative") ? "Inactivo": "Desactivado")}</span></td>
                                             <td className="px-4 py-3 pr-5 text-left">
                                                 <div className="flex items-center justify-end gap-2">
-                                                     {/*detalhes */}
+                                                    {/* detalhes da conta e documentos */}
+                                                    <TableActionButton
+                                                        onClick={() => { setItemSelected(item); setDetailsModalIsOpen(true) }}
+                                                        aria-label="Ver detalhes da conta e documentos"
+                                                        tooltip="Ver detalhes da conta e documentos"
+                                                        action="view"
+                                                    />
+
+                                                    {/* contexto do utilizador */}
                                                     <TableActionButton
                                                         onClick={() => {
-                                                            setItemSelected(item)
                                                             navigate(`/gestao-de-utilizadores/${item?.id}/visao-geral`, {
                                                                 state: {
                                                                     user: item,
@@ -477,8 +454,8 @@ export default function GestaoDeContas() {
                                                             })
                                                         }}
                                                         aria-label="Abrir contexto do utilizador"
-                                                        tooltip="Ver detalhes"
-                                                        action="view"
+                                                        tooltip="Abrir contexto do utilizador"
+                                                        action="context"
                                                     />
 
                                                     {/*editar */}
@@ -492,7 +469,7 @@ export default function GestaoDeContas() {
                                             </td>
                                         </tr>
                                     ) :
-                                        <TableStateRow colSpan={10} state="empty" message="Nenhuma conta encontrada." />
+                                        <TableStateRow colSpan={particularAccount ? 9 : 8} state="empty" message="Nenhuma conta encontrada." />
                                 }
 
                             </tbody>
@@ -513,7 +490,7 @@ export default function GestaoDeContas() {
                 </div>
 
 
-            </section>
+            </section >
 
         </>
     )

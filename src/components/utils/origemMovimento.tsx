@@ -39,11 +39,11 @@ export const PegaOrigemMovimento = (item: any) => {
         case "DepositGpoFrame":
             return  item?.detalhe?.deposit_gpo_frame?.canal
         case "PaymentReferences":
-          return canalFIltered?.description || ""
+          return item?.detalhe?.payment_references?.reference || "";
         case "CampaignReward":
           return item?.detalhe?.campaign_reward?.source_name || item?.detalhe?.campaign?.source_name || "Sómoney";
         case "Referral":
-          return item?.detalhe?.referral?.source_name || item?.detalhe?.referral?.channel || "Sómoney";
+          return canalFIltered?.description || item?.detalhe?.referral?.source_name || item?.detalhe?.referral?.channel || "Sómoney";
         case "MerchantTransaction": {
             const merchantTx = item?.detalhe?.merchant_transaction;
             if (merchantTx?.source_type === "merchant") {

@@ -58,7 +58,8 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
         passaporte: "",
         business_name: "",
         nif: "",
-        motivo: ""
+        motivo: "",
+        short_name: ""
     })
 
     const [situacaoUsuario, setSituacaoUsuario] = useState("")
@@ -74,23 +75,24 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
         setSituacaoUsuario(selectedItem?.status)
         setFormData({
             tipoDeConta: "",
-            nacionalidade: selectedItem?.user_document?.country,
-            bi: selectedItem?.bi_number,
-            primeiro_nome: selectedItem?.first_name,
-            ultimo_nome: selectedItem?.last_name,
-            email: selectedItem?.email,
-            telefone: selectedItem?.phone_number,
-            nascimento: selectedItem?.user_document?.birthday,
-            municipio: selectedItem?.user_document?.city,
-            provincia_id: String(idProvince[0]?.id),
-            provincia_nome: selectedItem?.user_document?.province,
-            morada: selectedItem?.user_document?.address,
+            nacionalidade: selectedItem?.user_document?.country || "",
+            bi: selectedItem?.bi_number || "",
+            primeiro_nome: selectedItem?.first_name || "",
+            ultimo_nome: selectedItem?.last_name || "",
+            email: selectedItem?.email || "",
+            telefone: selectedItem?.phone_number || "",
+            nascimento: selectedItem?.user_document?.birthday || "",
+            municipio: selectedItem?.user_document?.city || "",
+            provincia_id: String(idProvince[0]?.id) || "",
+            provincia_nome: selectedItem?.user_document?.province || "",
+            morada: selectedItem?.user_document?.address || "",
             palavraPasse: "",
             confirmPalavraPasse: "",
             passaporte: "",
-            business_name: selectedItem?.business_name,
-            nif: selectedItem?.nif,
-            motivo: selectedItem?.motivo
+            business_name: selectedItem?.business_name || "",
+            nif: selectedItem?.nif || "",
+            motivo: selectedItem?.motivo || "",
+            short_name: selectedItem?.short_name || ""
         })
 
     }, [selectedItem])
@@ -108,27 +110,39 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
             last_name: formData?.ultimo_nome,
             phone_number: formData.telefone,
             status: situacaoUsuario,
-            motivo: formData.motivo
+            motivo: formData.motivo,
+            city: formData.municipio,
+            province: formData.provincia_nome,
+            address: formData.morada,
+            birthday: formData.nascimento,
+            country: formData?.nacionalidade,
         }
 
-        const otherDataUsers = new FormData()
-        otherDataUsers.append('account_type', typeAccount ? "Users" : "Marchants")
-        otherDataUsers.append('user', selectedItem?.id)
-        otherDataUsers.append('address', formData?.morada)
-        otherDataUsers.append('province', formData?.provincia_nome)
-        otherDataUsers.append('city', formData?.municipio)
-        otherDataUsers.append('birthday', formData?.nascimento)
-        otherDataUsers.append('country', formData?.nacionalidade)
-        otherDataUsers.append('nacionalidade', formData?.nacionalidade === "Angola" ? "Nacional" : "Estrangeira")
+        // const otherDataUsers = new FormData()
+        // otherDataUsers.append('account_type', typeAccount ? "Users" : "Marchants")
+        // otherDataUsers.append('user', selectedItem?.id)
+        // otherDataUsers.append('address', formData?.morada)
+        // otherDataUsers.append('province', formData?.provincia_nome)
+        // otherDataUsers.append('city', formData?.municipio)
+        // otherDataUsers.append('birthday', formData?.nascimento)
+        // otherDataUsers.append('country', formData?.nacionalidade)
+        // otherDataUsers.append('nacionalidade', formData?.nacionalidade === "Angola" ? "Nacional" : "Estrangeira")
 
         const bodyMerchants = {
             email: formData.email,
             business_name: formData.business_name,
             nif: formData.nif,
-            password: formData.palavraPasse,
-            password_confirmation: formData.confirmPalavraPasse,
             motivo: formData.motivo,
-            status: situacaoUsuario
+            status: situacaoUsuario,
+            city: formData.municipio,
+            province: formData.provincia_nome,
+            address: formData.morada,
+            birthday: formData.nascimento,
+            country: "Angola",
+            phone_number: formData.telefone,
+            short_name: formData?.short_name
+            //account_type: typeAccount ? "Users" : "Marchants",
+
         }
 
         const body = typeAccount ? bodyUsers : bodyMerchants
@@ -139,7 +153,7 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
             //await api.put(`/front/user`)
             //await api.put(`/front/${typeAccount ? "users" : "merchants"}/${selectedItem?.id}/`)
             await api.put(`/front/${typeAccount ? "users" : "merchants"}/${selectedItem?.id}`, body) // para dados do user
-            await api.post(`/front/user/upload`, otherDataUsers) // para dados de upload
+            //await api.post(`/front/user/upload`, otherDataUsers) // para dados de upload
             queryClient.invalidateQueries({
                 queryKey: ['listaDeContas'],
                 //exact: true,
@@ -202,18 +216,7 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
                             <X className="size-4" aria-hidden="true" />
                         </SheetClose>
                     </div>
-                    {/* <div className="flex flex-col space-y-2 mt-5">
-                        <label className="text-[#143163] font-semibold text-[14px]">Tipo de Conta</label>
-                        <Select onValueChange={setTypeAccount}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Selecionar tipo de conta" />
-                            </SelectTrigger>
-                            <SelectContent >
-                                <SelectItem value="User">Conta Particular</SelectItem>
-                                <SelectItem value="marchant">Conta Empresa</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>*/}
+
                     <div>
                         <div className="ui-modal-tabs" role="tablist" aria-label="Secções de edição">
                             <button
@@ -283,9 +286,7 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
                                     <TextField label="Primeiro nome" value={formData.primeiro_nome} onChange={(e) => setFormData({ ...formData, primeiro_nome: e.target.value })} />
                                     <TextField label="Último nome" value={formData.ultimo_nome} onChange={(e) => setFormData({ ...formData, ultimo_nome: e.target.value })} />
                                     </div>
-                                    {selectedItem?.user_document?.nacionalidade !== "Nacional" ?
-                                        <TextField type="text" label="Número de passaporte" value={formData.bi} onChange={(e) => setFormData({ ...formData, bi: e.target.value })} /> :
-                                        <TextField label="N.º do bilhete de identidade" value={formData.bi} onChange={(e) => setFormData({ ...formData, bi: e.target.value })} />}
+                                    <TextField label="Documento de identificação" value={formData.bi} onChange={(e) => setFormData({ ...formData, bi: e.target.value })} />
                                 </>}
 
                                 {!typeAccount && <TextField type="email" label="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />}
@@ -330,6 +331,14 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
                             </div>
                         }
                     </form>
+                    {/* submissao de documentos */}
+                    {!dadosUser &&
+                        <AlterarSenha
+                            typeAccount={typeAccount}
+                            otherData={selectedItem}
+                            onClose={onClose}
+                        />
+                    }
 
                     {!dadosUser && <div className="grid gap-4 pt-3">
                         <AlterarSenha typeAccount={typeAccount} otherData={selectedItem} onClose={onClose} />
