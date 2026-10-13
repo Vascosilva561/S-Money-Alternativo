@@ -336,7 +336,7 @@ export default function Movimentos() {
                                             <td className="text-start py-2 px-3">
                                                 <div className="flex items-center gap-1.5">
                                                     <span
-                                                        className={`grid size-8 shrink-0 place-items-center rounded-full ${item?.signal === "CREDIT" ? "bg-[#E5F5EA] text-[#0A7A31]" : "bg-[#FDECEC] text-[#B42318]"}`}
+                                                        className={`ui-movement-direction-icon grid size-8 shrink-0 place-items-center rounded-full ${item?.signal === "CREDIT" ? "bg-[#E5F5EA] text-[#0A7A31]" : "bg-[#FDECEC] text-[#B42318]"}`}
                                                         aria-hidden="true"
                                                     >
                                                         {item?.signal === "CREDIT" ? <ArrowDownLeft className="size-4" /> : <ArrowUpRight className="size-4" />}
@@ -344,10 +344,6 @@ export default function Movimentos() {
                                                     <p>
                                                          <span className="font-semibold">{item?.signal === "CREDIT" ? `Crédito` : "Débito"}</span>
                                                     </p>
-                                                    <CopyTextButton
-                                                        value={item?.signal === "CREDIT" ? "Crédito" : "Débito"}
-                                                        label="movimento"
-                                                    />
                                                 </div>
                                             </td>
 

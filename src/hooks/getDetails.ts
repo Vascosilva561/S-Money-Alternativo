@@ -35,14 +35,7 @@ export function DetailsUser() {
         const { data } = await api.get("/front/managers/session")
         return data
     } catch (error) {
-        // if (isAxiosError(error)) {
-        //     const status = error.response?.status
-
-        //     // if (status === 401) {
-        //     //     logout()
-        //     //     return null
-        //     // }
-        // }
+        
         console.log(error)
 
         return null

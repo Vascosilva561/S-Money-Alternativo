@@ -1,6 +1,6 @@
 
 export type Logs = {
-    dados: {
+    dados: [{
 
         id: string;
         accao: string;
@@ -15,5 +15,6 @@ export type Logs = {
         updated_at: string;
         status: string
 
-    }
+    }],
+    total: number
 }

@@ -47,6 +47,7 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
         passaporte: "",
         business_name: "",
         nif: "",
+        shortName: ""
     })
     const [statusErro, setStatusErro] = useState(false)
     const [isShow, setIsShow] = useState(false)
@@ -93,11 +94,9 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
             confirmPalavraPasse: "",
             business_name: "",
             nif: "",
+            shortName: ""
         })
     }
-
-
-
 
     async function verificarBI(bi: string, e?: any) {
         e?.preventDefault();
@@ -184,7 +183,9 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
                 return;
             }
         }
-        if(!isVerified) return toast.error("Valide o BI antes de submeter os dados do utilizador!");
+        if (typeAccount && !estrangeiro && !isVerified) {
+            return toast.error("Valide o BI antes de submeter os dados do utilizador!");
+        }
 
         setDadosUser(false)
 
@@ -198,6 +199,9 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
         }
     }, [formData.nacionalidade])
 
+   const numero = Math.floor(100000 + Math.random() * 900000);
+
+console.log(numero)
 
     return (
         <>
@@ -233,7 +237,7 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
                             <button
                                 //onClick={() => setDadosUser(false)}
                                 className={`grid place-items-center text-[#143163] font-semibold rounded-t w-full cursor-pointer   ${!dadosUser ? "border-t-4 h-[50px]" : "h-[45px] mt-1.5"}
-                         border-[#48B9FF] text-[13px] p-2 ring-1 ring-[#A9B8CF] `}>Submissão de Documentos</button>
+                         border-[#48B9FF] text-[13px] p-2 ring-1 ring-[#A9B8CF] `}>Submissão de documentos</button>
 
                         </div>
                     </div>
@@ -276,12 +280,20 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
                                     <input required type="text" value={formData.business_name} onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
                                         className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                                 </div>}
+                                {!typeAccount && <div className="flex flex-col space-y-2 mt-6">
+                                    <label className="text-[#143163] font-semibold text-[14px]">Short Name<span className="text-[#FF5656]">*</span></label>
+                                    <input required type="text" maxLength={20} value={formData.shortName} onChange={(e) => setFormData({ ...formData, shortName: e.target.value })}
+                                        className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                                </div>}
 
                                 {typeAccount ? (!estrangeiro ? <div className="flex flex-col space-y-2 mt-6">
                                     <label className="text-[#143163] font-semibold text-[14px]">Bilhete de Identidade<span className="text-[#FF5656]">*</span></label>
                                     <div className="relative">
                                         <input required type="text" value={formData.bi}
-                                            onChange={(e) => setFormData({ ...formData, bi: e.target.value })}
+                                            onChange={(e) => {
+                                                setFormData({ ...formData, bi: e.target.value });
+                                                setIsVeified(false);
+                                            }}
                                             className={`w-full p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1
                                          focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                                         <Button type="button"
@@ -330,14 +342,14 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
                                 <div className="flex justify-between space-x-2">
                                     <div className="flex flex-col space-y-2 mt-6 w-full min-w-0">
                                         <label className="text-[#143163] font-semibold text-[14px]">Número de Telemóvel<span className="text-[#FF5656]">*</span></label>
-                                        <input required type="text" value={formData.telefone} onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                                        <input required type="tel" value={formData.telefone} onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
                                             className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                                     </div>
-                                    <div className="flex flex-col space-y-2 mt-6 w-full min-w-0">
+                                    {typeAccount && <div className="flex flex-col space-y-2 mt-6 w-full min-w-0">
                                         <label className="text-[#143163] font-semibold text-[14px]">Data de Nascimento</label>
                                         <input required type="date" value={formData.nascimento} onChange={(e) => setFormData({ ...formData, nascimento: e.target.value })}
                                             className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                                    </div>
+                                    </div>}
                                 </div>
                                 <div className="flex justify-between space-x-2">
                                     <div className="flex flex-col space-y-2 mt-6 w-full">
@@ -367,14 +379,10 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
                                 </div>
                                 <div className="flex flex-col space-y-2 mt-6">
                                     <label className="text-[#143163] font-semibold text-[14px]">{typeAccount ? "Morada" : "Endereço da Sede"}<span className="text-[#FF5656]">*</span></label>
-                                    <input required type="text" value={formData.morada} onChange={(e) => setFormData({ ...formData, morada: e.target.value })}
+                                    <input required value={formData.morada} onChange={(e) => setFormData({ ...formData, morada: e.target.value })}
                                         className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                                 </div>
-                                {/*!typeAccount&&<div className="flex flex-col space-y-2 mt-6">
-                                    <label className="text-[#143163] font-semibold text-[14px]">Área de actuação</label>
-                                    <input required type="text" value={formData.morada} onChange={(e) => setFormData({ ...formData, morada: e.target.value })}
-                                        className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                                </div>*/}
+                               
                                 <div className="flex flex-col space-y-2 mt-4 font-semibold">
                                     <label className="text-[#143163] text-[14px]">Palavra-passe<span className="text-[#FF5656]">*</span></label>
                                     <div className="relative block  rounded-lg items-center">

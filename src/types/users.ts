@@ -1,6 +1,6 @@
 
 export type Users = {
-    dados: {
+    dados: [{
         auth_token: string,
         id: string,
         login: number,
@@ -21,6 +21,7 @@ export type Users = {
         status_validate: string,
         status: string,
         business_name: string
+        short_name?: string | null
 
         user_document: {
             city: string,
@@ -35,7 +36,7 @@ export type Users = {
             province: string,
             nacionalidade: string,
         }
-    },
+    }],
     total: number,
    
 }

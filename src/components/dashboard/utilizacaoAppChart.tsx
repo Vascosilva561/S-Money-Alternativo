@@ -84,17 +84,18 @@ export function ChartAreaInteractive({
         ? "Todas"
         : `${selectedCategories.length} selecionadas`;
 
-
+const isPositive = (dataChart?.volume?.change ?? 0) >= 0;
+const hasData = dataChart?.volume?.change !== null && dataChart?.volume?.change !== undefined;
 
   return (
-    <Card className="pt-0 ">
-      <CardHeader className=" space-y-0 border-b p-1 pt-2 pb-8">
+    <Card className="">
+      <CardHeader className=" space-y-0 border-b p-1 pb-8">
         <div className="text-[#143163]">
           <CardDescription className="text-[#143163] flex items-end space-x-2 pb-4">
             <p className="font-bold text-lg">
               {formatNumberPtAO(dataChart?.volume?.total ?? 0, 2)} Kz
             </p>
-            <p className="text-[11px] text-[#0D9339] font-semibold">
+            <p className={`text-[11px] ${!hasData ? "text-[#7D8CA6]" : isPositive ? "text-[#0D9339]" : "text-[#E53935]"} font-semibold`}>
               {formatChange(dataChart?.volume?.change ?? null)}
             </p>
           </CardDescription>
@@ -149,7 +150,7 @@ export function ChartAreaInteractive({
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[150px] w-full"
+          className="aspect-auto h-[200px] w-full"
         >
           <AreaChart data={chartData}>
             <defs>

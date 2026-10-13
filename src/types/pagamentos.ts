@@ -1,6 +1,6 @@
 
 export type Pagamentos = {
-    dados: {
+    dados: [{
         id: string,
         amount: string,
         status: string,
@@ -39,7 +39,7 @@ export type Pagamentos = {
 
             business_name: string
         }
-    },
+    }],
     total: number,
     total_payment: number
 }

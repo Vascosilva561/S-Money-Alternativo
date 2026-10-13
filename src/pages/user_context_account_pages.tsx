@@ -199,6 +199,7 @@ export function UserContextAccountManagement() {
       ]
     : [
         { label: "Empresa", value: displayName },
+        { label: "Short Name", value: user.short_name || "—" },
         { label: "NIF", value: user.nif || "—" },
         { label: "Email", value: user.email || "—" },
         { label: "Contacto", value: user.phone_number || "—" },

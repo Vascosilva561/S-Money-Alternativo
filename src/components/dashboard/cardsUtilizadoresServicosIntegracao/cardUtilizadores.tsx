@@ -14,6 +14,9 @@ export default function CardUtilizadores({ dataResponse, isLoading }: params) {
 
     const navigate = useNavigate()
 
+    const isPositive = (users?.total?.value ?? 0) >= 0;
+    const hasData = users?.total?.value !== null && users?.total?.value !== undefined;
+
     return (
         <div className="flex space-x-2 w-full h-full">
             <div className="w-full ring-1 ring-zinc-200 rounded-lg p-5">
@@ -77,16 +80,18 @@ export default function CardUtilizadores({ dataResponse, isLoading }: params) {
                                     </svg>
                                     <div>
                                         <p className="text-[11px] text-[#7D8CA6]">Total de utilizadores</p>
-                                        <p className="font-bold text-lg">{formatNumberPtAO(users?.total?.value ?? 0)}</p>
+                                        <p className={`font-bold text-lg text-[#0D9339]`}>{formatNumberPtAO(users?.total?.value ?? 0)}</p>
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="text-[16px] text-end font-bold text-[#16A34A]">
+                                    <p className={`text-[16px] text-end font-bold ${!hasData ? "text-[#7D8CA6]" :
+                            isPositive ? "text-[#0D9339]" : "text-[#E53935]"}`}>
                                         {users?.total?.change != null
                                             ? `${users.total.change >= 0 ? "+" : ""}${formatNumberPtAO(users.total.change, 1)}%`
                                             : "—"}
                                     </p>
-                                    <p className="text-lg text-[11px] text-[#7D8CA6]">vs. período anterior</p>
+                                    <p className={`text-lg text-[11px] ${!hasData ? "text-[#7D8CA6]" :
+                            isPositive ? "text-[#0D9339]" : "text-[#E53935]"}`}>vs. período anterior</p>
                                 </div>
                             </div>
 

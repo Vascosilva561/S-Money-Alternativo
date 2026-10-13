@@ -188,6 +188,7 @@ export default function Dashboard() {
             title: "Total de clientes",
             value: formatNumberPtAO(data?.kpis.clients_total?.value ?? 0),
             unit: "",
+            change: data?.kpis.clients_total?.change ?? null,
             legend: formatChange(data?.kpis.clients_total?.change ?? null),
         },
         {
@@ -195,6 +196,7 @@ export default function Dashboard() {
             title: "Clientes activos",
             value: formatNumberPtAO(data?.kpis.clients_active?.value ?? 0),
             unit: "",
+            change: data?.kpis.clients_active?.change ?? null,
             legend: formatChange(data?.kpis.clients_active?.change ?? null),
         },
         {
@@ -202,6 +204,7 @@ export default function Dashboard() {
             title: "Novos clientes",
             value: formatNumberPtAO(data?.kpis.clients_new?.value ?? 0),
             unit: "",
+            change: data?.kpis.clients_new?.change ?? null,
             legend: formatChange(data?.kpis.clients_new?.change ?? null),
         },
         {
@@ -209,6 +212,7 @@ export default function Dashboard() {
             title: "Volume transacionado",
             value: formatNumberPtAO(data?.kpis.transaction_volume?.value ?? 0, 2),
             unit: "Kz",
+            change: data?.kpis.transaction_volume?.change ?? null,
             legend: formatChange(data?.kpis.transaction_volume?.change ?? null),
         },
         {
@@ -216,6 +220,7 @@ export default function Dashboard() {
             title: "Total de transacções",
             value: formatNumberPtAO(data?.kpis.transactions_total?.value ?? 0),
             unit: "",
+            change: data?.kpis.transactions_total?.change ?? null,
             legend: formatChange(data?.kpis.transactions_total?.change ?? null),
         },
         {
@@ -223,6 +228,7 @@ export default function Dashboard() {
             title: "Ticket médio",
             value: formatNumberPtAO(data?.kpis.average_ticket?.value ?? 0, 2),
             unit: "Kz",
+            change: data?.kpis.average_ticket?.change ?? null,
             legend: formatChange(data?.kpis.average_ticket?.change ?? null),
         },
         {
@@ -230,6 +236,7 @@ export default function Dashboard() {
             title: "Taxa de sucesso",
             value: formatNumberPtAO(data?.kpis.success_rate?.value ?? 0, 2),
             unit: "%",
+            change: data?.kpis.success_rate?.change ?? null,
             legend: formatChange(data?.kpis.success_rate?.change ?? null),
         },
         {
@@ -237,6 +244,7 @@ export default function Dashboard() {
             title: "Saldo total das wallets",
             value: formatNumberPtAO(data?.kpis.wallets_balance?.value ?? 0, 2),
             unit: "Kz",
+            change: data?.kpis.wallets_balance?.change ?? null,
             legend: formatChange(data?.kpis.wallets_balance?.change ?? null),
         },
     ];
@@ -270,37 +278,37 @@ export default function Dashboard() {
                     <div className="text-[#143163] flex items-center justify-between ">
                         <div className="flex flex-col justify-between p-5 ">
                             <p className="font-bold text-xl ">Principais KPIs</p>
-                            <p>Visão rápida dos indicadores que mais influenciam a operação.</p>
+                            <p className="text-[#627AA0]">Visão rápida dos indicadores que mais influenciam a operação.</p>
                         </div>
                         {/* filtros */}
                         <div className="flex flex-wrap items-center gap-2 p-5 text-[#7084A4]">
-                             {filterOptions.map((option) => {
-                                                        if (option.key === "custom" && kpiActiveFilter === "custom" && !periodOverrideActive) {
-                                                            return (
-                                                                <div
-                                                                    key={option.key}
-                                                                    className="flex items-center gap-2 ring-1 ring-zinc-200 rounded-full px-3 py-2 bg-[#143163] text-white"
-                                                                >
-                                                                    <DateRangePicker
-                                                                        value={kpiCustomRange}
-                                                                        onChange={setKpiCustomRange}
-                                                                    />
-                            
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => setKpiActiveFilter("today")}
-                                                                        className=" hover:opacity-70"
-                                                                        aria-label="Fechar seletor de data"
-                                                                    >
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                                            stroke-linejoin="round" className="w-[15px] h-[15px] lucide lucide-x-icon lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                                                                    </button>
-                                                                </div>
-                                                            );
-                                                        }
-                            
-                                                        return (
-                                                           <p
+                            {filterOptions.map((option) => {
+                                if (option.key === "custom" && kpiActiveFilter === "custom" && !periodOverrideActive) {
+                                    return (
+                                        <div
+                                            key={option.key}
+                                            className="flex items-center gap-2 ring-1 ring-zinc-200 rounded-full px-3 py-2 bg-[#143163] text-white"
+                                        >
+                                            <DateRangePicker
+                                                value={kpiCustomRange}
+                                                onChange={setKpiCustomRange}
+                                            />
+
+                                            <button
+                                                type="button"
+                                                onClick={() => setKpiActiveFilter("today")}
+                                                className=" hover:opacity-70"
+                                                aria-label="Fechar seletor de data"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round" className="w-[15px] h-[15px] lucide lucide-x-icon lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                            </button>
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <p
                                         key={option.key}
                                         onClick={() => !periodOverrideActive && handleKpiFilterClick(option.key)}
                                         className={`text-sm rounded-full ring-1 ring-zinc-200 p-2 px-3 duration-300
@@ -313,9 +321,9 @@ export default function Dashboard() {
                                     >
                                         {option.label}
                                     </p>
-                                                        );
-                                                    })}
-                            
+                                );
+                            })}
+
                             {periodOverrideActive && (
                                 <p className="text-[11px] text-[#7D8CA6] px-5">
                                     Período controlado pelos filtros globais
@@ -342,25 +350,36 @@ export default function Dashboard() {
                                 </div>
                             ))
                         ) : (
-                            cards?.map((item: any, key) => (
-                                <div
-                                    key={key}
-                                    className="relative p-2 ring-1 ring-[#EEEEEE] rounded-lg 
+                            cards?.map((item: any, key) => {
+                                const isPositive = (item?.change ?? 0) >= 0;
+                                const hasData = item?.change !== null && item?.change !== undefined;
+
+                                return (
+                                    <div
+                                        key={key}
+                                        className="relative p-2 ring-1 ring-[#EEEEEE] rounded-lg 
                        flex space-x-4 items-start justify-start hover:bg-zinc-100 duration-300 cursor-pointer overflow-hidden"
-                                >
-                                    <span>{IconsCardsDashboard(item?.key)}</span>
-                                    <div className="space-y-2 min-w-0 flex-1">
-                                        <p className="text-[#7D8CA6] text-[12px] font-semibold truncate">{item?.title}</p>
-                                        <span className="font-bold text-lg flex items-center flex-wrap gap-x-1 min-w-0">
-                                            <p className="text-[#143163] break-words leading-tight ">{item?.value}</p>
-                                            <p className=" ">{item?.unit}</p>
-                                        </span>
-                                        <span className="font-bold text-lg flex items-center space-x-1">
-                                            <p className="text-[10px] text-[#0D9339] font-normal">{item?.legend}</p>
-                                        </span>
+                                    >
+                                        <span>{IconsCardsDashboard(item?.key)}</span>
+                                        <div className="space-y-2 min-w-0 flex-1">
+                                            <p className="text-[#7D8CA6] text-[12px] font-semibold truncate">{item?.title}</p>
+                                            <span className="font-bold text-lg flex items-center flex-wrap gap-x-1 min-w-0">
+                                                <p className="text-[#143163] break-words leading-tight ">{item?.value}</p>
+                                                <p className=" ">{item?.unit}</p>
+                                            </span>
+                                            <span className="font-bold text-lg flex items-center space-x-1">
+                                                <p
+                                                    className={`text-[10px] font-normal ${!hasData ? "text-[#7D8CA6]" :
+                                                        isPositive ? "text-[#0D9339]" : "text-[#E53935]"
+                                                        }`}
+                                                >
+                                                    {item?.legend}
+                                                </p>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))
+                                )
+                            })
                         )}
                     </div>
 

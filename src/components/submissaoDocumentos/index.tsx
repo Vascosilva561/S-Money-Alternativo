@@ -109,6 +109,7 @@ export default function SubmissaoDocumentos({ otherData, onClose, setDadosUser, 
         formDataMerchants.append("city", otherData?.municipio)
         formDataMerchants.append("address", otherData?.morada)
         formDataMerchants.append("province", otherData?.provincia_nome)
+        formDataMerchants.append("short_name", otherData?.shortName)
 
         const body = typeAccount ? formData : formDataMerchants
 
@@ -123,7 +124,7 @@ export default function SubmissaoDocumentos({ otherData, onClose, setDadosUser, 
             })
 
             queryClient.invalidateQueries({
-                queryKey: ['usersList'],
+                queryKey: ['listaDeContas'],
                 //exact: true,
             })
             queryClient.invalidateQueries({
@@ -151,8 +152,8 @@ export default function SubmissaoDocumentos({ otherData, onClose, setDadosUser, 
             setLoading(false)
             console.log(error)
             if (isAxiosError(error)) {
-                const message = error?.response?.data?.errors[0]?.message
-                console.log(message)
+                const message = error?.response?.data?.errors[0]?.message || "Erro ao adionar, por favor, tente novamente."
+                
                 toast.error(`${message || "Erro ao adionar, por favor, tente novamente."}`, {
                     icon: <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="30" height="30" rx="4" fill="#FF0000" fill-opacity="0.1" />
@@ -216,7 +217,6 @@ export default function SubmissaoDocumentos({ otherData, onClose, setDadosUser, 
         setFormDataFiles({ ...formDataFiles, selfie: null })
 
     }
-    console.log(otherData)
 
     return (
         <>

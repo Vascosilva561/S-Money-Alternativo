@@ -304,7 +304,7 @@ export default function Camapnhas() {
                                                     <td className="ui-date-column text-center py-2">{formatDate(item?.start_date, "N/A")}</td>
                                                     <td className="ui-date-column text-center py-2">{formatDate(item?.end_date, "N/A")}</td>
                                                     <td className="text-center py-2  ">
-                                                        <div className="flex space-x-2 items-center">
+                                                        <div className="flex space-x-2 items-end justify-end pr-3">
                                                             {/*detalhes */}
                                                             <TableActionButton action="view" onClick={() => { setDetailsModalIsOpen(true), setItemSelected(item) }} />
                                                             {/*editar */}

@@ -21,6 +21,7 @@ import GestaoUtilizadores from "@/pages/gestao_utilizadores";
 import { UserContextLayout } from "@/pages/user_context";
 import UserOverview from "@/pages/user_overview";
 import UserContextOperationsPage from "@/pages/user_context_operations";
+import UserContextPaymentsPage from "@/pages/user_context_payments";
 import UserContextDepositsPage from "@/pages/user_context_deposits";
 import { UserContextAccountManagement, UserContextOtps, UserContextReports } from "@/pages/user_context_account_pages";
 import HistoricoDeRelatorioPage from "@/pages/historicosDeRelatorios";
@@ -76,9 +77,9 @@ export const Routers = () => {
                             <Route index element={<Navigate to="visao-geral" replace />} />
                             <Route path="visao-geral" element={<UserOverview />} />
                             <Route path="transferencias" element={<UserContextOperationsPage operation="transferencias" />} />
-                            <Route path="pagamentos" element={<UserContextOperationsPage operation="pagamentos" />} />
+                            <Route path="pagamentos" element={<UserContextPaymentsPage />} />
                             <Route path="depositos" element={<UserContextDepositsPage />} />
-                            <Route path="pagamentos-referencia" element={<Navigate to="../depositos?tab=referencia" replace />} />
+                            <Route path="pagamentos-referencia" element={<Navigate to="../pagamentos?tab=referencia" replace />} />
                             <Route path="pagamento-gpo" element={<Navigate to="../depositos?tab=gpo" replace />} />
                             <Route path="levantamentos" element={<UserContextOperationsPage operation="levantamentos" />} />
                             <Route path="conta-corrente" element={<UserContextOperationsPage operation="conta-corrente" />} />

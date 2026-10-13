@@ -44,12 +44,12 @@ export default function CardServicos({ dataResponse, isLoading, rankingBy, onRan
                     <p className="text-[10px] text-[#7D8CA6]
                           duration-300 ">Tipo</p>
                     <Select value={rankingBy} onValueChange={onRankingByChange}>
-                        <SelectTrigger className="h-6 border-none">
+                        <SelectTrigger className="h-4 border-none text-[12px] rounded">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                             {RANKING_OPTIONS.map((option) => (
-                                <SelectItem key={option.key} value={option.key}>
+                                <SelectItem key={option.key} value={option.key} className="text-[12px]">
                                     {option.label}
                                 </SelectItem>
                             ))}

@@ -24,8 +24,6 @@ type props = {
 
 export default function DetalhesMovimentos({ onClose, isOpen, itemSelected }: props) {
 
-
-
     return (
         <>
             <Sheet onOpenChange={onClose} open={isOpen}>

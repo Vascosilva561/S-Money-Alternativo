@@ -109,12 +109,11 @@ export default function CardFinanceiro({ globalFilters }: Props) {
 
             <div className="w-full mt-5">
                 <div className="flex flex-col items-start">
-
                     <p className="text-xl font-bold">Financeiro</p>
                     <p className="text-sm text-[#627AA0]">Volume processado, liquidez disponível e fluxo de caixa no período.</p>
                 </div>
                 <div className="flex space-x-2 w-full mt-5">
-                    <div className="flex flex-col justify-between w-full ring-1 ring-zinc-200 rounded-lg p-5 space-y-2">
+                    <div className="flex flex-col space-y-4 w-full ring-1 ring-zinc-200 rounded-lg p-5">
                         {/* filtros */}
                         <div className="flex justify-between w-full items-center">
                             <p className="text-lg font-semibold w-[290px]">Volume transaccionado</p>

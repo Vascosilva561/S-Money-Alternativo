@@ -670,13 +670,15 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   position: relative;
 }
 
-.payment-tabs-panel > .ui-data-page {
+.payment-tabs-panel > .ui-data-page,
+.payment-tabs-panel > .ui-context-page > .ui-data-page {
   position: relative;
   border-top-color: transparent !important;
   border-top-left-radius: 0 !important;
 }
 
-.payment-tabs-panel > .ui-data-page::before {
+.payment-tabs-panel > .ui-data-page::before,
+.payment-tabs-panel > .ui-context-page > .ui-data-page::before {
   position: absolute;
   top: -1px;
   right: 0;
@@ -1828,8 +1830,8 @@ div:has(> input[type="search"])::before {
 /* One pill geometry for every technical/business state rendered in a table.
    :where keeps semantic color classes able to override the neutral fallback. */
 :is(.ui-data-page, .ui-context-page) table tbody td :where(
-  span[class*="rounded-full"]:not(.ui-avatar):not(.ui-promotion-status-tag),
-  span[class*="rounded-lg"]:not(.ui-avatar):not(.ui-promotion-status-tag)
+  span[class*="rounded-full"]:not(.ui-avatar):not(.ui-promotion-status-tag):not(.ui-movement-direction-icon),
+  span[class*="rounded-lg"]:not(.ui-avatar):not(.ui-promotion-status-tag):not(.ui-movement-direction-icon)
 ) {
   box-sizing: border-box;
   display: inline-flex;
@@ -1881,10 +1883,10 @@ div:has(> input[type="search"])::before {
 }
 
 /* Danger / rejected or failed. */
-:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE4EA]"],
-:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE8E8]"],
-:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE7E7]"],
-:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDECEC]"] {
+:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE4EA]"]:not(.ui-movement-direction-icon),
+:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE8E8]"]:not(.ui-movement-direction-icon),
+:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDE7E7]"]:not(.ui-movement-direction-icon),
+:is(.ui-data-page, .ui-context-page) table tbody td span[class*="bg-[#FDECEC]"]:not(.ui-movement-direction-icon) {
   background: var(--status-danger-bg) !important;
   color: var(--status-danger-fg) !important;
 }
