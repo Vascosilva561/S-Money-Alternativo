@@ -1,6 +1,6 @@
 import { api } from "@/api"
 import { isAxiosError } from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { TextField } from "@/components/ui/form-field"
@@ -15,12 +15,31 @@ export default function AlterarSenha({ otherData, onClose, typeAccount }: props)
     const [telefone, setTelefone] = useState("")
     const [loading, setLoading] = useState(false)
 
+    useEffect(() => {
+        if (otherData?.phone_number) {
+            setTelefone(otherData?.phone_number)
+        }   
+    }, [otherData?.phone_number])
+
     const submitPhone = async (e: any) => {
-        e.preventDefault()
+        e.preventDefault();
+        if (!telefone) {
+            toast.error("Por favor, insira o número de telemóvel", {
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.75 1C5.822 1 1 5.823 1 11.75C1 17.677 5.822 22.5 11.75 22.5C17.678 22.5 22.5 17.677 22.5 11.75C22.5 5.823 17.678 1 11.75 1ZM11.75 21C6.649 21 2.5 16.851 2.5 11.75C2.5 6.649 6.649 2.5 11.75 2.5C16.851 2.5 21 6.649 21 11.75C21 16.851 16.851 21 11.75 2₁" fill="#FF5656" />
+                </svg>,
+                style: {
+                    borderLeft: "8px solid #EF4A00", // Tailwind emerald-500
+                },
+                duration: 2000
+            })
+            return;
+        }
+
         try {
             setLoading(true)
             await api.get(`/front/${typeAccount ? "user" : "merchant"}-reset-password?id=${otherData?.id}&phone_number=${telefone}`)
-            
+
             onClose()
             toast.success(`Alterações Efectuadas Com Sucesso!`, {
                 icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +58,7 @@ export default function AlterarSenha({ otherData, onClose, typeAccount }: props)
 
             setLoading(false)
             if (isAxiosError(error)) {
-                const message = error?.response?.data?.data
+                const message = error?.response?.data?.data || "Ocorreu um erro ao tentar redefinir a senha. Por favor, tente novamente."
 
                 toast.error(`${message}`, {
                     icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

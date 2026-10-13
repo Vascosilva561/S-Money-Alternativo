@@ -244,7 +244,7 @@ export default function EditarCampanha({ onClose, isOpen, itemSelected }: props)
                             <label className="text-[#143163] font-semibold text-[14px]">Código de indicação</label>
                             <div className="relative ">
 
-                                <input required type="text" step="0.01" min="0" value={formData.codigo} onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+                                <input type="text" step="0.01" min="0" value={formData.codigo} onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
                                     className={`w-full p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] 
                                     focus:outline-none text-[#143163] text-sm`} />
                                 <Button type="button" disabled={loadingCodigo} onClick={() => verificarCodigo(formData?.codigo)}

@@ -1,6 +1,7 @@
 import type { ComponentType } from "react"
 
 import bancosSvg from "./bancos.svg"
+import configEmpresasSvg from "./config-empresas.svg"
 import dashboardSvg from "./dashboard.svg"
 import depositosGpoSvg from "./depositos-gpo.svg"
 import faqsSvg from "./faqs.svg"
@@ -20,6 +21,7 @@ import saldoPorUtilizadorSvg from "./saldo-por-utilizador.svg"
 import servicosSvg from "./servicos.svg"
 import transferenciasSvg from "./transferencias.svg"
 import utilizadoresBackofficeSvg from "./utilizadores-backoffice.svg"
+import webhooksSvg from "./webhooks.svg"
 
 type FigmaSidebarIconProps = {
   className?: string
@@ -42,6 +44,8 @@ function createFigmaSidebarIcon(src: string): ComponentType<FigmaSidebarIconProp
 }
 
 export const DashboardIcon = createFigmaSidebarIcon(dashboardSvg)
+export const ConfigEmpresasIcon = createFigmaSidebarIcon(configEmpresasSvg)
+export const WebhooksIcon = createFigmaSidebarIcon(webhooksSvg)
 export const FAQsIcon = createFigmaSidebarIcon(faqsSvg)
 export const BancosIcon = createFigmaSidebarIcon(bancosSvg)
 export const ProdutosIcon = createFigmaSidebarIcon(servicosSvg)

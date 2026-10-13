@@ -6,6 +6,7 @@ export type UserContextAccount = {
   first_name?: string
   last_name?: string
   business_name?: string
+  short_name?: string | null
   phone_number?: string
   email?: string
   bi_number?: string

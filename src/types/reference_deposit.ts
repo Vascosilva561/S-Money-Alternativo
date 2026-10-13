@@ -7,7 +7,7 @@ interface Account {
     business_name: string
 }
 
-export type ReferencePaymentType = {
+export type ReferenceDepositType = {
     id: string;
     reference: string;
     account: Account;
@@ -20,8 +20,8 @@ export type ReferencePaymentType = {
     updated_at: string;
 }
 
-export type ReferencePaymentResponse = {
-    dados: ReferencePaymentType[];
+export type ReferenceDepositResponse = {
+    dados: ReferenceDepositType[];
     total: number;
     total_amount: number
 }

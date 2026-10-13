@@ -37,7 +37,7 @@ export const GetAmount = (item: any) => {
             ?? item?.valor;
           break;
         default:
-          return null;
+          return "N/A";
       }
 
   return formatCurrency(amount, "", 2, "").trim() || null;

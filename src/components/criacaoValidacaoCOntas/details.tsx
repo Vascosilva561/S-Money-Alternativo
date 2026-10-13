@@ -72,6 +72,10 @@ export default function DetailsUsuario({ onClose, isOpen, itemSelected }: props)
                                     <p>{itemSelected?.account_type === "User"?"Utilizador:":"Empresa"}</p>
                                     <p className="h-5 font-semibold">{itemSelected?.account_type === "User" ? `${itemSelected?.first_name} ${itemSelected?.last_name}` : `${itemSelected?.business_name}`}</p>
                                 </div>
+                                {itemSelected?.account_type !== "User" && <div className="w-full flex justify-between items-center">
+                                    <p>Short Name:</p>
+                                    <p className="h-5 font-semibold">{itemSelected?.short_name || "N/A"}</p>
+                                </div>}
                                 {itemSelected?.account_type === "User" &&<div className="w-full flex justify-between items-center">
                                     <p>Data de nascimento:</p>
                                     <p className="h-5">{itemSelected?.created_at ? (new Date(itemSelected.created_at)).toLocaleDateString('pt-BR') : ''}</p>

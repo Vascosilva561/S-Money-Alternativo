@@ -24,6 +24,12 @@ import { statusPayment } from "@/components/utils/statusPayment"
 import { statusPaymentColor } from "@/components/utils/statusPaymentColor"
 import { statusTransactions } from "@/components/utils/statusTransactions"
 import { statusTransactionsColor } from "@/components/utils/statusTransactionsColor"
+import { TypeTransaction } from "@/components/utils/getTypeMoviment"
+import { PegaOrigemMovimento } from "@/components/utils/origemMovimento"
+import { PegaDestinoMovimento } from "@/components/utils/destinoMovimento"
+import { GetAmount } from "@/components/utils/getAmount"
+import TipoDeTransacaoIcon from "@/assets/tipoDeMovimentoIcon"
+import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { Button } from "@/components/ui/button"
 import { DateField, FormField, NativeSelectField } from "@/components/ui/form-field"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -36,6 +42,8 @@ import {
   RefreshCw,
   Search,
   X,
+  ArrowDownLeft,
+  ArrowUpRight,
 } from "lucide-react"
 import { useMemo, useState, type ReactNode } from "react"
 import { toast } from "sonner"
@@ -58,6 +66,8 @@ type ContextResponse = {
   total?: string | number
   total_amount?: string | number
   total_payment?: string | number
+  total_entrada?: string | number
+  total_saida?: string | number
 }
 
 type OperationColumn = {
@@ -139,6 +149,18 @@ function getRowDate(row: ContextRow) {
 
 function getRowStatus(row: ContextRow) {
   return String(row.status ?? getNestedValue(row, ["detalhe", "transaction", "status"]) ?? "")
+}
+
+function getMovementLabel(row: ContextRow) {
+  const signal = getString(row, "signal").toUpperCase()
+  if (signal === "CREDIT") return "Crédito"
+  if (signal === "DEBIT") return "Débito"
+  return "—"
+}
+
+function getMovementAmount(row: ContextRow) {
+  const amount = GetAmount(row) || "0,00"
+  return `${getString(row, "signal").toUpperCase() === "DEBIT" ? "-" : ""}${amount} Kz`
 }
 
 const neutralStatusClasses = "bg-[#F2F4F7] text-[#536176]"
@@ -324,16 +346,66 @@ const operationDefinitions: Record<UserContextOperationKey, OperationDefinition>
     detail: "movement",
     columns: [
       {
-        label: "Operação",
-        render: (row) => <span className="font-semibold">{getString(row, "type") || "—"}</span>,
-        className: "min-w-[170px]",
+        label: "Movimento",
+        render: (row) => {
+          const isCredit = getString(row, "signal").toUpperCase() === "CREDIT"
+          const label = getMovementLabel(row)
+          return (
+            <span className="flex items-center gap-1.5">
+              <span className={`ui-movement-direction-icon grid size-8 shrink-0 place-items-center rounded-full ${isCredit ? "bg-[#E5F5EA] text-[#0A7A31]" : "bg-[#FDECEC] text-[#B42318]"}`} aria-hidden="true">
+                {isCredit ? <ArrowDownLeft className="size-4" /> : <ArrowUpRight className="size-4" />}
+              </span>
+              <span className="font-semibold">{label}</span>
+            </span>
+          )
+        },
+        className: "min-w-[145px]",
       },
       {
-        label: "Movimento",
-        render: (row) => getString(row, "signal") || "—",
-        className: "min-w-[120px]",
+        label: "Transação",
+        render: (row) => {
+          const type = getString(row, "type")
+          return (
+            <span className="flex items-center gap-1.5 font-semibold">
+              <span className="shrink-0">{TipoDeTransacaoIcon(type)}</span>
+              <span>{TypeTransaction(type) || "—"}</span>
+            </span>
+          )
+        },
+        className: "min-w-[165px]",
       },
-      ...getCommonColumns("movement").slice(1),
+      {
+        label: "Valor",
+        render: (row) => <span className={`font-semibold ${getString(row, "signal").toUpperCase() === "CREDIT" ? "text-[#0D9339]" : "text-[#EF4A00]"}`}>{getMovementAmount(row)}</span>,
+        className: "min-w-[115px]",
+      },
+      {
+        label: "Origem",
+        render: (row) => {
+          const origin = String(PegaOrigemMovimento(row) || "")
+          return (
+            <div className="flex min-w-0 items-center gap-1.5" title={origin || "—"}>
+              <span className="min-w-0 truncate font-semibold">{origin || "—"}</span>
+              <CopyTextButton value={origin} label="origem" />
+            </div>
+          )
+        },
+        className: "min-w-[160px]",
+      },
+      {
+        label: "Destino",
+        render: (row) => {
+          const destination = String(PegaDestinoMovimento(row) || "")
+          return (
+            <div className="flex min-w-0 items-center gap-1.5" title={destination || "—"}>
+              <span className="min-w-0 truncate font-semibold">{destination || "—"}</span>
+              <CopyTextButton value={destination} label="destino" />
+            </div>
+          )
+        },
+        className: "min-w-[160px]",
+      },
+      ...getCommonColumns("movement").slice(2),
     ],
   },
 }
@@ -346,6 +418,8 @@ function normaliseResponse(data: unknown): ContextResponse {
     total: response?.total as string | number | undefined,
     total_amount: response?.total_amount as string | number | undefined,
     total_payment: response?.total_payment as string | number | undefined,
+    total_entrada: response?.total_entrada as string | number | undefined,
+    total_saida: response?.total_saida as string | number | undefined,
   }
 }
 
@@ -429,9 +503,10 @@ function getTotalAmount(response: ContextResponse | undefined) {
   return response?.total_payment ?? response?.total_amount
 }
 
-function getExportValue(column: OperationColumn, row: ContextRow, detail: OperationDefinition["detail"]) {
+function getExportValue(column: OperationColumn, row: ContextRow, detail: OperationDefinition["detail"], operation: UserContextOperationKey) {
+  const isMovementTable = operation === "conta-corrente"
   if (column.label === "ID") return getString(row, "id") || "—"
-  if (column.label === "Valor") return formatAmount(getRowAmount(row))
+  if (column.label === "Valor") return isMovementTable ? getMovementAmount(row) : formatAmount(getRowAmount(row))
   if (column.label === "Data") return formatDate(getRowDate(row))
   if (column.label === "Estado") return getStatusDisplay(row, detail).label
   if (column.label === "Remetente") return getString(row, "sender_name") || "—"
@@ -439,17 +514,21 @@ function getExportValue(column: OperationColumn, row: ContextRow, detail: Operat
   if (column.label === "Referência") return getString(row, "reference") || getString(row, "payment_reference") || "—"
   if (column.label === "Canal") return getString(row, "channel") || getString(row, "canal") || "—"
   if (column.label === "IBAN") return getString(row, "iban") || "—"
-  if (column.label === "Movimento") return getString(row, "signal") || "—"
-  if (column.label === "Operação") return getString(row, "type") || "Depósito"
+  if (column.label === "Origem" && isMovementTable) return String(PegaOrigemMovimento(row) || "—")
+  if (column.label === "Destino" && isMovementTable) return String(PegaDestinoMovimento(row) || "—")
+  if (column.label === "Transação" && isMovementTable) return TypeTransaction(getString(row, "type")) || "—"
+  if (column.label === "Movimento") return isMovementTable ? getMovementLabel(row) : getString(row, "signal") || "—"
+  if (column.label === "Operação") return isMovementTable ? TypeTransaction(getString(row, "type")) || "—" : getString(row, "type") || "Depósito"
 
   const rendered = column.render(row)
   return typeof rendered === "string" || typeof rendered === "number" ? String(rendered) : "—"
 }
 
-function downloadCsv(definition: OperationDefinition, rows: ContextRow[], selectedColumns: string[]) {
+function downloadCsv(operation: UserContextOperationKey, rows: ContextRow[], selectedColumns: string[]) {
+  const definition = operationDefinitions[operation]
   const columns = definition.columns.filter((column) => selectedColumns.includes(column.label))
   const headers = columns.map((column) => column.label)
-  const values = rows.map((row) => columns.map((column) => getExportValue(column, row, definition.detail)))
+  const values = rows.map((row) => columns.map((column) => getExportValue(column, row, definition.detail, operation)))
   const csv = [headers, ...values].map((line) => line.map((value) => `"${value.replace(/"/g, '""')}"`).join(";")).join("\r\n")
   const blob = new Blob([`\ufeff${csv}`], { type: "text/csv;charset=utf-8;" })
   const url = URL.createObjectURL(blob)
@@ -460,7 +539,7 @@ function downloadCsv(definition: OperationDefinition, rows: ContextRow[], select
   URL.revokeObjectURL(url)
 }
 
-export default function UserContextOperationsPage({ operation, title, embeddedInDeposits = false }: { operation: UserContextOperationKey; title?: string; embeddedInDeposits?: boolean }) {
+export default function UserContextOperationsPage({ operation, title, embedded = false }: { operation: UserContextOperationKey; title?: string; embedded?: boolean }) {
   const user = useUserContext()
   const definition = operationDefinitions[operation]
   const pageTitle = title || definition.title
@@ -502,6 +581,10 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
       getString(row, "iban"),
       getString(row, "status"),
       getString(row, "type"),
+      String(TypeTransaction(getString(row, "type")) || ""),
+      String(PegaOrigemMovimento(row) || ""),
+      String(PegaDestinoMovimento(row) || ""),
+      getMovementLabel(row),
       String(getRowAmount(row) ?? ""),
     ].some((value) => value.toLowerCase().includes(term)))
   }, [operationQuery.data?.dados, search])
@@ -546,12 +629,15 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
         rows = rows.filter((row) => [
           getString(row, "id"), getString(row, "sender_name"), getString(row, "receiver_name"),
           getString(row, "reference"), getString(row, "channel"), getString(row, "iban"),
-          getString(row, "status"), getString(row, "type"), String(getRowAmount(row) ?? ""),
+          getString(row, "status"), getString(row, "type"),
+          String(TypeTransaction(getString(row, "type")) || ""),
+          String(PegaOrigemMovimento(row) || ""), String(PegaDestinoMovimento(row) || ""),
+          getMovementLabel(row), String(getRowAmount(row) ?? ""),
         ].some((value) => value.toLowerCase().includes(term)))
       }
 
       const uniqueRows = Array.from(new Map(rows.map((row, index) => [getString(row, "id") || String(index), row])).values())
-      downloadCsv(definition, uniqueRows, exportColumns)
+      downloadCsv(operation, uniqueRows, exportColumns)
       setExportOpen(false)
       toast.success(`${uniqueRows.length} registo(s) exportado(s) em CSV.`)
     } catch {
@@ -603,7 +689,7 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
 
   return (
     <div className="ui-context-page">
-      {!embeddedInDeposits && (
+      {!embedded && (
         <div className="mb-5">
           <p className="text-sm font-medium text-[#6B7280]">Contexto da conta</p>
           <h2 className="mt-1 text-2xl font-bold text-[#143163]">{pageTitle}</h2>
@@ -637,7 +723,7 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
                 type="search"
                 value={search}
                 onChange={(event) => { setSearch(event.target.value); setPage(1) }}
-                placeholder="Pesquisar nesta conta..."
+                placeholder={operation === "conta-corrente" ? "Pesquisar movimentos..." : "Pesquisar nesta conta..."}
                 className="h-10 w-full rounded-lg border border-[#C9D8E9] bg-white pl-10 pr-3 text-sm text-[#143163] outline-none transition placeholder:text-[#8293AE] focus:border-[#48B9FF] focus:ring-4 focus:ring-[#48B9FF]/15"
                 aria-label={`Pesquisar em ${pageTitle}`}
               />
@@ -647,7 +733,15 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
           <div className="ui-inline-summary ui-context-summary flex items-center text-[14px] text-[#143163]">
             <span><strong>Total geral de registos:</strong> <span className="font-semibold">{operationQuery.isPending ? "..." : totalItems || "Nenhum"}</span></span>
             <span className="ui-inline-summary-divider" aria-hidden="true" />
-            <span><strong>Valor total:</strong> <span className="font-semibold">{operationQuery.isPending ? "..." : formatAmount(getTotalAmount(operationQuery.data))}</span></span>
+            {operation === "conta-corrente" ? (
+              <>
+                <span><strong>Total de movimentos de entrada:</strong> <span className="font-semibold">{operationQuery.isPending ? "..." : formatAmount(operationQuery.data?.total_entrada)}</span></span>
+                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                <span><strong>Total de movimentos de saída:</strong> <span className="font-semibold">{operationQuery.isPending ? "..." : formatAmount(operationQuery.data?.total_saida)}</span></span>
+              </>
+            ) : (
+              <span><strong>Valor total:</strong> <span className="font-semibold">{operationQuery.isPending ? "..." : formatAmount(getTotalAmount(operationQuery.data))}</span></span>
+            )}
           </div>
 
           {operationQuery.isError ? (
@@ -656,7 +750,7 @@ export default function UserContextOperationsPage({ operation, title, embeddedIn
             </div>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-[#E5EBF4]">
-              <table className="w-full min-w-[920px] border-collapse">
+              <table className={`w-full border-collapse ${operation === "conta-corrente" ? "min-w-[960px] table-fixed" : "min-w-[920px]"}`}>
                 <caption className="sr-only">{definition.title} da conta seleccionada</caption>
                 <thead className="h-12 bg-[#F5F7FB] text-left text-[#143163]">
                   <tr>

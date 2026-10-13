@@ -11,8 +11,8 @@ export default function UserContextDepositsPage() {
       </div>
 
       <DepositTabs
-        reference={<UserContextOperationsPage operation="pagamentos-referencia" title="Depósitos por Referência" embeddedInDeposits />}
-        gpo={<UserContextOperationsPage operation="pagamento-gpo" title="Depósitos por GPO" embeddedInDeposits />}
+        reference={<UserContextOperationsPage operation="pagamentos-referencia" title="Depósitos por Referência" embedded />}
+        gpo={<UserContextOperationsPage operation="pagamento-gpo" title="Depósitos por GPO" embedded />}
       />
     </div>
   )

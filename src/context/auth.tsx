@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { api } from "../api";
 import { toast, Toaster } from "sonner";
+import { useSelectedAccount } from "./selectedAccountCntext";
 
 type IUser = {
     id: string;
@@ -49,6 +50,7 @@ export const AuthContext = createContext<IAuthContext>({
 })
 
 export function AuthProvider({ children }: any) {
+     const { clearAccount } = useSelectedAccount();
     const [statusErroAuth, setStatusErroAuth] = useState(false);
     const storedToken = localStorage.getItem("tokenSomoney");
     const storedUser = localStorage.getItem("userSomoney");
@@ -89,12 +91,15 @@ export function AuthProvider({ children }: any) {
             throw error;
         }
     }
+     
+    
     function logout() {
         localStorage.removeItem("userSomoney");
         localStorage.removeItem("tokenSomoney");
         localStorage.removeItem("refreshToken-somoney-backoffice");
 
         setUser(null);
+        clearAccount()
         setIsAuthenticated(false);
     }
 
@@ -155,7 +160,7 @@ export function AuthProvider({ children }: any) {
 
     return (
         <AuthContext.Provider
-            value={{
+        value={{
                 statusErroAuth,
                 setStatusErroAuth,
                 isAuthenticated,
@@ -164,7 +169,7 @@ export function AuthProvider({ children }: any) {
                 login,
                 logout,
             }}
-        >
+            >
             <Toaster />
             {children}
 

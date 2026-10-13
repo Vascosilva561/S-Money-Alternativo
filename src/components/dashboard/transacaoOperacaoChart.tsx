@@ -56,10 +56,14 @@ export function ChartTransationChart({ data, isLoading, statusFilter, onStatusFi
 
     const navigate = useNavigate()
 
-function goToFilteredList(status: string) {
-    const params = new URLSearchParams({ status });
-    navigate(`/movimentos?${params.toString()}`);
-}
+    function goToFilteredList(status: string) {
+        const params = new URLSearchParams({ status });
+        navigate(`/movimentos?${params.toString()}`);
+    }
+
+    const isPositive = (data?.hourly?.change ?? 0) >= 0;
+    const hasData = data?.hourly?.change !== null && data?.hourly?.change !== undefined;
+
     return (
         <Card className="pt-0">
             <CardHeader className="space-y-0 border-b p-1 pt-2 pb-8">
@@ -69,7 +73,8 @@ function goToFilteredList(status: string) {
                         <p className="font-bold text-lg">
                             {isLoading ? "..." : formatNumberPtAO(data?.hourly?.total ?? 0)}
                         </p>
-                        <p className="text-[11px] text-[#0D9339] font-semibold">
+                        <p className={`text-[11px] ${!hasData ? "text-[#7D8CA6]" :
+                            isPositive ? "text-[#0D9339]" : "text-[#E53935]"} font-semibold`}>
                             {isLoading ? "" : formatChange(data?.hourly?.change ?? null)}
                         </p>
                     </CardDescription>
@@ -80,23 +85,23 @@ function goToFilteredList(status: string) {
                         disabled={statusOverrideActive}
                         value={statusFilter}
                         onValueChange={onStatusFilterChange}>
-                        <SelectTrigger className="border-none">
+                        <SelectTrigger className="border-none h-4 text-[12px] rounded">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                             {STATUS_OPTIONS.map((option) => (
-                                <SelectItem key={option.key} value={option.key}>
+                                <SelectItem key={option.key} value={option.key} className="text-[12px]">
                                     {option.label}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                 </div>
-                    {statusOverrideActive && (
-                        <p className="text-[11px] text-[#7D8CA6] mt-1">
-                            Estado controlado pelo filtro global
-                        </p>
-                    )}
+                {statusOverrideActive && (
+                    <p className="text-[11px] text-[#7D8CA6] mt-1">
+                        Estado controlado pelo filtro global
+                    </p>
+                )}
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
@@ -137,9 +142,9 @@ function goToFilteredList(status: string) {
                     </AreaChart>
                 </ChartContainer>
                 <button
-                type="button"
-                onClick={()=>goToFilteredList("SUCCESS")}
-                className="flex items-center text-[#2678F2] cursor-pointer text-[11px] mt-2 hover:underline w-fit">
+                    type="button"
+                    onClick={() => goToFilteredList("SUCCESS")}
+                    className="flex items-center text-[#2678F2] cursor-pointer text-[11px] mt-2 hover:underline w-fit">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 10H15M11 14L15 10L11 6" stroke="#2678F2" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>

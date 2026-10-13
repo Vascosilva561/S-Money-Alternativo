@@ -1,13 +1,13 @@
 export const statusMovimento = (item: any) => {
-      switch (item?.type) {
+    switch (item?.type) {
         case "Withdrawal":
-          return item?.detalhe?.withdrawal?.status === "ACCEPTED"?"Concluído":(item?.detalhe?.withdrawal?.status === "PENDING"?"Pendente":"Falhou");
+            return item?.detalhe?.withdrawal?.status === "ACCEPTED" ? "Concluído" : (item?.detalhe?.withdrawal?.status === "PENDING" ? "Pendente" : "Falhou");
         case "Transaction":
-          return item?.detalhe?.transaction?.status === "PAID"?"Concluído":(item?.detalhe?.transaction?.status === "PENDING"?"Pendente":"Falhou");
+            return item?.detalhe?.transaction?.status === "PAID" ? "Concluído" : (item?.detalhe?.transaction?.status === "PENDING" ? "Pendente" : "Falhou");
         case "PgsPayment":
-          return item?.detalhe?.pgs_payment?.status === "SUCCESS"?"Concluído":"Falhou";
+            return item?.detalhe?.pgs_payment?.status === "SUCCESS" ? "Concluído" : "Falhou";
         case "DepositGpoFrame":
-          return item?.detalhe?.deposit_gpo_frame?.status === "ACCEPTED"?"Concluído":(item?.detalhe?.deposit_gpo_frame?.status === "PENDING"?"Pendente":"Falhou");
+            return item?.detalhe?.deposit_gpo_frame?.status === "ACCEPTED" ? "Concluído" : (item?.detalhe?.deposit_gpo_frame?.status === "PENDING" ? "Pendente" : "Falhou");
         case "PaymentReferences":
           return item?.detalhe?.payment_references?.status === "SUCCESS"?"Concluído":"Falhou";
         case "MerchantTransaction": {

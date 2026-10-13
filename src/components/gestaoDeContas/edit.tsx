@@ -158,6 +158,7 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
                 queryKey: ['listaDeContas'],
                 //exact: true,
             })
+            queryClient.invalidateQueries({ queryKey: ["user-context", String(selectedItem?.id)] })
             onClose()
             toast.success(`Alterações Efectuadas Com Sucesso!`, {
                 icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -278,6 +279,7 @@ export default function EditUsuario({ onClose, isOpen, typeAccount, selectedItem
 
                                 {!typeAccount && <>
                                     <TextField required label="Empresa" value={formData.business_name} onChange={(e) => setFormData({ ...formData, business_name: e.target.value })} />
+                                    <TextField required label="Short Name" maxLength={20} value={formData.short_name} onChange={(e) => setFormData({ ...formData, short_name: e.target.value })} />
                                     <TextField label="NIF" value={formData.nif} onChange={(e) => setFormData({ ...formData, nif: e.target.value })} />
                                 </>}
 

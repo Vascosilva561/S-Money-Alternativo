@@ -19,7 +19,7 @@ type props = {
     itemSelected: any
 }
 
-export default function DetalhesPagamentoReference({ onClose, isOpen, itemSelected }: props) {
+export default function DetalhesDepositoReference({ onClose, isOpen, itemSelected }: props) {
 
       const canalFIltered: {description:string, value:string} = tipo_de_Terminal?.find((terminal)=>terminal?.value === itemSelected?.channel) || {description: "", value: ""}
 

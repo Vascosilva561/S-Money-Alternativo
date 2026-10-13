@@ -143,6 +143,9 @@ export default function EditUsersManagers({ onClose, isOpen, itemSelected }: pro
                 queryClient.invalidateQueries({
                     queryKey: ['ListaDeUtilizadoresBackOffice'],
                 })
+                queryClient.invalidateQueries({
+                    queryKey: ['detailsUser'],
+                })
             })
             clearInputs()
             onClose()

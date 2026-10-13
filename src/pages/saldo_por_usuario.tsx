@@ -382,8 +382,8 @@ export default function SaldoPorUsuario() {
                                                     </div>
                                                 </td>
                                                 <td className="ui-preserve-cell px-4 py-3 text-left font-semibold">
-                                                    <div className="flex min-w-0 items-center gap-1.5">
-                                                        <span className="ui-full-value min-w-0 flex-1">{item.phone_number || item.email || "N/A"}</span>
+                                                    <div className="flex w-fit max-w-full min-w-0 items-center gap-1.5">
+                                                        <span className="ui-full-value min-w-0">{item.phone_number || item.email || "N/A"}</span>
                                                         <CopyTextButton
                                                             value={item.phone_number || item.email || ""}
                                                             label={particularAccount ? "telefone" : "NIF"}

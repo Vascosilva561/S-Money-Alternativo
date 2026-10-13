@@ -1,11 +1,13 @@
 import { api } from "@/api"
 import { formatNumberPtAO } from "@/components/utils/formmat"
 import { Spinner } from "@/components/utils/spinner"
+import { GetAmount } from "@/components/utils/getAmount"
 import { useQueries } from "@tanstack/react-query"
 import {
+  ArrowDownLeft,
   ArrowDownToLine,
-  ArrowUpFromLine,
   ArrowUpRight,
+  ArrowUpFromLine,
   CircleAlert,
   CreditCard,
   Landmark,
@@ -104,8 +106,12 @@ function getActivityLabel(activity: SummaryItem) {
   return activity.type || "Operação"
 }
 
-function getActivityAmount(activity: SummaryItem) {
-  return activity.amount ?? activity.valor
+function getActivityAmount(activity: SummaryItem): number | undefined {
+  const amount = toNumber(GetAmount(activity) ?? undefined) ?? toNumber(activity.amount ?? activity.valor)
+  if (amount === undefined) return undefined
+
+  const isDebit = activity.signal?.trim().toUpperCase() === "DEBIT"
+  return isDebit ? -Math.abs(amount) : Math.abs(amount)
 }
 
 type MetricCardProps = {
@@ -240,8 +246,8 @@ export default function UserOverview() {
             {activityItems.map((activity, index) => (
               <div key={activity.id ?? `${activity.created_at}-${index}`} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                 <div className="flex min-w-[220px] items-center gap-3">
-                  <span className={`grid h-9 w-9 place-items-center rounded-full ${activity.signal?.toLowerCase() === "credit" ? "bg-[#E2F6E8] text-[#14883B]" : "bg-[#FDE7E7] text-[#B42318]"}`}>
-                    {activity.signal?.toLowerCase() === "credit" ? <ArrowDownToLine className="h-4 w-4" aria-hidden="true" /> : <ArrowUpFromLine className="h-4 w-4" aria-hidden="true" />}
+                  <span className={`grid h-9 w-9 place-items-center rounded-full ${activity.signal?.trim().toUpperCase() === "CREDIT" ? "bg-[#E5F5EA] text-[#0A7A31]" : "bg-[#FDECEC] text-[#B42318]"}`}>
+                    {activity.signal?.trim().toUpperCase() === "CREDIT" ? <ArrowDownLeft className="h-4 w-4" aria-hidden="true" /> : <ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
                   </span>
                   <div>
                     <p className="text-sm font-semibold text-[#143163]">{getActivityLabel(activity)}</p>

@@ -117,14 +117,16 @@ export function UserContextLayout() {
 
   const userQuery = useQuery({
     queryKey: ["user-context", userId, accountType],
-    enabled: Boolean(userId && !selectedUser),
+    enabled: Boolean(userId),
+    initialData: selectedUser,
     queryFn: async () => {
       const { data } = await api.get(`/front/${accountType}/${userId}`)
       return unwrapUser(data)
     },
   })
 
-  const user = selectedUser ?? userQuery.data
+  const user = userQuery.data ?? selectedUser
+  const isCompanyAccount = user?.account_type === "Merchant" || Boolean(user?.business_name)
   const displayName = getDisplayName(user)
   const status = getStatusLabel(user)
   const hasKnownStatus = isKnownStatus(status)
@@ -193,7 +195,7 @@ export function UserContextLayout() {
             </div>
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-[#143163]" aria-hidden="true" />
-              <span><strong className="font-semibold text-[#143163]">Documento de identificação:</strong> {user?.bi_number || user?.nif || "—"}</span>
+              <span><strong className="font-semibold text-[#143163]">{isCompanyAccount ? "NIF:" : "Documento de identificação:"}</strong> {(isCompanyAccount ? user?.nif : user?.bi_number || user?.nif) || "—"}</span>
             </div>
             <span className={`ui-status-tag inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${hasKnownStatus ? getStatusClasses(status) : "bg-[#F2F4F7] text-[#667085]"}`}>
               <StatusIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
