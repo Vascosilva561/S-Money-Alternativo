@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
@@ -46,7 +47,7 @@ export default function Servicos() {
             //console.log(urlLogs)
             const { data } = await api.get(urlLogs)
 
-            
+
             return data
         } catch (error) {
             console.log("erro ao busscar users ", error)
@@ -59,7 +60,7 @@ export default function Servicos() {
         placeholderData: keepPreviousData,
     })
 
-   
+
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -210,8 +211,9 @@ export default function Servicos() {
                         }}
                     >
 
-                        <div className="w-full flex flex-col p-5 " >
-                            <div className="flex space-x-4">
+                        <div className="ui-data-stack w-full flex flex-col p-5 " >
+                            <div className="ui-toolbar ui-legacy-toolbar">
+                                <div className="ui-toolbar-actions flex space-x-4">
 
                                 <button onClick={() => setFilterModalIsOpen(true)} type="button" aria-label="Filtrar" className="ui-filter-trigger" title="Filtrar">
                                     <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 5h16l-6.5 7v5l-3 2v-7L4 5z" /></svg>
@@ -227,10 +229,8 @@ export default function Servicos() {
                             </div>
 
                             {/* filtros */}
-                            <div>
 
-                            </div>
-                            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                            <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                                 <div className="flex space-x-2 ">
 
                                     {!isLoading && (isFetching && <>
@@ -254,13 +254,24 @@ export default function Servicos() {
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
 
 
                             {/* Tabela */}
-                            <div className="mt-10 flex items-center space-x-2 text-[16px] text-[#143163]"><p className="font-bold">Total geral de registos: </p><p className="">{isLoading ? "..." : data?.total}</p></div>
 
-                            <div className="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+
+                            <TableResults
+                                label="Serviços encontrados"
+                                visibleCount={filteredUsersData.length}
+                                totalCount={data?.total}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPreviousPage={handlePrevPage}
+                                onNextPage={handleNextPage}
+                                isLoading={isLoading || isFetching}
+                                containerClassName="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                            >
                                 <table className="w-full md:table-fixed border-collapse ">
                                     <thead className="bg-[#F5F6FA] h-14  ">
                                         <tr className=" place-items-center text-[#143163] ">
@@ -325,7 +336,7 @@ export default function Servicos() {
                                     </tbody>
                                 </table>
 
-                            </div>
+                            </TableResults>
                             {/* paginacao */}
 
                             <PaginationFooter

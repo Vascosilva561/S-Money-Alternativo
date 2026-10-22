@@ -7,6 +7,7 @@ export type MenuKey =
   | "levantamentos"
   | "movimentos"
   | "relatorios"
+  | "referencias"
   | "logs"
   | "saldo_por_usuario"
   | "permissoes"

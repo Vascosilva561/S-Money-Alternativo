@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { Plus } from "lucide-react"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
@@ -220,8 +221,9 @@ export default function UsuariosBackOffice() {
                         }}
                     >
 
-                        <div className="w-full flex flex-col p-5">
-                            <div className="flex space-x-4">
+                        <div className="w-full flex flex-col p-5 ui-data-stack">
+                            <div className="ui-toolbar ui-legacy-toolbar">
+                            <div className="flex space-x-4 ui-toolbar-actions">
                                 <button
                                     onClick={() => setAddUserModalIsOpen(true)}
                                     type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
@@ -244,11 +246,7 @@ export default function UsuariosBackOffice() {
                                 }
                             </div>
 
-                            {/* filtros */}
-                            <div>
-
-                            </div>
-                            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                            <div className="flex justify-between space-x-4 items-center text-[#143163] ui-toolbar-search">
                                 <div className="flex space-x-2 ">
 
                                     {!isLoading && (isFetching && <>
@@ -272,18 +270,29 @@ export default function UsuariosBackOffice() {
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
                             {/* Tabela */}
-                            <div className="mt-10 flex items-center space-x-2 text-[16px] text-[#143163]"><p className="font-bold">Total geral de registos: </p><p className="">{isLoading ? "..." : data?.total}</p></div>
 
-                            <div className="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+
+                            <TableResults
+                                label="Utilizadores encontrados"
+                                visibleCount={filteredUsersData.length}
+                                totalCount={data?.total}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPreviousPage={handlePrevPage}
+                                onNextPage={handleNextPage}
+                                isLoading={isLoading || isFetching}
+                                containerClassName="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                            >
                                 <table className="w-full md:table-fixed border-collapse ">
                                     <thead className="bg-[#F5F6FA] h-14  ">
                                         <tr className=" place-items-center text-[#143163] ">
 
                                             {/* <th className={`text-start px-8 py-2 w-[20%]`}>ID do Pagamento</th> */}
 
-                                            <th className="text-start px-5 w-[20%]">Utilizador backoffice</th>
+                                            <th className="text-start px-5 w-[20%]">Nome completo</th>
                                             <th className={`text-start   w-[20%]`}>Email Corporativo</th>
                                             <th className="text-start   w-[15%]">Cargo</th>
                                             <th className="ui-date-column text-center  w-[15%]">Último Acesso</th>
@@ -332,7 +341,7 @@ export default function UsuariosBackOffice() {
                                     </tbody>
                                 </table>
 
-                            </div>
+                            </TableResults>
                             {/* paginacao */}
 
                             <PaginationFooter

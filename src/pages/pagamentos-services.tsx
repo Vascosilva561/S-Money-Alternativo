@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
@@ -18,9 +19,9 @@ import { RefreshButton } from "@/components/ui/refresh-button"
 import { ClearFiltersButton } from "@/components/ui/clear-filters-button"
 import { FilterButton } from "@/components/ui/filter-button"
 import { Button } from "@/components/ui/button"
-import { Search, ReceiptText, TrendingUp, Wallet, Download } from "lucide-react"
+import { Search, ReceiptText, TrendingUp, Download } from "lucide-react"
 import { TextField } from "@/components/ui/form-field"
-import { Card } from "@/components/ui/card"
+import { KpiCard } from "@/components/ui/kpi-card"
 import { useSelectedAccount } from "@/context/selectedAccountCntext"
 
 export default function PagamentosDeServices() {
@@ -73,7 +74,7 @@ export default function PagamentosDeServices() {
                         : account
                             ? `${account.first_name || ""} ${account.last_name || ""}`.trim()
                             : queryParams?.users_name || "",                //beneficiario: queryParams?.beneficiario
-                
+
                             account_type: tipoDeConta,
                 data_inicio: queryParams?.dataInicial,
                 data_fim: queryParams?.dataFinal,
@@ -95,7 +96,7 @@ export default function PagamentosDeServices() {
         placeholderData: keepPreviousData,
     })
 
-    
+
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
         // Permite espaços no meio, mas evita strings só com espaços
@@ -225,7 +226,7 @@ export default function PagamentosDeServices() {
 
         })
         setEstadoDoPagamento("SUCCESS")
-        setTipoDeConta("User")
+        setTipoDeConta(account?.accountType ?? "User")
         setServico("")
         setTimeout(() => refetch(), 0)
     }
@@ -273,31 +274,18 @@ export default function PagamentosDeServices() {
 
     const summaryCards = [
         {
-            label: "Saldo dos clientes",
-            helper: "Saldo total disponível",
-            value: isLoadingSummary ? "A carregar..." : `${Number(summaryData?.total_saldo ?? 0).toLocaleString()} Kz`,
-            icon: Wallet,
-            iconBackground: "bg-[#EEF6FF]",
-            iconColor: "text-[#2678F2]",
-            accent: "bg-[#48B9FF]",
-        },
-        {
             label: "Total consumido",
             helper: "Valor movimentado",
             value: isLoadingSummary ? "A carregar..." : `${Number(summaryData?.total_custo ?? 0).toLocaleString()} Kz`,
             icon: ReceiptText,
-            iconBackground: "bg-[#F4F1FF]",
-            iconColor: "text-[#7956D8]",
-            accent: "bg-[#9B7BFF]",
+            tone: "purple" as const,
         },
         {
             label: "Lucro Sómoney",
             helper: "Resultado acumulado",
             value: isLoadingSummary ? "A carregar..." : `${Number(summaryData?.total_lucro ?? 0).toLocaleString()} Kz`,
             icon: TrendingUp,
-            iconBackground: "bg-[#ECFBF3]",
-            iconColor: "text-[#159B5B]",
-            accent: "bg-[#25B76F]",
+            tone: "green" as const,
         },
     ]
 
@@ -319,6 +307,7 @@ export default function PagamentosDeServices() {
                 setEstadoDoPagamento={setEstadoDoPagamento}
                 tipoDeConta={tipoDeConta}
                 setTipoDeConta={setTipoDeConta}
+                defaultTipoDeConta={account?.accountType ?? "User"}
                 servico={servico}
                 setServico={setServico}
             />
@@ -329,7 +318,7 @@ export default function PagamentosDeServices() {
             {/* <div className="border-2 border-zinc-700 w-[350px]"></div> */}
             <section className="ui-data-page h-fit overflow-hidden rounded-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
 
-                <div className="flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
+                <div className="ui-data-stack flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
                             <Button
@@ -365,54 +354,36 @@ export default function PagamentosDeServices() {
                         </div>
                     </div>
                     {/* Cards */}
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {summaryCards.map((card) => {
-                            const Icon = card.icon
-
                             return (
-                                <Card
+                                <KpiCard
                                     key={card.label}
-                                    className="relative min-h-[128px] overflow-hidden rounded-lg border border-[#D7E2F2] bg-white p-4 shadow-sm"
-                                    role="group"
-                                    aria-label={card.label}
-                                >
-                                    <span className={`absolute inset-y-0 left-0 w-1 ${card.accent}`} aria-hidden="true" />
-
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#71809A]">
-                                                {card.label}
-                                            </p>
-                                            <p className="mt-2 text-xl font-bold leading-none tracking-tight text-[#143163]">
-                                                {card.value}
-                                            </p>
-                                        </div>
-
-                                        <span
-                                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${card.iconBackground} ${card.iconColor}`}
-                                            aria-hidden="true"
-                                        >
-                                            <Icon size={19} strokeWidth={2.1} />
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-3 flex items-center gap-2 text-xs font-medium text-[#71809A]">
-                                        <span className={`h-1.5 w-1.5 rounded-full ${card.accent}`} aria-hidden="true" />
-                                        <span>{card.helper}</span>
-                                    </div>
-                                </Card>
+                                    {...card}
+                                />
                             )
                         })}
                     </div>
 
                     {/* Tabela */}
-                    <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
-                        <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total}</span></span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Total geral de pagamentos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_payment ? Number(data?.total_payment)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
-                    </div>
-
-                    <div className="overflow-hidden rounded-xl border border-[#E5EBF4]">
+                    <TableResults
+                        leadingContent={
+                            <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
+                                <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total}</span></span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Total geral de pagamentos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_payment ? Number(data?.total_payment)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
+                            </div>
+                        }
+                        label="Pagamentos encontrados"
+                        visibleCount={filteredUsersData.length}
+                        totalCount={data?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="overflow-hidden rounded-xl border border-[#E5EBF4]"
+                    >
                         <div className="overflow-x-auto">
                         <table className="w-full min-w-[880px] table-fixed border-collapse text-sm">
                             <caption className="sr-only">Lista de pagamentos</caption>
@@ -483,7 +454,7 @@ export default function PagamentosDeServices() {
                             </tbody>
                         </table>
                         </div>
-                    </div>
+                    </TableResults>
                     {/* paginacao */}
 
                     <PaginationFooter

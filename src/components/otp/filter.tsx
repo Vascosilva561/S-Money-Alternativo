@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 
 type props = {
@@ -32,15 +33,10 @@ export default function FilterOtp({ onClose, isOpen, queryParams, setQueryParams
 }: props) {
 
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.sigla !== "" ||
-           queryParams?.estado !== "" || queryParams?.bankCode !== ""
-
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.telefone, queryParams.email, queryParams.otpType,
+        queryParams.dataInicial, queryParams.dataFinal,
+    ))
 
     return (
         <>

@@ -13,6 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 import { getLevelBadgeName, LevelBadgeIcon } from "@/components/gestaoDeContas/level-badge"
 import provinvia from "../json/provincias.json"
 import municipios from "../json/municipios.json"
@@ -47,17 +48,12 @@ export default function FilterCounts({ onClose, isOpen, queryParams, setQueryPar
     setNacionalidade,
     nacionalidadeParam,}: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.phone_number !== "" || queryParams.nif !== "" || queryParams.email !== "" ||
-            queryParams.business_name !== "" || statusParam !== "" || queryParams.bi !== "" || queryParams.passaporte !== "" ||
-            queryParams.provincia_id !== "" || queryParams.municipio !== "" || queryParams.dataAdesaoInicial !== "" ||
-            queryParams.dataAdesaoFinal !== "" || nacionalidadeParam !== "" || situacaoParam !== "" || nivelParam !== ""
-        
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.name, queryParams.phone_number, queryParams.nif, queryParams.email,
+        queryParams.business_name, statusParam, queryParams.bi, queryParams.passaporte,
+        queryParams.provincia_id, queryParams.municipio, queryParams.dataAdesaoInicial,
+        queryParams.dataAdesaoFinal, nacionalidadeParam, situacaoParam, nivelParam,
+    ))
 
 
     const municipioLista = municipios?.municipios?.filter((item) => item?.provincia_id === Number(queryParams?.provincia_id))

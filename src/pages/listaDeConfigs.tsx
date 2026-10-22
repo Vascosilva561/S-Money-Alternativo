@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,10 +18,21 @@ import { getReferenceStatusClass, getReferenceStatusLabel } from "@/components/u
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { Plus, Search, X } from "lucide-react"
 import { useMemo, useState } from "react"
+import { useSearchParams } from "react-router"
+import ConfiguracoesGPO from "@/pages/configGPO"
 
-type ConfigTab = "ListaDePools" | "Configuracoes" | "Referencias"
+type ConfigTab = "ListaDePools" | "Configuracoes" | "Referencias" | "GPO"
 
 export default function ListaDeConfiguracoes() {
+    const [searchParams, setSearchParams] = useSearchParams()
+    const requestedTab = searchParams.get("tab")
+    const separador: ConfigTab = requestedTab === "configuracoes"
+        ? "Configuracoes"
+        : requestedTab === "referencias"
+            ? "Referencias"
+            : requestedTab === "gpo"
+                ? "GPO"
+                : "ListaDePools"
     const perPage = "50"
     const [searchInput, setSearchInput] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
@@ -39,7 +51,6 @@ export default function ListaDeConfiguracoes() {
         end_date: "",
         status: "",
     })
-    const [separador, setSeparador] = useState<ConfigTab>("ListaDePools")
     const [isFiltered] = useState(false)
 
     async function getConfis(page: number) {
@@ -153,7 +164,9 @@ export default function ListaDeConfiguracoes() {
         ? poolsData.length
         : separador === "Configuracoes"
             ? configData.length
-            : referencesData?.total ?? 0
+            : separador === "Referencias"
+                ? referencesData?.total ?? 0
+                : 0
     const totalPages = Math.ceil(totalItems / Number(perPage))
     const paginationRange = useMemo<(number | string)[]>(() => {
         const range: (number | string)[] = []
@@ -174,24 +187,29 @@ export default function ListaDeConfiguracoes() {
     const changeTab = (tab: ConfigTab) => {
         setCurrentPage(1)
         setSearchInput("")
-        setSeparador(tab)
+        setSearchParams((current) => {
+            const next = new URLSearchParams(current)
+            if (tab === "ListaDePools") next.delete("tab")
+            else next.set("tab", tab === "Configuracoes" ? "configuracoes" : tab.toLowerCase())
+            return next
+        }, { replace: true })
     }
 
     const isLoading = separador === "ListaDePools"
         ? poolsQuery.isLoading
         : separador === "Configuracoes"
             ? configQuery.isLoading
-            : referencesQuery.isLoading
+            : separador === "Referencias" ? referencesQuery.isLoading : false
     const isFetching = separador === "ListaDePools"
         ? poolsQuery.isFetching
         : separador === "Configuracoes"
             ? configQuery.isFetching
-            : referencesQuery.isFetching
+            : separador === "Referencias" ? referencesQuery.isFetching : false
     const activeRefetch = separador === "ListaDePools"
         ? poolsQuery.refetch
         : separador === "Configuracoes"
             ? configQuery.refetch
-            : referencesQuery.refetch
+            : separador === "Referencias" ? referencesQuery.refetch : poolsQuery.refetch
     const columnCount = separador === "ListaDePools" ? 4 : 6
 
     return (
@@ -217,7 +235,7 @@ export default function ListaDeConfiguracoes() {
                         ? itemSelected
                         : separador === "Configuracoes"
                             ? itemSelectedConfig
-                            : itemSelectedReference
+                            : separador === "Referencias" ? itemSelectedReference : null
                 }
                 onClose={() => setDetailsModalIsOpen(false)}
                 isOpen={detailsModalIsOpen}
@@ -231,7 +249,7 @@ export default function ListaDeConfiguracoes() {
             <div className="ui-tabs ui-company-tabs flex" role="tablist" aria-label="Configurações de empresas" onKeyDown={(event) => {
                 if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
                 event.preventDefault()
-                const tabs: ConfigTab[] = ["ListaDePools", "Configuracoes", "Referencias"]
+                const tabs: ConfigTab[] = ["ListaDePools", "Configuracoes", "Referencias", "GPO"]
                 const currentIndex = tabs.indexOf(separador)
                 const direction = event.key === "ArrowRight" ? 1 : -1
                 const nextTab = tabs[(currentIndex + direction + tabs.length) % tabs.length]
@@ -241,7 +259,8 @@ export default function ListaDeConfiguracoes() {
                 {([
                     ["ListaDePools", "Pools"],
                     ["Configuracoes", "Configurações"],
-                    ["Referencias", "Referências"],
+                    ["Referencias", "Config. Referências"],
+                    ["GPO", "Config. GPO"],
                 ] as const).map(([tab, label]) => (
                     <button
                         key={tab}
@@ -252,8 +271,8 @@ export default function ListaDeConfiguracoes() {
                         aria-controls="company-config-panel"
                         tabIndex={separador === tab ? 0 : -1}
                         onClick={() => changeTab(tab)}
-                        className={`cursor-pointer border-x px-3 text-sm font-semibold text-[#143163] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] ${separador === tab
-                            ? "border-t-4 border-[#D7E2F2] bg-white"
+                        className={`cursor-pointer border-x px-3 text-sm font-semibold text-[#143163] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] ${tab === "ListaDePools" ? "ui-company-pools-tab" : ""} ${separador === tab
+                            ? "border-t-4 border-[#48B9FF] bg-white"
                             : "border-[#D7E2F2] bg-[#F8FAFC] hover:bg-[#F1F6FC]"
                             }`}
                     >
@@ -263,7 +282,7 @@ export default function ListaDeConfiguracoes() {
             </div>
 
             <section id="company-config-panel" role="tabpanel" aria-labelledby={`company-tab-${separador}`} tabIndex={0} className="ui-data-page overflow-hidden rounded-b-xl rounded-tr-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
-                <div className="p-4 sm:p-5 lg:p-6">
+                {separador === "GPO" ? <ConfiguracoesGPO embedded /> : <div className="ui-data-stack p-4 sm:p-5 lg:p-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
                             {separador !== "Referencias" && (
@@ -305,12 +324,19 @@ export default function ListaDeConfiguracoes() {
                         </div>
                     </div>
 
-                    <div className="ui-record-count mt-4 flex items-center gap-2 text-sm text-[#637590]">
-                        <span className="font-semibold">Total geral de registos:</span>
-                        <span>{isLoading ? "…" : totalItems}</span>
-                    </div>
 
-                    <div className="mt-2 overflow-x-auto rounded-lg border border-[#E3EAF4]">
+
+                    <TableResults
+                        label={separador === "ListaDePools" ? "Pools encontrados" : separador === "Configuracoes" ? "Configurações encontradas" : "Referências encontradas"}
+                        visibleCount={separador === "ListaDePools" ? filteredPools.length : separador === "Configuracoes" ? filteredConfig.length : filteredReferences.length}
+                        totalCount={totalItems}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePreviousPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="mt-2 overflow-x-auto rounded-lg border border-[#E3EAF4]"
+                    >
                         <table className="w-full min-w-[760px] border-collapse text-left">
                             <thead className="bg-[#F5F7FB] text-xs font-semibold tracking-wide text-[#637590]">
                                 {separador === "ListaDePools" ? (
@@ -456,7 +482,7 @@ export default function ListaDeConfiguracoes() {
                                 )}
                             </tbody>
                         </table>
-                    </div>
+                    </TableResults>
 
                     {isFetching && !isLoading && (
                         <p className="mt-3 text-right text-xs text-[#8293AE]" role="status">A actualizar os registos…</p>
@@ -472,7 +498,7 @@ export default function ListaDeConfiguracoes() {
                             onNextPage={handleNextPage}
                         />
                     </div>
-                </div>
+                </div>}
             </section>
         </>
     )

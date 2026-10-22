@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import SomoneyLogo from "@/assets/sidebarIcons/somoneyLogo"
+import IBANIcons from "@/assets/sidebarIcons/iban"
 import {
   DashboardIcon,
   DepositosIcon,
@@ -18,9 +19,9 @@ import {
   HistoricoRelatoriosIcon,
   LevantamentosIcon,
   MovimentosIcon,
-  OTPsIcon,
   PagamentosIcon,
   TransferenciasSomoneyIcon,
+  WebhooksIcon,
 } from "@/assets/sidebarIcons/figma"
 
 type UserContextSidebarProps = {
@@ -34,8 +35,16 @@ const userContextMenu = [
   { label: "Depósitos", path: "depositos", icon: DepositosIcon },
   { label: "Levantamentos", path: "levantamentos", icon: LevantamentosIcon },
   { label: "Movimentos", path: "conta-corrente", icon: MovimentosIcon },
+]
+
+const merchantContextMenu = [
+  { label: "Referências", path: "referencias", icon: PagamentosIcon },
+  { label: "Webhooks", path: "webhooks", icon: WebhooksIcon },
+]
+
+const userContextAccountMenu = [
+  { label: "IBANs", path: "ibans", icon: IBANIcons },
   { label: "Relatórios", path: "historico-relatorios", icon: HistoricoRelatoriosIcon },
-  { label: "OTPs", path: "otps", icon: OTPsIcon },
   { label: "Gestão da Conta", path: "gestao-da-conta", icon: GestaoContasIcon },
 ]
 
@@ -58,6 +67,13 @@ export default function UserContextSidebar({ userId }: UserContextSidebarProps) 
   const navigate = useNavigate()
   const location = useLocation()
   const [hoveredPath, setHoveredPath] = useState<string | null>(null)
+  const contextualUser = (location.state as { user?: { account_type?: string; business_name?: string } } | null)?.user
+  const isMerchantContext = contextualUser?.account_type === "Merchant" || Boolean(contextualUser?.business_name)
+  const visibleMenu = [
+    ...userContextMenu,
+    ...(isMerchantContext ? merchantContextMenu : []),
+    ...userContextAccountMenu,
+  ]
 
   return (
     <Sidebar collapsible="icon" variant="sidebar" className="overflow-visible border-[#EBECEF] bg-white">
@@ -125,7 +141,7 @@ export default function UserContextSidebar({ userId }: UserContextSidebarProps) 
           )}
 
           <div className={isCollapsed ? "flex w-full flex-col items-stretch gap-[3.6px]" : "space-y-[4.5px]"}>
-            {userContextMenu.map(({ label, path, icon: Icon }) => (
+            {visibleMenu.map(({ label, path, icon: Icon }) => (
               <ContextTooltip key={path} label={label} isCollapsed={isCollapsed}>
                 <NavLink
                   to={`/gestao-de-utilizadores/${userId}/${path}`}

@@ -1,8 +1,9 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useMemo, useState } from "react"
 import { statusPayment } from "@/components/utils/statusPayment"
 import { statusPaymentColor } from "@/components/utils/statusPaymentColor"
 import { TableStateRow } from "@/components/ui/table-state-row"
@@ -18,6 +19,7 @@ import { Search } from "lucide-react"
 import { Spinner } from "@/components/utils/spinner"
 import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
 import { useSelectedAccount } from "@/context/selectedAccountCntext"
+import { normaliseReferencePayments } from "@/lib/reference-payments"
 
 export default function PagamentosReferencia() {
 
@@ -44,6 +46,13 @@ export default function PagamentosReferencia() {
     const [cursorHistory, setCursorHistory] = useState([""])
     const [_isFiltered, setIsFiltered] = useState(false)
     const { account: selectedAccount } = useSelectedAccount();
+    useEffect(() => {
+        setCurrentPage(1)
+        setCursor("")
+        setCursorHistory([""])
+        setItemSelected(null)
+        setDetailsModalIsOpen(false)
+    }, [selectedAccount?.id])
 
 
     async function getPayments(cursor = "") {
@@ -63,15 +72,16 @@ export default function PagamentosReferencia() {
             if (queryParams.end_date) params.set("end_date", queryParams.end_date)
             if (cursor) params.set("cursor", cursor)
 
-            params.set("limit", String(queryParams.limit))
+            params.set("per_page", String(queryParams.limit))
+            params.set("page", String(currentPage))
 
-            const urlPayments = `/front/merchant/${selectedAccount?.merchant_payment_number}/payments?${params.toString()}`
+            const urlPayments = `/front/merchant/${encodeURIComponent(String(selectedAccount.id))}/payments?${params.toString()}`
 
             const { data } = await api.get(urlPayments)
 
             setIsFiltered(false)
 
-            return data
+            return normaliseReferencePayments(data)
         } catch (error) {
             console.log("Erro ao buscar pagamentos", error)
             return { code: "", payments: [], next_cursor: null }
@@ -83,11 +93,13 @@ export default function PagamentosReferencia() {
             queryKey: [
                 "listaPagamentosReferencia",
                 selectedAccount?.id,
+                currentPage,
                 queryParams,
                 cursor
             ],
             queryFn: () => getPayments(cursor),
-            placeholderData: keepPreviousData,
+            enabled: Boolean(selectedAccount?.id),
+            placeholderData: (previousData, previousQuery) => previousQuery?.queryKey[1] === selectedAccount?.id ? previousData : undefined,
         })
 
 
@@ -164,7 +176,7 @@ export default function PagamentosReferencia() {
         return range;
     };
 
-    const totalPages = currentPage + (data?.next_cursor ? 1 : 0)
+    const totalPages = data?.total !== undefined ? Math.max(1, Math.ceil(data.total / queryParams.limit)) : currentPage + (data?.next_cursor ? 1 : 0)
     const paginationRange = generatePaginationRange(totalPages, currentPage);
     const pageTotalAmount = (data?.payments ?? []).reduce(
         (total, payment) => total + Number(payment.operation_amount || 0),
@@ -173,6 +185,11 @@ export default function PagamentosReferencia() {
 
     const handlePageChange = (page: number) => {
         if (page === currentPage) return
+        if (data?.total !== undefined) {
+            setCursor("")
+            setCurrentPage(page)
+            return
+        }
         const pageCursor = cursorHistory[page - 1]
         if (pageCursor !== undefined) {
             setCursor(pageCursor)
@@ -183,6 +200,10 @@ export default function PagamentosReferencia() {
     };
 
     const handleNextPage = () => {
+        if (data?.total !== undefined) {
+            if (currentPage < totalPages) setCurrentPage((page) => page + 1)
+            return
+        }
         const nextCursor = data?.next_cursor
         if (!nextCursor) return
 
@@ -240,7 +261,7 @@ export default function PagamentosReferencia() {
             <DetalhesPagamentoReference itemSelected={itemSelected} onClose={() => setDetailsModalIsOpen(false)} isOpen={detailsModalIsOpen} />
 
             <section className="ui-data-page h-fit overflow-hidden rounded-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
-                <div className="flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
+                <div className="ui-data-stack flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
                             <FilterButton onClick={() => setFilterModalIsOpen(true)} label="Filtrar pagamentos por referência" />
@@ -266,21 +287,32 @@ export default function PagamentosReferencia() {
                             />
                         </div>
                     </div>
-                    <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
-                        <span>
-                            <strong>Entidade Sómoney:</strong>
-                            <span className="inline-flex items-center gap-1.5">
-                                <span>11269</span>
-                                <CopyTextButton value="11269" label="entidade Sómoney" />
-                            </span>
-                        </span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Registos nesta página:</strong> <span className="font-semibold">{isLoading ? "..." : data?.payments.length ?? 0}</span></span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Valor nesta página:</strong> <span className="font-semibold">{isLoading ? "..." : formatCurrency(pageTotalAmount)}</span></span>
-                    </div>
-
-                    <div className="overflow-hidden rounded-xl border border-[#E5EBF4]">
+                    <TableResults
+                        leadingContent={
+                            <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
+                                <span>
+                                    <strong>Entidade Sómoney:</strong>
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <span>11269</span>
+                                        <CopyTextButton value="11269" label="entidade Sómoney" />
+                                    </span>
+                                </span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Registos nesta página:</strong> <span className="font-semibold">{isLoading ? "..." : data?.payments.length ?? 0}</span></span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Valor nesta página:</strong> <span className="font-semibold">{isLoading ? "..." : formatCurrency(pageTotalAmount)}</span></span>
+                            </div>
+                        }
+                        label="Pagamentos encontrados"
+                        totalCount={data?.total}
+                        visibleCount={filteredPaymentsData.length}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="overflow-hidden rounded-xl border border-[#E5EBF4]"
+                    >
                         <table className="w-full md:table-fixed border-collapse ">
                             <thead className="bg-[#F5F6FA] h-14  ">
                                 <tr className=" place-items-center text-[#143163] ">
@@ -339,7 +371,7 @@ export default function PagamentosReferencia() {
                             </tbody>
                         </table>
 
-                    </div>
+                    </TableResults>
                     {/* paginacao */}
 
                     <PaginationFooter

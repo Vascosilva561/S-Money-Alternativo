@@ -81,6 +81,7 @@ const pagamentosMenus: SidebarSection[] = [
       { title: "Transferências", url: "/transferencias-somoney", icon: TransferenciasSomoneyIcon, key: "transferencias" },
       { title: "Pagamentos", url: "/pagamentos", icon: PagamentosIcon, key: "pagamentos" },
       { title: "Depósitos", url: "/depositos", icon: DepositosIcon, key: "depositos_gpo" },
+
       { title: "Levantamentos", url: "/levantamentos", icon: LevantamentosIcon, key: "levantamentos" },
       { title: "Movimentos", url: "/movimentos", icon: MovimentosIcon, key: "movimentos" },
     ],
@@ -94,6 +95,7 @@ const pagamentosMenus: SidebarSection[] = [
   {
     title: "Controle",
     items: [
+      { title: "Referências", url: "/referencias", icon: PagamentosIcon, key: "referencias" },
       { title: "Logs", url: "/operacoes-backoffice", icon: OperacoesBackofficeIcon, key: "logs" },
       { title: "Saldo por utilizador", url: "/saldo-por-usuario", icon: SaldoPorUsuarioIcon, key: "saldo_por_usuario" },
     ],

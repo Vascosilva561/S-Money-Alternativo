@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
@@ -304,7 +305,7 @@ export default function GestaoDeContas() {
             {/* <div className="border-2 border-zinc-700 w-[350px]"></div> */}
             <section className="ui-data-page overflow-hidden rounded-b-xl rounded-tr-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
 
-                <div className="p-4 sm:p-5 lg:p-6">
+                <div className="ui-data-toolbar-section p-4 sm:p-5 lg:p-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
 
@@ -352,15 +353,22 @@ export default function GestaoDeContas() {
 
                 </div>
 
-                <div className="flex flex-col gap-3 px-4 pb-6 sm:px-5 lg:px-6">
+                <div className="ui-data-stack flex flex-col gap-3 px-4 pb-6 sm:px-5 lg:px-6">
 
                     {/* Tabela */}
-                    <div className="ui-record-count flex items-center gap-2 pt-1 text-sm text-[#143163]">
-                        <span className="font-semibold">Total geral de registos:</span>
-                        <span className="rounded-full bg-[#F1F5FA] px-2.5 py-1 font-semibold">{isLoading ? "..." : data?.total ?? 0}</span>
-                    </div>
 
-                    <div className="overflow-hidden rounded-xl border border-[#E5EBF4]">
+
+                    <TableResults
+                        label="Contas encontradas"
+                        visibleCount={filteredUsersData.length}
+                        totalCount={data?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="overflow-hidden rounded-xl border border-[#E5EBF4]"
+                    >
                         <div className="overflow-x-auto">
                         <table className={`ui-user-management-table w-full table-fixed border-collapse text-sm ${particularAccount ? "ui-particular-account" : "ui-business-account"}`}>
                             <caption className="sr-only">Lista de utilizadores</caption>
@@ -475,7 +483,7 @@ export default function GestaoDeContas() {
                             </tbody>
                         </table>
                         </div>
-                    </div>
+                    </TableResults>
                     {/* paginacao */}
 
                     <PaginationFooter

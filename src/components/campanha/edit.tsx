@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
     Sheet,
     SheetClose,
@@ -258,11 +257,19 @@ export default function EditarCampanha({ onClose, isOpen, itemSelected }: props)
                             {<p className="text-green-600 text-sm font-semibold">{userSend || ""}</p>}
                         </div>
 
-                        <div className="mt-6">
-                            <label className="flex cursor-pointer items-center gap-2 text-[#143163] font-semibold text-[14px]">
-                                <Checkbox checked={formData.active} onCheckedChange={(active) => setFormData({ ...formData, active })} />
-                                Ativo
-                            </label>
+                        <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-[#D7E2F2] bg-[#F8FAFC] px-4 py-3">
+                            <span id="campaign-status-label" className="text-sm font-semibold text-[#143163]">Estado da campanha</span>
+                            <button
+                                type="button"
+                                role="switch"
+                                aria-checked={formData.active}
+                                aria-labelledby="campaign-status-label"
+                                onClick={() => setFormData((current) => ({ ...current, active: !current.active }))}
+                                disabled={loading}
+                                className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${formData.active ? "bg-[#22C55E]" : "bg-[#D1D5DB]"}`}
+                            >
+                                <span className={`inline-block size-5 transform rounded-full bg-white shadow-sm transition-transform ${formData.active ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+                            </button>
                         </div>
 
                         {<Button className=" w-full p-2 mt-[60px] rounded-[6px] mb-10 cursor-pointer bg-[#EAF6F8] hover:bg-[#17CFDA] hover:ring-[#17CFDA] transition duration-300 ring-1 ring-[#ADCBD0] text-[#143163] font-semibold"

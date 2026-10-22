@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { useQuery } from "@tanstack/react-query"
@@ -15,6 +16,7 @@ import { formatCurrency } from "@/components/utils/formmat"
 import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { TableStateRow } from "@/components/ui/table-state-row"
 import { RefreshButton } from "@/components/ui/refresh-button"
+import { KpiCard } from "@/components/ui/kpi-card"
 import { useSearchParams } from "react-router"
 
 export default function SaldoPorUsuario() {
@@ -268,7 +270,7 @@ export default function SaldoPorUsuario() {
                 </button>
             </div>
             <section className="ui-data-page overflow-hidden rounded-b-xl rounded-tr-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
-                <div className="p-4 sm:p-5 lg:p-6">
+                <div className="ui-data-toolbar-section p-4 sm:p-5 lg:p-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
                             <button
@@ -330,29 +332,30 @@ export default function SaldoPorUsuario() {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-3 px-4 pb-6 sm:px-5 lg:px-6">
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        <article className="flex min-h-[96px] max-w-[380px] items-center justify-between gap-4 rounded-lg border border-[#D7E2F2] bg-white p-4 shadow-sm">
-                            <div className="flex min-w-0 items-center gap-3">
-                                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#EEF6FF] text-[#2678F2]" aria-hidden="true">
-                                    <Wallet className="size-5" strokeWidth={2.1} />
-                                </span>
-                                <div className="min-w-0">
-                                    <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#71809A]">Saldo total das wallets</p>
-                                    <p className="mt-1 text-xl font-bold leading-none tracking-tight text-[#143163]">
-                                        {isLoading ? "A carregar..." : `${Number(data?.totalBalance?.total ?? 0).toLocaleString()} Kz`}
-                                    </p>
-                                </div>
-                            </div>
-                        </article>
+                <div className="ui-data-stack flex flex-col gap-3 px-4 pb-6 sm:px-5 lg:px-6">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <KpiCard
+                            label="Saldo total das wallets"
+                            value={isLoading ? "A carregar..." : `${Number(data?.totalBalance?.total ?? 0).toLocaleString()} Kz`}
+                            helper={particularAccount ? "Saldo agregado de particulares" : "Saldo agregado de empresas"}
+                            icon={Wallet}
+                            tone="blue"
+                        />
                     </div>
 
-                    <div className="ui-record-count flex items-center gap-2 pt-1 text-sm text-[#143163]">
-                        <span className="font-semibold">Total geral de registos:</span>
-                        <span className="rounded-full bg-[#F1F5FA] px-2.5 py-1 font-semibold">{isLoading ? "..." : data?.users?.total ?? 0}</span>
-                    </div>
 
-                    <div className="overflow-hidden rounded-xl border border-[#E5EBF4]">
+
+                    <TableResults
+                        label="Utilizadores encontrados"
+                        visibleCount={filteredUsers.length}
+                        totalCount={data?.users?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="overflow-hidden rounded-xl border border-[#E5EBF4]"
+                    >
                         <div className="overflow-x-auto">
                             <table className="ui-balance-table w-full min-w-[760px] table-fixed border-collapse text-sm">
                                 <caption className="sr-only">Saldos por utilizador</caption>
@@ -407,7 +410,7 @@ export default function SaldoPorUsuario() {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </TableResults>
 
                     <PaginationFooter
                         currentPage={currentPage}

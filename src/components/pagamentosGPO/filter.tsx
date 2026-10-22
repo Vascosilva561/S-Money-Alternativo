@@ -1,10 +1,6 @@
+import * as React from "react"
 import { Button } from "@/components/ui/button"
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetHeader,
-} from "@/components/ui/sheet"
+import { DateField, FormField, TextField } from "@/components/ui/form-field"
 import {
     Select,
     SelectContent,
@@ -12,163 +8,173 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet"
+import { X } from "lucide-react"
 
-
-type props = {
-    isOpen: boolean,
-    onClose: () => void,
-    queryParams: any,
-    setQueryParams: (e: any) => void
-    filter: (currentPage: number) => void
-    setIsFiltered: (e: any) => void
-    setShowFilter: (e: any) => void
-   
-    canal: string,
-    setCanal: (value:string)=>void,
-
-    setStatus: (value: string) => void,
-    status: string,
-
-    setTipoDeConta: (value: string) => void,
-    tipoDeConta: string,
+type GpoPaymentFilters = {
+    merchant_id: string
+    merchant_number: string
+    business_name: string
+    status: string
+    payment_reference: string
+    transaction_reference: string
+    phone_number: string
+    external_payment_id: string
+    montante_de: string
+    montante_ate: string
+    data_inicio: string
+    data_fim: string
 }
 
-export default function FilterDeposits({ onClose, isOpen, queryParams, setQueryParams, status, setStatus,
-    filter, setIsFiltered, setShowFilter, setCanal, canal,
-     tipoDeConta, setTipoDeConta
+type Props = {
+    isOpen: boolean
+    onClose: () => void
+    filter: (page?: number) => void
+    queryParams: GpoPaymentFilters
+    setQueryParams: React.Dispatch<React.SetStateAction<GpoPaymentFilters>>
+}
 
-}: props) {
+export default function FilterGpoPayments({
+    isOpen,
+    onClose,
+    filter,
+    queryParams,
+    setQueryParams,
+}: Props) {
+    const handleChange = (field: keyof GpoPaymentFilters, value: string) => {
+        setQueryParams((previous) => ({
+            ...previous,
+            [field]: value,
+        }))
+    }
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.user_name_phone !== "" || queryParams.destinatario !== "" ||
-            queryParams.dataInicial !== "" || canal !== "" || queryParams.dataFinal !== "" || status !== "" ||
-             tipoDeConta !== "" || queryParams?.montante_de !== "" || queryParams?.montante_ate !== ""
-
-        ) {
-            setShowFilter(true)
-        }
+    const applyFilters = () => {
+        filter(1)
+        onClose()
     }
 
     return (
-        <>
-            <Sheet onOpenChange={onClose} open={isOpen} >
+        <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
+            <SheetContent className="ui-filter-sheet-panel ui-gpo-filter-sheet w-full overflow-hidden p-5 sm:max-w-[620px] sm:p-6">
+                <div className="flex w-full items-start justify-between gap-4 border-b border-[#E5EBF4] pb-4">
+                    <SheetHeader className="p-0">
+                        <SheetTitle>Filtrar pagamentos GPO</SheetTitle>
+                        <SheetDescription>Defina os critérios para refinar a lista de pagamentos.</SheetDescription>
+                    </SheetHeader>
+                    <SheetClose aria-label="Fechar filtros" className="ui-gpo-sheet-close">
+                        <X className="size-4" aria-hidden="true" />
+                    </SheetClose>
+                </div>
 
-                <SheetContent className="ui-filter-sheet-panel w-full overflow-hidden p-5 sm:max-w-[440px] sm:p-6">
-                    <div className="flex items-start justify-between gap-4 w-full border-b border-[#E5EBF4] pb-4">
-                        <SheetHeader className="text-[#143163] font-semibold text-lg p-0" description="Defina os critérios que pretende aplicar para refinar a lista.">Filtrar Dados</SheetHeader>
-                        <SheetClose aria-label="Fechar filtros" className=" cursor-pointer bg-[#DBDEE3] hover:bg-[#C5C9CE] rounded duration-300"><svg width="25" height="25" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="25" height="25" rx="8" />
-                            <path d="M29.7067 28.2943C30.0973 28.685 30.0973 29.3183 29.7067 29.709C29.512 29.9037 29.256 30.0023 29 30.0023C28.744 30.0023 28.488 29.905 28.2933 29.709L21 22.4156L13.7067 29.709C13.512 29.9037 13.256 30.0023 13 30.0023C12.744 30.0023 12.488 29.905 12.2933 29.709C11.9027 29.3183 11.9027 28.685 12.2933 28.2943L19.5867 21.001L12.2933 13.7077C11.9027 13.317 11.9027 12.6837 12.2933 12.293C12.684 11.9023 13.3173 11.9023 13.708 12.293L21.0013 19.5864L28.2946 12.293C28.6853 11.9023 29.3187 11.9023 29.7093 12.293C30.1 12.6837 30.1 13.317 29.7093 13.7077L22.416 21.001L29.7067 28.2943Z" fill="#143163" stroke="#143163" />
-                        </svg>
-                        </SheetClose>
+                <div className="ui-gpo-filter-grid grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+                    <TextField
+                        label="Nº do comerciante"
+                        type="text"
+                        value={queryParams.merchant_number}
+                        onChange={(event) => handleChange("merchant_number", event.target.value)}
+                        placeholder="Digite o número do comerciante"
+                    />
+
+                    <TextField
+                        label="Nome da empresa"
+                        type="text"
+                        value={queryParams.business_name}
+                        onChange={(event) => handleChange("business_name", event.target.value)}
+                        placeholder="Digite o nome da empresa"
+                    />
+
+                    <FormField label="Estado">
+                        <Select
+                            value={queryParams.status}
+                            onValueChange={(value) => handleChange("status", value)}
+                        >
+                            <SelectTrigger className="w-full" aria-label="Estado">
+                                <SelectValue placeholder="Todos" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="PAID">Concluído</SelectItem>
+                                <SelectItem value="PENDING">Pendente</SelectItem>
+                                <SelectItem value="REJECTED">Falhou</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </FormField>
+
+                    <TextField
+                        label="Referência do pagamento"
+                        type="text"
+                        value={queryParams.payment_reference}
+                        onChange={(event) => handleChange("payment_reference", event.target.value)}
+                        placeholder="Digite a referência"
+                    />
+
+                    <TextField
+                        label="Referência da transação"
+                        type="text"
+                        value={queryParams.transaction_reference}
+                        onChange={(event) => handleChange("transaction_reference", event.target.value)}
+                        placeholder="Digite a referência da transação"
+                    />
+
+                    <TextField
+                        label="Número de telemóvel"
+                        type="text"
+                        value={queryParams.phone_number}
+                        onChange={(event) => handleChange("phone_number", event.target.value)}
+                        placeholder="Digite o número"
+                    />
+
+                    <TextField
+                        label="External Payment ID"
+                        containerClassName="ui-gpo-filter-external-id"
+                        type="text"
+                        value={queryParams.external_payment_id}
+                        onChange={(event) => handleChange("external_payment_id", event.target.value)}
+                        placeholder="Digite o External Payment ID"
+                    />
+
+                    <div className="ui-gpo-filter-range grid grid-cols-2 gap-3">
+                        <TextField
+                            label="Montante mínimo"
+                            type="number"
+                            value={queryParams.montante_de}
+                            onChange={(event) => handleChange("montante_de", event.target.value)}
+                            placeholder="0,00"
+                        />
+                        <TextField
+                            label="Montante máximo"
+                            type="number"
+                            value={queryParams.montante_ate}
+                            onChange={(event) => handleChange("montante_ate", event.target.value)}
+                            placeholder="0,00"
+                        />
                     </div>
 
-                    <div className="">
+                    <DateField
+                        label="Data inicial"
+                        value={queryParams.data_inicio}
+                        onChange={(event) => handleChange("data_inicio", event.target.value)}
+                    />
+                    <DateField
+                        label="Data final"
+                        value={queryParams.data_fim}
+                        onChange={(event) => handleChange("data_fim", event.target.value)}
+                    />
+                </div>
 
-                        {/*<div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold ">ID da Transação</label>
-                            <input type="text" value={queryParams.name} onChange={(e) => setQueryParams({ ...queryParams, name: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>*/}
-
-                        <div className="flex flex-col space-y-2 mt-6 w-full">
-                            <label className="text-[#143163] font-semibold text-sm">Tipo de Conta</label>
-                            <Select onValueChange={setTipoDeConta} value={tipoDeConta}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Todas" />
-                                </SelectTrigger>
-                                <SelectContent >
-                                    <SelectItem value="User">Particular</SelectItem>
-                                    <SelectItem value="Merchant">Empresa</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-sm">Utilizador (Nome/Telemóvel)</label>
-                            <input type="email" value={queryParams.user_name_phone} onChange={(e) => setQueryParams({ ...queryParams, user_name_phone: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>
-
-                        <div className="flex justify-between space-x-2">
-
-                            <div className="flex flex-col space-y-2 mt-5 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Montante (De)</label>
-                                <input type="number" value={queryParams.montante_de} onChange={(e) => setQueryParams({ ...queryParams, montante_de: e.target.value })}
-                                className={`p-2 w-full ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                            <div className="flex justify-between space-x-2 w-full items-center">
-                                <div className="flex flex-col space-y-2 mt-5  w-full ">
-                                    <label className="text-[#143163] font-semibold text-sm">Montante (Até)</label>
-                                    <input type="number" value={queryParams.montante_ate} onChange={(e) => setQueryParams({ ...queryParams, montante_ate: e.target.value })}
-                                className={`p-2 w-full ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="flex justify-between space-x-2">
-
-                            <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Canal de Entrada</label>
-                                <Select onValueChange={setCanal} value={canal}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Todos"/>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            <SelectItem value="M. Express">M. Express</SelectItem>
-                                            <SelectItem value="P. Refenrencia">P. Referência</SelectItem>
-                                            
-                                        </SelectContent>
-                                    </Select>
-                            </div>
-                            <div className="flex justify-between space-x-2 w-full items-center">
-                                <div className="flex flex-col space-y-2 mt-5  w-full">
-                                    <label className="text-[#143163] font-semibold text-sm">Estado do Depósito</label>
-                                    <Select onValueChange={setStatus} value={status}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Todos"/>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                           <SelectItem value="ACCEPTED">Concluído</SelectItem>
-                                            <SelectItem value="PENDING">Pendente</SelectItem>
-                                            <SelectItem value="REJECTED">Expirado</SelectItem>
-                                            <SelectItem value="REFUNDED">Reembolso</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div className="flex justify-between space-x-2">
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Inicial</label>
-                                <input type="date" value={queryParams.dataInicial} onChange={(e) => setQueryParams({ ...queryParams, dataInicial: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                            <div className="flex flex-col space-y-2 mt-5 w-full ">
-                                <label className="text-[#143163] font-semibold text-sm">Data Final</label>
-                                <input type="date" value={queryParams.dataFinal} onChange={(e) => setQueryParams({ ...queryParams, dataFinal: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                            </div>
-                        </div>
-
-                        <SheetClose asChild>
-                            <Button onClick={() => {
-                            setIsFiltered(true)
-                            mostraLimparFiltro()
-                            filter(1)
-                        }} className="h-11 w-full rounded-lg bg-[#143163] text-white hover:bg-[#1D467F]"
-                            type="button" variant="brand">
-                            Filtrar
-                        </Button>
-                        </SheetClose>
-                    </div>
-
-                </SheetContent>
-
-            </Sheet>
-        </>
+                <SheetFooter className="ui-gpo-filter-footer">
+                    <Button onClick={applyFilters} className="h-11 w-full" type="button" variant="brand">
+                        Filtrar
+                    </Button>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
     )
 }

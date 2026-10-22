@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 
 
@@ -40,16 +41,13 @@ export default function FilterTransactions({ onClose, isOpen, queryParams, setQu
 
     }: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.remetente !== "" || queryParams.destinatario !== "" || queryParams.valorDe !== "" || queryParams.valorAte !== "" ||
-            queryParams.dataInicial !== "" || statusOfTransaction !== "" || queryParams.dataFinal !== "" ||
-            typeAccountSender !== "" || typeAccountReceiver !== ""
-
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.remetente, queryParams.destinatario, queryParams.valorDe, queryParams.valorAte,
+        queryParams.dataInicial, queryParams.dataFinal,
+        statusOfTransaction !== "PAID" ? statusOfTransaction : "",
+        typeAccountSender !== "User" ? typeAccountSender : "",
+        typeAccountReceiver !== "User" ? typeAccountReceiver : "",
+    ))
 
     return (
         <>

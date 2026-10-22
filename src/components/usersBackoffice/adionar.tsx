@@ -175,7 +175,7 @@ export default function AddUsersManagers({ onClose, isOpen }: props) {
                     <form onSubmit={createUser}>
 
                         <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-[14px]">Utilizador backoffice</label>
+                            <label className="text-[#143163] font-semibold text-[14px]">Nome completo</label>
                             <input required type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                         </div>

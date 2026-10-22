@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
@@ -264,13 +265,13 @@ export default function Movimentos() {
             {/* <div className="border-2 border-zinc-700 w-[350px]"></div> */}
             <section className="ui-data-page max-h-max overflow-hidden rounded-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
 
-                <div className="flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
+                <div className="ui-data-stack flex flex-col gap-3 px-4 pb-6 pt-4 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
                     <div className="ui-toolbar flex flex-col gap-4 pb-2 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-2">
                             <Button
                                 type="button"
-                                variant="brand"
-                                className="h-10 px-4"
+                                variant="outline"
+                                className="h-10 rounded-lg border-[#143163] bg-[#143163] px-4 font-semibold text-white shadow-none hover:bg-[#1D467F] hover:text-white"
                                 onClick={() => setAddModalIsOpen(true)}
                             >
                                 <Download aria-hidden="true" />
@@ -300,15 +301,26 @@ export default function Movimentos() {
                         </div>
                     </div>
 
-                    <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
-                        <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total}</span></span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Total de movimentos de entrada:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_entrada ? Number(data?.total_entrada)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Total de movimentos de saída:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_saida ? Number(data?.total_saida)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
-                    </div>
-
-                    <div className="overflow-hidden rounded-xl border border-[#E5EBF4]">
+                    <TableResults
+                        leadingContent={
+                            <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
+                                <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total}</span></span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Total de movimentos de entrada:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_entrada ? Number(data?.total_entrada)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Total de movimentos de saída:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_saida ? Number(data?.total_saida)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
+                            </div>
+                        }
+                        label="Movimentos encontrados"
+                        visibleCount={filteredUsersData.length}
+                        totalCount={data?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="overflow-hidden rounded-xl border border-[#E5EBF4]"
+                    >
                         <div className="overflow-x-auto">
                         <table className="w-full min-w-[960px] table-fixed border-collapse text-sm ">
                             <caption className="sr-only">Lista de movimentos</caption>
@@ -394,7 +406,7 @@ export default function Movimentos() {
                             </tbody>
                         </table>
                         </div>
-                    </div>
+                    </TableResults>
                     {/* paginacao */}
 
                     <PaginationFooter

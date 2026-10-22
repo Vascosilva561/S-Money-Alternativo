@@ -154,7 +154,7 @@ export default function DetalhesPagamentoReference({
                                 <p>Valor:</p>
 
                                 <p className="text-[#4B5563] text-right">
-                                    {formatAmount(itemSelected?.operation_amount)} Kz
+                                    {formatAmount(itemSelected?.operation_amount ?? itemSelected?.value)} Kz
                                 </p>
                             </div>
 
@@ -165,6 +165,19 @@ export default function DetalhesPagamentoReference({
                                     {itemSelected?.processing_date || "N/A"}
                                 </p>
                             </div>
+
+                            {itemSelected?.cost !== undefined && <div className="w-full flex justify-between items-center gap-4">
+                                <p>Custo:</p><p className="text-[#4B5563] text-right">{formatAmount(itemSelected.cost)} Kz</p>
+                            </div>}
+                            {itemSelected?.profit_somoney !== undefined && <div className="w-full flex justify-between items-center gap-4">
+                                <p>Lucro Sómoney:</p><p className="text-[#4B5563] text-right">{formatAmount(itemSelected.profit_somoney)} Kz</p>
+                            </div>}
+                            {itemSelected?.transaction_reference && <div className="w-full flex justify-between items-center gap-4">
+                                <p>Referência da transação:</p><p className="text-[#4B5563] text-right break-all">{itemSelected.transaction_reference}</p>
+                            </div>}
+                            {itemSelected?.merchant?.business_name && <div className="w-full flex justify-between items-center gap-4">
+                                <p>Empresa:</p><p className="text-[#4B5563] text-right">{itemSelected.merchant.business_name}</p>
+                            </div>}
 
                             <div className="w-full flex justify-between items-center gap-4">
                                 <p>Local do pagamento:</p>

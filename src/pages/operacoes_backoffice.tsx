@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
@@ -183,7 +184,7 @@ export default function Logs() {
             {/* <div className="border-2 border-zinc-700 w-[350px]"></div> */}
             <section className="ui-data-page bg-white rounded-lg h-fit text-sm shadow-[0px_0px_13px_0px_rgba(207,_215,_229,_0.67)] border-2  border-[#C8D7EF]">
 
-                <div className="flex flex-col p-5 ">
+                <div className="ui-data-stack flex flex-col p-5 ">
                     {/* <div className="flex space-x-4">
                         <button onClick={() => setAddModalIsOpen(true)} type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
                          hover:bg-[#17CFDA] hover:ring-[#17CFDA] rounded-[5px] duration-300 font-semibold  flex space-x-2 items-center">
@@ -206,10 +207,9 @@ export default function Logs() {
                     </div> */}
 
                     {/* filtros */}
-                    <div>
 
-                    </div>
-                    <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                    <div className="ui-toolbar ui-legacy-toolbar">
+                        <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                         <div className="flex space-x-2 ">
 
                             {!isLoading && (isFetching && <>
@@ -233,11 +233,22 @@ export default function Logs() {
                             </div>
                         </div>
                     </div>
+                    </div>
 
 
 
                     {/* Tabela */}
-                    <div className="logs-table-wrapper mt-10 border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+                    <TableResults
+                        label="Logs encontrados"
+                        visibleCount={filteredUsersData.length}
+                        totalCount={data?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName="logs-table-wrapper mt-10 border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                    >
                         <table className="w-full md:table-fixed border-collapse ">
                             <thead className="bg-[#F5F6FA] h-14  ">
                                 <tr className=" place-items-center text-[#143163] ">
@@ -303,7 +314,7 @@ export default function Logs() {
                             </tbody>
                         </table>
 
-                    </div>
+                    </TableResults>
                     {/* paginacao */}
 
                     <PaginationFooter

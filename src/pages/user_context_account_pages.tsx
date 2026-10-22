@@ -1,8 +1,10 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { TableStateRow } from "@/components/ui/table-state-row"
 import DetailsGestaoUsuario from "@/components/gestaoDeContas/details"
 import EditUsuario from "@/components/gestaoDeContas/edit"
+import BankIbans from "@/components/bancos/ibans"
 import ModalEliminarOtp from "@/components/otp/modalELiminar"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { generatePaginationRange } from "@/hooks/generatePaginationRange"
@@ -81,8 +83,8 @@ export function UserContextOtps() {
       </div>
 
       <section className="ui-data-page rounded-xl border border-[#D7E2F2] bg-white text-sm shadow-[0_8px_24px_rgba(20,49,99,0.06)]">
-        <div className="flex flex-col gap-4 p-5">
-          <div className="flex w-full justify-end">
+        <div className="ui-data-stack flex flex-col gap-4 p-5">
+          <div className="ui-toolbar flex w-full justify-end">
             <div className="relative w-full max-w-[300px]">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7D8CA6]" aria-hidden="true" />
                   <input type="search" aria-label="Pesquisar OTPs" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Pesquisar OTP..." className="h-10 w-full rounded-lg border border-[#C9D8E9] bg-white pl-10 pr-3 text-sm text-[#143163] outline-none transition placeholder:text-[#8293AE] focus:border-[#48B9FF] focus:ring-4 focus:ring-[#48B9FF]/15" />
@@ -92,7 +94,17 @@ export function UserContextOtps() {
           {otpQuery.isError ? (
             <div className="rounded-lg border border-[#F0D99A] bg-[#FFF9E8] px-4 py-6 text-center text-sm text-[#765500]">Não foi possível carregar os OTPs desta conta.</div>
           ) : (
-            <div className="overflow-x-auto rounded-xl border border-[#E5EBF4]">
+            <TableResults
+                label="OTPs encontrados"
+                visibleCount={filteredRows.length}
+                totalCount={otpQuery.data?.total}
+                currentPage={page}
+                totalPages={totalPages}
+                onPreviousPage={() => setPage((current) => Math.max(1, current - 1))}
+                onNextPage={() => setPage((current) => Math.min(totalPages, current + 1))}
+                isLoading={otpQuery.isPending || otpQuery.isFetching}
+                containerClassName="overflow-x-auto rounded-xl border border-[#E5EBF4]"
+            >
               <table className="ui-context-otp-table w-full min-w-[760px] border-collapse">
                 <caption className="sr-only">Histórico de códigos OTP da conta seleccionada</caption>
                 <thead className="h-14 bg-[#F5F6FA] text-left text-[#143163]">
@@ -122,7 +134,7 @@ export function UserContextOtps() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableResults>
           )}
 
           <PaginationFooter
@@ -175,6 +187,44 @@ export function UserContextReports() {
           emptyDescription="O serviço actual não permite associar os ficheiros de relatório a uma conta específica. A listagem geral não é apresentada neste contexto."
         />
       </div>
+    </div>
+  )
+}
+
+export function UserContextIbans() {
+  const user = useUserContext()
+  const [activeTab, setActiveTab] = useState<"account" | "pending">("pending")
+  const displayName = user.business_name || [user.first_name, user.last_name].filter(Boolean).join(" ") || "esta conta"
+
+  return (
+    <div className="ui-context-page space-y-5">
+      <div>
+        <p className="text-sm font-medium text-[#6B7280]">Contexto da conta</p>
+        <h2 className="mt-1 text-2xl font-bold text-[#143163]">IBANs</h2>
+        <p className="mt-1 text-sm text-[#6B7280]">Dados bancários associados a {displayName}.</p>
+      </div>
+
+      <div className="ui-tabs flex" role="group" aria-label="Listagem de IBANs">
+        {([
+          { id: "pending", label: "IBANs por validar" },
+          { id: "account", label: "IBANs da conta" },
+        ] as const).map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            aria-pressed={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={activeTab === tab.id ? "border-t-4 border-[#48B9FF]" : ""}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <BankIbans
+        accountId={String(user.id ?? "")}
+        statusFilter={activeTab === "pending" ? "pending" : "approved"}
+      />
     </div>
   )
 }

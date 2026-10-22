@@ -1,22 +1,30 @@
 import { useRef, type KeyboardEvent, type ReactNode } from "react"
 import { useSearchParams } from "react-router"
 
-export type PaymentTab = "servicos" | "referencia"
+export type PaymentTab = "servicos" | "referencia" | "gpo"
 
 type PaymentsTabsProps = {
   services: ReactNode
   reference: ReactNode
+  gpo?: ReactNode
 }
 
-const tabs: { id: PaymentTab; label: string }[] = [
+const baseTabs: { id: PaymentTab; label: string }[] = [
   { id: "servicos", label: "Pagamento de serviços" },
   { id: "referencia", label: "Pagamentos por referência" },
 ]
 
-export default function PaymentsTabs({ services, reference }: PaymentsTabsProps) {
+export default function PaymentsTabs({ services, reference, gpo }: PaymentsTabsProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
-  const activeTab: PaymentTab = searchParams.get("tab") === "referencia" ? "referencia" : "servicos"
+  const hasGpoTab = gpo !== undefined && gpo !== null
+  const tabs = hasGpoTab
+    ? [...baseTabs, { id: "gpo" as const, label: "Pagamentos por GPO" }]
+    : baseTabs
+  const requestedTab = searchParams.get("tab")
+  const activeTab: PaymentTab = tabs.some((tab) => tab.id === requestedTab)
+    ? requestedTab as PaymentTab
+    : "servicos"
 
   const selectTab = (tab: PaymentTab) => {
     setSearchParams((current) => {
@@ -43,6 +51,11 @@ export default function PaymentsTabs({ services, reference }: PaymentsTabsProps)
   }
 
   const panelId = "payments-tab-panel"
+  const activeContent = activeTab === "referencia"
+    ? reference
+    : activeTab === "gpo" && gpo
+      ? gpo
+      : services
 
   return (
     <div className="min-w-0">
@@ -50,7 +63,7 @@ export default function PaymentsTabs({ services, reference }: PaymentsTabsProps)
         role="tablist"
         aria-label="Tipo de pagamento"
         aria-orientation="horizontal"
-        className="ui-tabs ui-payment-tabs flex"
+        className={hasGpoTab ? "ui-tabs ui-payment-tabs ui-payment-tabs-gpo flex" : "ui-tabs ui-payment-tabs flex"}
       >
         {tabs.map((tab, index) => {
           const isSelected = activeTab === tab.id
@@ -59,7 +72,7 @@ export default function PaymentsTabs({ services, reference }: PaymentsTabsProps)
             <button
               key={tab.id}
               ref={(element) => { tabRefs.current[index] = element }}
-              id={`payments-tab-${tab.id}`}
+              id={"payments-tab-" + tab.id}
               type="button"
               role="tab"
               aria-selected={isSelected}
@@ -78,11 +91,11 @@ export default function PaymentsTabs({ services, reference }: PaymentsTabsProps)
       <div
         id={panelId}
         role="tabpanel"
-        aria-labelledby={`payments-tab-${activeTab}`}
+        aria-labelledby={"payments-tab-" + activeTab}
         tabIndex={0}
-        className="payment-tabs-panel min-w-0 outline-none"
+        className={hasGpoTab ? "payment-tabs-panel payment-tabs-panel-gpo min-w-0 outline-none" : "payment-tabs-panel min-w-0 outline-none"}
       >
-        {activeTab === "referencia" ? reference : services}
+        {activeContent}
       </div>
     </div>
   )

@@ -6,16 +6,16 @@ import {
     SheetHeader,
 } from "@/components/ui/sheet"
 import type { ReferralItem } from "@/types/Indicacoes"
-import type { ProgramaIndicacao } from "@/types/configurations"
+import type { Indicator } from "@/types/indicator"
 
 type props = {
     isOpen: boolean,
     onClose: () => void,
-    itemSelected: ReferralItem | ProgramaIndicacao | undefined
+    itemSelected: ReferralItem | Indicator | undefined
 }
 
 // type guard: campo `code` só existe em ReferralItem
-function isReferralItem(item: ReferralItem | ProgramaIndicacao): item is ReferralItem {
+function isReferralItem(item: ReferralItem | Indicator): item is ReferralItem {
     return (item as ReferralItem).code !== undefined
 }
 
@@ -108,20 +108,19 @@ export default function DetailsIndicacoes({ onClose, isOpen, itemSelected }: pro
                                 </div>
                             </div>
                         ) : itemSelected ? (
-                            // ---- Detalhes de Programa/Configuração ----
+                            // ---- Detalhes do indicador ----
                             <div className="w-full">
                                 <div className="text-sm text-[#143163] space-y-2">
 
-                                    {/* Programa */}
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Nome:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.name}</p>
+                                        <p>Utilizador:</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected.user?.name || "N/A"}</p>
                                     </div>
 
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Descrição:</p>
+                                        <p>Telefone:</p>
                                         <p className="h-5 text-[#4B5563]">
-                                            {itemSelected?.description || "N/A"}
+                                            {itemSelected.user?.phone_number || "N/A"}
                                         </p>
                                     </div>
 
@@ -135,25 +134,25 @@ export default function DetailsIndicacoes({ onClose, isOpen, itemSelected }: pro
                                     <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />
 
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Data de início:</p>
-                                        <p className="h-5 text-[#4B5563]">{itemSelected?.start_date || "N/A"}</p>
+                                        <p>E-mail:</p>
+                                        <p className="h-5 text-[#4B5563]">{itemSelected.user?.email || "N/A"}</p>
                                     </div>
 
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Data de término:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.end_date || "N/A"}</p>
+                                        <p>Código de convite:</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected.invite_code || itemSelected.user?.invite_code || "N/A"}</p>
                                     </div>
 
                                     <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />
 
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Valor do prémio:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.reward_amount.toLocaleString('pt-AO')} Kz</p>
+                                        <p>Valor do indicador:</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{Number(itemSelected.value_indicator).toLocaleString("pt-AO")} Kz</p>
                                     </div>
 
                                     <div className="w-full flex justify-between items-center">
-                                        <p>Orçamento:</p>
-                                        <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.budget.toLocaleString('pt-AO')} Kz</p>
+                                        <p>Valor indicado:</p>
+                                        <p className="h-5 font-semibold text-[#4B5563]">{Number(itemSelected.value_indicated).toLocaleString("pt-AO")} Kz</p>
                                     </div>
 
                                     <div className="ring-[0.5px] ring-[#A9B8CF] w-full mb-8" />

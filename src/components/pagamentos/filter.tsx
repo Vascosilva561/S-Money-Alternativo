@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select"
 import { DateField, FormField, TextField } from "@/components/ui/form-field"
 import { X } from "lucide-react"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 
 type props = {
@@ -34,20 +35,23 @@ type props = {
 
     setTipoDeConta: (value: string) => void,
     tipoDeConta: string,
+    defaultTipoDeConta?: string,
 }
 
 
 export default function FilterPayments({ onClose, isOpen, queryParams, setQueryParams, servico, setServico,
     filter, setIsFiltered, setShowFilter, setEstadoDoPagamento, estadoDoPagamento,
-     tipoDeConta, setTipoDeConta
+     tipoDeConta, setTipoDeConta, defaultTipoDeConta = "User"
 
 }: props) {
 
     const mostraLimparFiltro = () => {
 
-        setShowFilter(Boolean(
-            queryParams.users_name || queryParams.beneficiario || queryParams.dataInicial ||
-            queryParams.dataFinal || estadoDoPagamento || servico || tipoDeConta
+        setShowFilter(hasActiveFilterValues(
+            queryParams.users_name, queryParams.beneficiario, queryParams.dataInicial, queryParams.dataFinal,
+            estadoDoPagamento !== "SUCCESS" ? estadoDoPagamento : "",
+            servico,
+            tipoDeConta !== defaultTipoDeConta ? tipoDeConta : "",
         ))
     }
 

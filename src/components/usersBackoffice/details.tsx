@@ -48,7 +48,7 @@ export default function DetalhesUserBackOffice({ onClose, isOpen, itemSelected }
                         <div className="w-full">
                             <div className="text-sm text-[#143163] space-y-2">
                                 <div className="w-full flex justify-between items-center">
-                                    <p>Utilizador backoffice:</p>
+                                    <p>Nome completo:</p>
                                     <p className="h-5 font-semibold text-[#4B5563]">{itemSelected?.name}</p>
                                 </div>
                                 <div className="w-full flex justify-between items-center">

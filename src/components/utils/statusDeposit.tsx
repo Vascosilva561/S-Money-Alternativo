@@ -1,9 +1,10 @@
 
 export const statusDeposit = (status: string) => {
-      switch (status) {
+      switch (String(status ?? "").trim().toUpperCase()) {
         case "ACCEPTED":
           return "Concluído";
         case "REJECTED":
+        case "EXPIRED":
           return "Expirado";
         case "PENDING":
           return "Pendente";

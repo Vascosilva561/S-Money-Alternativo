@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { Plus } from "lucide-react"
 
 import { api } from "@/api"
@@ -200,8 +201,9 @@ export default function FAQsWeb() {
             setQueryParams={setQueryParams} />
 
 
-        <div className="faq-tab-content w-full flex flex-col">
-            <div className="faq-toolbar flex space-x-4">
+        <div className="ui-data-stack faq-tab-content w-full flex flex-col">
+            <div className="ui-toolbar ui-legacy-toolbar">
+                <div className="ui-toolbar-actions faq-toolbar flex space-x-4">
                 <button
                     onClick={() => setAddFaqModalIsOpen(true)}
                     type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
@@ -224,10 +226,8 @@ export default function FAQsWeb() {
             </div>
 
             {/* filtros */}
-            <div>
 
-            </div>
-            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+            <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                 <div className="flex space-x-2 ">
 
                     {!isLoading && (isFetching && <>
@@ -252,21 +252,33 @@ export default function FAQsWeb() {
                     </div>
                 </div>
             </div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-[#143163]" aria-live="polite">
-                <p className="flex items-center gap-2 font-semibold">
-                    Total geral de registos:
-                    <span className="min-w-8 rounded-full bg-[#EFF4FA] px-2.5 py-0.5 text-center">{isLoading ? "..." : totalItems}</span>
-                </p>
-                <span className="ui-inline-summary-divider" aria-hidden="true" />
-                <p className="flex items-center gap-2 font-semibold">
-                    Total de FAQs:
-                    <span className="min-w-8 rounded-full bg-[#EFF4FA] px-2.5 py-0.5 text-center">{isLoading ? "..." : totalItems}</span>
-                </p>
             </div>
 
             {/* Tabela */}
-            <div className="faq-table-wrapper border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+            <TableResults
+                leadingContent={
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-[#143163]" aria-live="polite">
+                        <p className="flex items-center gap-2 font-semibold">
+                            Total geral de registos:
+                            <span className="min-w-8 rounded-full bg-[#EFF4FA] px-2.5 py-0.5 text-center">{isLoading ? "..." : totalItems}</span>
+                        </p>
+                        <span className="ui-inline-summary-divider" aria-hidden="true" />
+                        <p className="flex items-center gap-2 font-semibold">
+                            Total de FAQs:
+                            <span className="min-w-8 rounded-full bg-[#EFF4FA] px-2.5 py-0.5 text-center">{isLoading ? "..." : totalItems}</span>
+                        </p>
+                    </div>
+                }
+                label="FAQs encontradas"
+                visibleCount={filteredDataUsers.length}
+                totalCount={data?.total}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                isLoading={isLoading || isFetching}
+                containerClassName="faq-table-wrapper border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+            >
                 <table className="faq-table w-full md:table-fixed border-collapse ">
                     <thead className="bg-[#F5F6FA] h-14  ">
                         <tr className=" place-items-center text-[#143163] ">
@@ -337,7 +349,7 @@ export default function FAQsWeb() {
                     </tbody>
                 </table>
 
-            </div>
+            </TableResults>
             {/* paginacao */}
 
             <PaginationFooter

@@ -116,7 +116,8 @@ export default function DetailsPools({ onClose, isOpen, itemSelected }: Props) {
                             <div className={`text-sm text-[#143163] ${isReference ? "" : "space-y-4"}`}>
 
                                 {/* POOL */}
-                                {isPool && (
+                                {
+                                isPool && (
                                     <>
                                         <div className="space-y-2">
                                             <div className="w-full flex justify-between items-center gap-4">
@@ -141,7 +142,8 @@ export default function DetailsPools({ onClose, isOpen, itemSelected }: Props) {
                                             </div>
                                         </div>
                                     </>
-                                )}
+                                    )
+                                }
 
                                 {/* CONFIGURAÇÃO */}
                                 {isConfig && (

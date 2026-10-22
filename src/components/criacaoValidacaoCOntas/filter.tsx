@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 import provinvia from "../json/provincias.json"
 import municipios from "../json/municipios.json"
 
@@ -32,14 +33,11 @@ type props = {
 
 export default function FilterUsuario({ onClose, isOpen, queryParams, setQueryParams, setStatusParam, statusParam, filter, setIsFiltered, setShowFilter, typeAccount, setCurrentPage }: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.phone_number !== "" || queryParams.nif !== "" || queryParams.email !== "" ||
-            queryParams.business_name !== "" || statusParam !== "" || queryParams.bi !== "" || queryParams.passaporte !== "" ||
-            queryParams.provincia_id !== "" || queryParams.municipio !== "") {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.name, queryParams.phone_number, queryParams.nif, queryParams.email,
+        queryParams.business_name, statusParam, queryParams.bi, queryParams.passaporte,
+        queryParams.provincia_id, queryParams.municipio,
+    ))
 
 
     const municipioLista = municipios?.municipios?.filter((item) => item?.provincia_id === Number(queryParams?.provincia_id))

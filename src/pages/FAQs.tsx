@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { Plus } from "lucide-react"
 
 import { api } from "@/api"
@@ -237,9 +238,10 @@ export default function FAQs() {
             <section className="ui-data-page bg-white rounded-b-lg h-fit text-sm shadow-[0px_6px_16px_-4px_rgba(207,_215,_229,_0.5)]
             border-x-2 border-b-2 border-b-[#C8D7EF] border-x-[#C8D7EF] relative">
                 <div className="w-full h-auto">
-                    {abaAtiva === 'Categorias' && <div className="faq-tab-panel w-full flex flex-col p-5">
+                    {abaAtiva === 'Categorias' && <div className="ui-data-stack faq-tab-panel w-full flex flex-col p-5">
 
-                            <div className="faq-toolbar flex space-x-4">
+                            <div className="ui-toolbar ui-legacy-toolbar">
+                                <div className="ui-toolbar-actions faq-toolbar flex space-x-4">
                                 <button
                                     onClick={() => setAddCategoryModalIsOpen(true)}
                                     type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
@@ -263,10 +265,8 @@ export default function FAQs() {
                             </div>
 
                             {/* filtros */}
-                            <div>
 
-                            </div>
-                            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                            <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                                 <div className="flex space-x-2 ">
 
                                     {!isLoading && (isFetching && <>
@@ -291,11 +291,22 @@ export default function FAQs() {
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
                             {/* Tabela */}
-                            <div className="mt-10 flex items-center space-x-2 text-[16px] text-[#143163]"><p className="font-bold">Total geral de registos: </p><p className="">{isLoading ? "..." : data?.total}</p></div>
 
-                            <div className="faq-table-wrapper border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+
+                            <TableResults
+                                label="Categorias encontradas"
+                                visibleCount={filteredDataUsers.length}
+                                totalCount={data?.total}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPreviousPage={handlePrevPage}
+                                onNextPage={handleNextPage}
+                                isLoading={isLoading || isFetching}
+                                containerClassName="faq-table-wrapper border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                            >
                                 <table className="faq-table w-full md:table-fixed border-collapse ">
                                     <thead className="bg-[#F5F6FA] h-14  ">
                                         <tr className=" place-items-center text-[#143163] ">
@@ -348,7 +359,7 @@ export default function FAQs() {
                                     </tbody>
                                 </table>
 
-                            </div>
+                            </TableResults>
                             {/* paginacao */}
 
                             <PaginationFooter

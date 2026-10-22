@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { LoaderCircle, Plus, Search, X } from "lucide-react"
@@ -96,7 +97,6 @@ export default function GestaoDeNiveis() {
     : Number.isFinite(apiTotal) && apiTotal > 0
       ? Math.ceil(apiTotal / PAGE_SIZE)
       : rules.length === PAGE_SIZE ? currentPage + 1 : currentPage
-  const totalRecords = Number.isFinite(apiTotal) && apiTotal >= 0 ? apiTotal : rules.length
   const paginationRange = buildPaginationRange(totalPages, currentPage)
 
   function openCreate() {
@@ -124,7 +124,7 @@ export default function GestaoDeNiveis() {
   return (
     <section className="ui-data-page text-sm">
       <h1 className="sr-only">Gestão de Níveis</h1>
-      <div className="p-4 sm:p-5 lg:p-6">
+      <div className="ui-data-stack p-4 sm:p-5 lg:p-6">
         <div className="ui-toolbar flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <button
@@ -193,10 +193,7 @@ export default function GestaoDeNiveis() {
           </div>
         </div>
 
-        <div className="ui-record-count mt-5 flex items-center gap-2 text-sm text-[#143163]">
-          <span className="font-semibold">Total geral de registos:</span>
-          <span>{rulesQuery.isLoading ? "…" : new Intl.NumberFormat("pt-AO").format(totalRecords)}</span>
-        </div>
+
 
         {rulesQuery.isError && rules.length > 0 && (
           <p role="alert" className="mt-3 rounded-lg border border-[#F0D99A] bg-[#FFF9E8] px-4 py-3 text-sm text-[#765500]">
@@ -204,7 +201,17 @@ export default function GestaoDeNiveis() {
           </p>
         )}
 
-        <div className="mt-3 overflow-x-auto rounded-xl border border-[#E5EBF4]">
+        <TableResults
+            label="Níveis encontrados"
+            visibleCount={visibleRules.length}
+            totalCount={rulesQuery.data?.total}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPreviousPage={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            onNextPage={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            isLoading={rulesQuery.isLoading || rulesQuery.isFetching}
+            containerClassName="mt-3 overflow-x-auto rounded-xl border border-[#E5EBF4]"
+        >
           <table className="w-full min-w-[1120px] table-fixed border-collapse text-sm">
             <caption className="sr-only">Limites de transacção por nível e tipo de conta</caption>
             <thead className="bg-[#F5F7FB] text-left text-xs font-semibold text-[#143163]">
@@ -266,7 +273,7 @@ export default function GestaoDeNiveis() {
               )}
             </tbody>
           </table>
-        </div>
+        </TableResults>
 
         <div className="mt-4">
           <PaginationFooter

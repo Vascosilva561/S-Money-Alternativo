@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 type props = {
     isOpen: boolean,
@@ -28,15 +29,10 @@ export default function FilterAgentes({ onClose, isOpen, queryParams, setQueryPa
 
 }: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.phone_number !== "" ||
-            queryParams?.status !== "" || queryParams?.email !== "" || queryParams?.nif !== ""
-
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.title, queryParams.name, queryParams.nif, queryParams.phone_number, queryParams.email,
+        queryParams.status, queryParams.start_date, queryParams.end_date,
+    ))
 
     return (
         <>

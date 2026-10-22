@@ -11,34 +11,26 @@ import { api } from "@/api"
 import { useQueryClient } from "@tanstack/react-query"
 import { isAxiosError } from "axios"
 import { toast } from "sonner"
-import type { ProgramaIndicacao } from "@/types/configurations"
+import type { Indicator } from "@/types/indicator"
 
 type props = {
     isOpen: boolean,
     onClose: () => void,
-    itemSelected: ProgramaIndicacao | undefined
+    itemSelected: Indicator | undefined
 }
 
 export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
     const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        startDate: "",
-        endDate: "",
-        rewardAmount: "",
-        budget: "",
+        valueIndicator: "",
+        valueIndicated: "",
         active: true,
     })
     const [loading, setLoading] = useState(false)
 
     const clearInputs = () => {
         setFormData({
-            title: "",
-            description: "",
-            startDate: "",
-            endDate: "",
-            rewardAmount: "",
-            budget: "",
+            valueIndicator: "",
+            valueIndicated: "",
             active: true,
         })
     }
@@ -48,13 +40,9 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
     useEffect(() => {
         if (itemSelected) {
             setFormData({
-                title: itemSelected.name,
-                description: itemSelected.description,
-                startDate: itemSelected.start_date,
-                endDate: itemSelected.end_date,
-                rewardAmount: String(itemSelected.reward_amount),
-                budget: String(itemSelected.budget),
-                active: itemSelected?.active,
+                valueIndicator: String(itemSelected.value_indicator ?? ""),
+                valueIndicated: String(itemSelected.value_indicated ?? ""),
+                active: itemSelected.active,
             })
         }
     }, [itemSelected])
@@ -66,12 +54,8 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
 
         try {
             const body = {
-                name: formData.title,
-                description: formData.description,
-                start_date: formData.startDate,
-                end_date: formData.endDate,
-                reward_amount: formData.rewardAmount,
-                budget: formData.budget,
+                value_indicator: Number(formData.valueIndicator),
+                value_indicated: Number(formData.valueIndicated),
                 active: formData.active,
             }
             setLoading(true)
@@ -135,46 +119,22 @@ export default function EditarConfig({ onClose, isOpen, itemSelected }: props) {
                     <form onSubmit={editConfig} className="w-full">
 
 
-                        <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-[14px]">Nome</label>
-                            <input required type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                        <div className="rounded-lg border border-[#E5EBF4] bg-[#F8FAFC] p-4 text-sm text-[#4B5563]">
+                            <p className="font-semibold text-[#143163]">{itemSelected?.user?.name || "Utilizador sem nome"}</p>
+                            <p>{itemSelected?.user?.phone_number || "Telefone não disponível"}</p>
+                            <p>Código de convite: {itemSelected?.invite_code || itemSelected?.user?.invite_code || "N/A"}</p>
                         </div>
-
-                        <div className="flex flex-col space-y-2 mt-6">
-                            <label className="text-[#143163] font-semibold text-[14px]">Descrição</label>
-                            <textarea required value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                        </div>
-
-
 
                         <div className="flex items-center justify-between space-x-2">
                             <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Data de início</label>
-                                <input required type="date" value={formData.startDate} onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none
-                                     text-[#143163] text-sm`} />
-                            </div>
-
-                            <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Data de término</label>
-                                <input required type="date" value={formData.endDate} onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                    className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none 
-                                    text-[#143163] text-sm`} />
-                            </div>
-                        </div>
-
-                        <div className="flex items-center justify-between space-x-2 relative">
-                            <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Valor do prémio</label>
-                                <input required type="number" step="0.01" min="0" value={formData.rewardAmount} onChange={(e) => setFormData({ ...formData, rewardAmount: e.target.value })}
+                                <label className="text-[#143163] font-semibold text-[14px]">Valor do indicador</label>
+                                <input required type="number" step="0.01" min="0" value={formData.valueIndicator} onChange={(e) => setFormData({ ...formData, valueIndicator: e.target.value })}
                                     className={`w-full p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                             </div>
 
                             <div className="flex flex-col space-y-2 mt-6 w-full">
-                                <label className="text-[#143163] font-semibold text-[14px]">Orçamento</label>
-                                <input required type="number" step="0.01" min="0" value={formData.budget} onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                                <label className="text-[#143163] font-semibold text-[14px]">Valor indicado</label>
+                                <input required type="number" step="0.01" min="0" value={formData.valueIndicated} onChange={(e) => setFormData({ ...formData, valueIndicated: e.target.value })}
                                     className={`w-full p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
                             </div>
                         </div>
