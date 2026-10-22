@@ -1,5 +1,94 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+/* Result count and compact navigation above every data table. Keep this
+   outside horizontal overflow so the controls remain visible on mobile. */
+.ui-table-results {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  width: 100%;
+}
+
+.ui-table-results > .ui-table-results-header {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.ui-table-results-summary {
+  min-width: 0;
+  margin: 0;
+  color: #637590;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: right;
+}
+
+.ui-table-results-navigation {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+}
+
+.ui-table-results-navigation > button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #637590;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.ui-table-results-navigation > button:hover:not(:disabled) {
+  background: #F1F5FA;
+  color: #143163;
+}
+
+.ui-table-results-navigation > button:focus-visible {
+  outline: 2px solid #48B9FF;
+  outline-offset: 2px;
+}
+
+.ui-table-results-navigation > button:disabled {
+  color: #B4BFCE;
+  cursor: not-allowed;
+}
+
+.ui-table-results-navigation svg {
+  width: 16px;
+  height: 16px;
+}
+
+:is(.ui-data-page, .ui-context-page) .ui-table-results > .ui-table-results-surface {
+  margin: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .ui-table-results > .ui-table-results-header {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-table-results-navigation > button {
+    transition: none;
+  }
+}
 /* ---break---*/
 @custom-variant dark (&:is(.dark *));
 @tailwind base;
@@ -310,14 +399,6 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   margin: 0;
 }
 
-.ui-data-page [class*="mt-5"][class*="items-center"]:has(input[type="search"]) {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  z-index: 2;
-  margin-top: 0 !important;
-}
-
 .ui-data-page button[class*="bg-[#EAF6F8]"]:not([data-action]) {
   min-height: 40px;
   align-items: center;
@@ -599,12 +680,6 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   max-width: none;
 }
 
-/* Logs keeps the search field absolutely positioned in the toolbar. Reserve
-   the visual gap that the normal document flow would otherwise provide. */
-.ui-data-page .logs-table-wrapper {
-  margin-top: 52px !important;
-}
-
 .ui-tabs > button[class*="border-t-4"] {
   border-top: 4px solid #48B9FF !important;
   border-right-color: #D7E2F2 !important;
@@ -710,8 +785,13 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
    occupy only part of the content width. */
 .ui-tabs + .ui-data-page {
   position: relative;
+  margin-block-start: 0 !important;
   border-top-left-radius: 0 !important;
   border-top-color: transparent !important;
+}
+
+.ui-tabs:has(+ .ui-data-page) {
+  margin-block-end: 0 !important;
 }
 
 /* Continue the shape's top stroke only after a partial tab strip. Drawing this
@@ -734,26 +814,74 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
 }
 
 .ui-tabs.ui-company-tabs {
-  width: min(600px, 100%);
+  width: max-content;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ui-tabs.ui-company-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-tabs.ui-company-tabs > button {
+  flex: 0 0 auto;
+  width: auto !important;
+  min-width: max-content;
+}
+
+.ui-tabs.ui-company-tabs:has(> button:nth-child(4)) {
+  width: max-content;
+  max-width: 100%;
+}
+
+.ui-tabs.ui-company-tabs:has(> button:nth-child(4)) + .ui-data-page {
+  border-top-right-radius: 12px !important;
+}
+
+.ui-tabs.ui-company-tabs + .ui-data-page {
+  border-top-color: transparent !important;
+  border-top-right-radius: 12px !important;
 }
 
 .ui-tabs.ui-company-tabs + .ui-data-page::before {
-  left: min(600px, 100%);
+  left: min(536px, 100%);
 }
 
 .ui-company-tabs > button {
   white-space: nowrap;
 }
 
+.ui-company-tabs > button.ui-company-pools-tab {
+  padding-right: 34px !important;
+  padding-left: 34px !important;
+}
+
 @media (max-width: 640px) {
   .ui-tabs.ui-company-tabs {
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
   }
 
   .ui-company-tabs > button {
+    flex: 0 0 auto;
+    width: auto !important;
+    min-width: max-content;
     padding-right: 8px !important;
     padding-left: 8px !important;
     font-size: 12px;
+  }
+
+  .ui-company-tabs > button.ui-company-pools-tab {
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
+
+  .ui-tabs.ui-company-tabs + .ui-data-page::before {
+    left: min(430px, 100%);
   }
 }
 
@@ -855,6 +983,10 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
 .ui-toolbar {
   border-bottom: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.ui-toolbar .ui-field {
+  margin-top: 0 !important;
 }
 
 .ui-record-count {
@@ -1306,7 +1438,7 @@ form label { color: var(--field-label); font-size: 14px; font-weight: 600; line-
   [class~="p-4"] > div:first-child,
   [class~="p-5"] > div:first-child,
   [class~="p-6"] > div:first-child
-) {
+):not(.ui-data-stack) {
   align-items: center;
   gap: 8px !important;
 }
@@ -3960,6 +4092,11 @@ div:has(> .ui-inline-validation) > textarea {
   padding: 28px !important;
 }
 
+.ui-webhook-edit-sheet .ui-field {
+  align-content: start;
+  margin-top: 0 !important;
+}
+
 .ui-detail-sheet > :first-child:has(> [data-slot="sheet-header"]),
 .ui-edit-sheet > :first-child:has(> [data-slot="sheet-header"]) {
   display: flex;
@@ -4053,7 +4190,7 @@ div:has(> .ui-inline-validation) > textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: var(--field-column-gap);
   row-gap: var(--field-row-gap);
-  align-items: start;
+  align-items: stretch;
 }
 
 .ui-export-sheet .ui-export-fields > .ui-field,
@@ -4188,16 +4325,16 @@ div:has(> .ui-inline-validation) > textarea {
   background: #1D467F !important;
 }
 
-.ui-sheet-content button[class*="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action),
-.ui-dialog-content button[class*="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action),
-.ui-sheet-content button[class*="bg-[#D0F8FF]"],
-.ui-dialog-content button[class*="bg-[#D0F8FF]"],
-.ui-sheet-content button[class*="bg-[#E02E2E]"],
-.ui-dialog-content button[class*="bg-[#E02E2E]"],
-.ui-sheet-content button[class*="bg-destructive"],
-.ui-dialog-content button[class*="bg-destructive"],
-.ui-sheet-content button[class*="bg-[#14883B]"],
-.ui-dialog-content button[class*="bg-[#14883B]"] {
+.ui-sheet-content button[class~="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action),
+.ui-dialog-content button[class~="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action),
+.ui-sheet-content button[class~="bg-[#D0F8FF]"],
+.ui-dialog-content button[class~="bg-[#D0F8FF]"],
+.ui-sheet-content button[class~="bg-[#E02E2E]"],
+.ui-dialog-content button[class~="bg-[#E02E2E]"],
+.ui-sheet-content button[class~="bg-destructive"],
+.ui-dialog-content button[class~="bg-destructive"],
+.ui-sheet-content button[class~="bg-[#14883B]"],
+.ui-dialog-content button[class~="bg-[#14883B]"] {
   min-height: 44px;
   border: 1px solid #143163 !important;
   border-radius: 8px !important;
@@ -4207,16 +4344,16 @@ div:has(> .ui-inline-validation) > textarea {
   box-shadow: none !important;
 }
 
-.ui-sheet-content button[class*="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action):hover:not(:disabled),
-.ui-dialog-content button[class*="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action):hover:not(:disabled),
-.ui-sheet-content button[class*="bg-[#D0F8FF]"]:hover:not(:disabled),
-.ui-dialog-content button[class*="bg-[#D0F8FF]"]:hover:not(:disabled),
-.ui-sheet-content button[class*="bg-[#E02E2E]"]:hover:not(:disabled),
-.ui-dialog-content button[class*="bg-[#E02E2E]"]:hover:not(:disabled),
-.ui-sheet-content button[class*="bg-destructive"]:hover:not(:disabled),
-.ui-dialog-content button[class*="bg-destructive"]:hover:not(:disabled),
-.ui-sheet-content button[class*="bg-[#14883B]"]:hover:not(:disabled),
-.ui-dialog-content button[class*="bg-[#14883B]"]:hover:not(:disabled) {
+.ui-sheet-content button[class~="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action):hover:not(:disabled),
+.ui-dialog-content button[class~="bg-[#EAF6F8]"]:not(.ui-inline-validation):not(.ui-modal-secondary-action):hover:not(:disabled),
+.ui-sheet-content button[class~="bg-[#D0F8FF]"]:hover:not(:disabled),
+.ui-dialog-content button[class~="bg-[#D0F8FF]"]:hover:not(:disabled),
+.ui-sheet-content button[class~="bg-[#E02E2E]"]:hover:not(:disabled),
+.ui-dialog-content button[class~="bg-[#E02E2E]"]:hover:not(:disabled),
+.ui-sheet-content button[class~="bg-destructive"]:hover:not(:disabled),
+.ui-dialog-content button[class~="bg-destructive"]:hover:not(:disabled),
+.ui-sheet-content button[class~="bg-[#14883B]"]:hover:not(:disabled),
+.ui-dialog-content button[class~="bg-[#14883B]"]:hover:not(:disabled) {
   border-color: #1D467F !important;
   background: #1D467F !important;
   color: #FFFFFF !important;
@@ -4406,4 +4543,748 @@ div[class*="border-2"]:has(> label > input[type="file"]) p {
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 16px !important;
+}
+
+/* Three payment modes need enough room for the local tab labels. */
+.ui-payment-tabs-gpo {
+  width: min(700px, 100%);
+}
+
+.ui-payment-tabs-gpo > button {
+  white-space: nowrap;
+}
+
+.payment-tabs-panel-gpo > .ui-data-page::before {
+  left: min(700px, 100%);
+}
+
+@media (max-width: 640px) {
+  .ui-payment-tabs-gpo {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .ui-payment-tabs-gpo::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ui-payment-tabs-gpo > button {
+    flex: 0 0 auto;
+  }
+}
+/* Keep the GPO reference and transaction columns readable while leaving the
+   action control visible inside the local payments table. */
+.ui-data-page table.ui-gpo-payments-table {
+  width: 100% !important;
+  min-width: 1120px !important;
+  table-layout: fixed !important;
+}
+
+.ui-data-page table.ui-gpo-payments-table :is(th, td).ui-gpo-actions-column {
+  width: 8% !important;
+  min-width: 92px !important;
+  white-space: nowrap !important;
+}
+/* GPO payment drawers reuse the backoffice sheet frame and keep long values inside the panel. */
+.ui-filter-sheet-panel.ui-gpo-filter-sheet {
+  box-sizing: border-box;
+  width: min(620px, 100vw) !important;
+  max-width: min(620px, 100vw) !important;
+}
+
+.ui-gpo-filter-grid {
+  align-content: start;
+}
+
+.ui-gpo-filter-grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 641px) and (min-height: 700px) {
+  .ui-gpo-filter-sheet > .ui-gpo-filter-grid {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    overflow-y: auto !important;
+  }
+
+  .ui-gpo-filter-sheet > .ui-gpo-filter-footer {
+    margin-top: auto !important;
+  }
+}
+
+.ui-gpo-filter-range {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ui-gpo-filter-grid > .ui-gpo-filter-external-id {
+  grid-column: 1 / -1;
+}
+
+.ui-gpo-filter-sheet > :first-child,
+.ui-gpo-detail-sheet .ui-detail-sheet-header {
+  position: relative;
+  padding-right: 52px !important;
+}
+
+.ui-gpo-sheet-close {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 1;
+  display: grid !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  padding: 0 !important;
+  border: 1px solid #E3EAF4 !important;
+  border-radius: 8px !important;
+  background: #F5F7FA !important;
+  color: #143163 !important;
+  opacity: 1 !important;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.ui-gpo-sheet-close:hover {
+  border-color: #9FB5D2 !important;
+  background: #E8EEF6 !important;
+}
+
+.ui-gpo-sheet-close svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.ui-detail-sheet.ui-detail-sheet--structured.ui-gpo-detail-sheet {
+  box-sizing: border-box !important;
+  width: min(640px, 100vw) !important;
+  max-width: min(640px, 100vw) !important;
+  min-width: 0;
+}
+
+.ui-detail-sheet.ui-detail-sheet--structured .ui-gpo-detail-body {
+  min-width: 0;
+  width: 100%;
+}
+
+.ui-gpo-detail-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ui-gpo-detail-section {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ui-gpo-detail-section > p:first-child {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #143163 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 22px;
+}
+
+.ui-gpo-detail-divider {
+  width: 100%;
+  height: 1px;
+  flex: 0 0 1px;
+  background: #E3EAF4;
+}
+
+.ui-gpo-detail-list {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ui-gpo-detail-row {
+  display: grid !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 22px;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: start;
+  column-gap: 16px;
+}
+
+.ui-gpo-detail-row > * {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 !important;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.45;
+}
+
+.ui-gpo-detail-row > .ui-gpo-detail-label {
+  color: #627089 !important;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.ui-gpo-detail-row > .ui-gpo-detail-value {
+  width: 100%;
+  justify-self: stretch;
+  color: #4B5563;
+  font-size: 14px;
+  text-align: right;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word;
+}
+
+.ui-gpo-detail-row > div.ui-gpo-detail-value {
+  display: block;
+}
+
+.ui-gpo-detail-row .ui-status-tag {
+  max-width: 100%;
+  justify-self: end;
+  vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+  .ui-gpo-sheet-close {
+    top: 0 !important;
+    right: 0 !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    flex-basis: 34px;
+  }
+
+  .ui-gpo-detail-row {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: 10px;
+  }
+
+  .ui-gpo-detail-row > .ui-gpo-detail-label {
+    font-size: 12px;
+  }
+
+  .ui-gpo-detail-row > .ui-gpo-detail-value {
+    font-size: 13px;
+  }
+}
+
+/* All modal field groups use one 24px rhythm. Shared FormField components
+   already sit inside grid/flex stacks or legacy space-y wrappers, so remove
+   their standalone top margin and let the containing layout own the gap. */
+[data-slot="sheet-content"],
+[data-slot="dialog-content"] {
+  --field-row-gap: 24px;
+  --field-column-gap: 24px;
+}
+
+.ui-sheet-content.ui-detail-sheet {
+  --field-row-gap: 14px;
+  --field-column-gap: 16px;
+}
+
+[data-slot="sheet-content"] .ui-field,
+[data-slot="dialog-content"] .ui-field {
+  margin-top: 0 !important;
+}
+
+[data-slot="sheet-content"] :is(div, form):has(> .ui-field),
+[data-slot="dialog-content"] :is(div, form):has(> .ui-field) {
+  gap: 24px !important;
+}
+
+[data-slot="sheet-content"] :is(div, form):has(> .ui-field) > :is(.ui-field, div:has(> .ui-field)),
+[data-slot="dialog-content"] :is(div, form):has(> .ui-field) > :is(.ui-field, div:has(> .ui-field)) {
+  margin-block: 0 !important;
+}
+
+[data-slot="sheet-content"] :is(div, form):not([class*="grid"]):not([class*="flex"]):not(.ui-export-field-row):has(> .ui-field),
+[data-slot="dialog-content"] :is(div, form):not([class*="grid"]):not([class*="flex"]):not(.ui-export-field-row):has(> .ui-field) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.ui-reference-filter-fields {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 24px !important;
+  overflow-y: auto;
+  padding: 8px 0 20px;
+}
+
+.ui-reference-filter-sheet .ui-reference-filter-fields > div.flex.flex-col,
+.ui-reference-filter-sheet .ui-reference-filter-date-row > div.flex.flex-col {
+  margin-top: 0 !important;
+}
+
+.ui-reference-filter-sheet .ui-reference-filter-date-row {
+  column-gap: 24px !important;
+  row-gap: 24px !important;
+}
+
+/* Cargo forms share one spacing and control system across create and edit. */
+.ui-position-sheet {
+  box-sizing: border-box;
+  display: flex !important;
+  width: min(600px, 100vw) !important;
+  max-width: min(600px, 100vw) !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  padding: 24px !important;
+  background: #FFFFFF;
+}
+
+.ui-position-header {
+  display: flex;
+  min-width: 0;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 0 0 18px;
+  border-bottom: 1px solid #E5EBF4;
+}
+
+.ui-position-header [data-slot="sheet-header"] {
+  min-width: 0;
+  flex: 1 1 auto;
+  gap: 4px !important;
+  padding: 0 !important;
+  text-align: left;
+}
+
+.ui-position-header [data-slot="sheet-title"] {
+  margin: 0 !important;
+  color: #143163 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 24px !important;
+}
+
+.ui-position-header [data-slot="sheet-description"] {
+  margin: 0 !important;
+  color: #667085 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+}
+
+.ui-position-close {
+  display: grid !important;
+  width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px;
+  place-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid #DCE5F2 !important;
+  border-radius: 9px !important;
+  background: #F5F7FB !important;
+  color: #143163 !important;
+  cursor: pointer;
+}
+
+.ui-position-close:hover {
+  border-color: #B8C9DE !important;
+  background: #EAF0F8 !important;
+}
+
+.ui-position-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ui-position-sheet > .ui-modal-tabs {
+  flex: 0 0 auto;
+}
+
+.ui-position-carousel {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.ui-position-track {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  transition: transform 300ms ease;
+}
+
+.ui-position-panel {
+  display: flex;
+  width: 50%;
+  min-width: 0;
+  height: 100%;
+  flex: 0 0 50%;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 4px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #D8E2F0 transparent;
+}
+
+.ui-position-panel .ui-modal-step-heading {
+  flex: 0 0 auto;
+  margin: 2px 0 16px;
+}
+
+.ui-position-panel .ui-modal-step-divider {
+  flex: 0 0 1px;
+  margin: 0;
+}
+
+.ui-position-fields {
+  display: flex !important;
+  min-width: 0;
+  flex-direction: column !important;
+  gap: 24px !important;
+  margin-top: 24px;
+}
+
+.ui-position-fields > .ui-field {
+  width: 100%;
+  margin: 0 !important;
+  gap: 8px;
+}
+
+.ui-position-fields .ui-field-label {
+  color: #143163;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.ui-position-fields .ui-control,
+.ui-position-select-trigger {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px !important;
+  height: 40px !important;
+  border: 1px solid #C9D8E9 !important;
+  border-radius: 8px !important;
+  background: #FFFFFF !important;
+  color: #143163 !important;
+  font-size: 14px !important;
+  line-height: 20px;
+  box-shadow: none !important;
+}
+
+.ui-position-fields .ui-control {
+  padding: 10px 12px !important;
+}
+
+.ui-position-fields .ui-control::placeholder {
+  color: #8293AE;
+}
+
+.ui-position-fields .ui-control:focus-visible,
+.ui-position-select-trigger:focus-visible {
+  border-color: #48B9FF !important;
+  outline: none;
+  box-shadow: 0 0 0 4px rgb(72 185 255 / 15%) !important;
+}
+
+.ui-position-fields .ui-textarea {
+  min-height: 120px !important;
+  height: 120px !important;
+  resize: vertical;
+}
+
+.ui-position-select-trigger {
+  justify-content: space-between;
+  padding: 0 12px !important;
+}
+
+.ui-position-permissions-scroll {
+  min-height: 0;
+  flex: 1 1 auto;
+  margin-top: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 4px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #D8E2F0 transparent;
+}
+
+.ui-position-accordion-item {
+  border-bottom: 1px solid #E5EBF4 !important;
+}
+
+.ui-position-accordion-trigger {
+  display: flex !important;
+  width: 100%;
+  min-height: 48px;
+  align-items: center !important;
+  justify-content: space-between;
+  padding: 12px 10px !important;
+  border-radius: 8px;
+  color: #143163 !important;
+  font-size: 14px !important;
+  line-height: 20px;
+}
+
+.ui-position-accordion-trigger:hover {
+  background: #F5F8FC;
+}
+
+.ui-position-permission-row {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #E5EBF4;
+  border-radius: 8px;
+  background: #F8FAFD;
+  color: #344563;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.ui-position-permission-row > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.ui-position-empty-state {
+  margin: 24px 0;
+  color: #627089;
+  font-size: 14px;
+  text-align: center;
+}
+
+.ui-position-loading {
+  display: grid;
+  place-items: center;
+}
+
+.ui-position-footer {
+  width: 100%;
+  flex: 0 0 auto;
+  margin: 0 !important;
+  padding: 16px 0 0 !important;
+  border-top: 1px solid #E5EBF4;
+  background: #FFFFFF;
+}
+
+.ui-position-footer .ui-position-action {
+  display: inline-flex;
+  width: 100%;
+  height: 44px !important;
+  min-height: 44px !important;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  border: 1px solid #1D376D !important;
+  border-radius: 8px !important;
+  background: #1D376D !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.ui-position-footer .ui-position-action:hover:not(:disabled) {
+  border-color: #264783 !important;
+  background: #264783 !important;
+}
+
+.ui-position-footer .ui-position-action:focus-visible {
+  outline: 2px solid #48B9FF !important;
+  outline-offset: 2px;
+}
+
+.ui-position-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #143163;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ui-position-spin 700ms linear infinite;
+}
+
+.ui-position-spinner--light {
+  border-color: rgb(255 255 255 / 75%);
+  border-top-color: transparent;
+}
+
+@keyframes ui-position-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .ui-position-sheet {
+    padding: 20px 16px !important;
+  }
+
+  .ui-position-fields {
+    gap: 24px !important;
+  }
+}
+
+/* Every list owns its vertical rhythm. Legacy margin/position selectors must
+   not collapse the result header into the search or add a second table gap. */
+:is(.ui-data-page, .ui-context-page) .ui-data-stack {
+  display: flex !important;
+  min-width: 0;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 16px !important;
+}
+
+:is(.ui-data-page, .ui-context-page) .ui-data-stack > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+:is(.ui-data-page, .ui-context-page) .ui-data-stack .ui-pagination {
+  margin-top: 0 !important;
+}
+
+.ui-data-page > .ui-data-toolbar-section {
+  padding-bottom: 16px !important;
+}
+
+:is(.ui-data-page, .ui-context-page) .ui-table-results {
+  display: flex !important;
+  min-width: 0;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+}
+
+:is(.ui-data-page, .ui-context-page) .ui-data-stack > .ui-legacy-toolbar {
+  display: flex !important;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px !important;
+}
+
+.ui-data-page .ui-legacy-toolbar > .ui-toolbar-actions {
+  display: flex;
+  width: auto;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.ui-data-page .ui-legacy-toolbar > .ui-toolbar-search {
+  position: static !important;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 12px !important;
+  margin: 0 0 0 auto !important;
+}
+
+.ui-data-page .ui-toolbar-search > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Long financial labels wrap inside their surface at narrow widths. */
+.ui-data-stack > .ui-inline-summary > span:not(.ui-inline-summary-divider) {
+  max-width: 100%;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  white-space: normal;
+}
+
+@media (max-width: 1023px) {
+  .ui-data-page .ui-data-stack > .ui-legacy-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ui-data-page .ui-legacy-toolbar > .ui-toolbar-actions,
+  .ui-data-page .ui-legacy-toolbar > .ui-toolbar-search {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .ui-data-page .ui-toolbar-search > div:last-child,
+  .ui-data-page .ui-toolbar-search div:has(> input[type="search"]) {
+    width: 100%;
+  }
+}
+
+/* Domain totals share a responsive row with the page result count. */
+:is(.ui-data-page, .ui-context-page) .ui-table-results > .ui-table-results-header-with-leading-content {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+
+.ui-table-results-leading-content {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ui-table-results-header-with-leading-content .ui-inline-summary {
+  min-width: 0;
+  margin: 0;
+}
+
+.ui-table-results-header-with-leading-content .ui-inline-summary > span:not(.ui-inline-summary-divider) {
+  max-width: 100%;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  white-space: normal;
+}
+
+.ui-table-results-header-with-leading-content .ui-inline-summary-divider {
+  display: none;
+}
+
+.ui-table-results-header-with-leading-content .ui-inline-summary-divider + * {
+  padding-left: 12px;
+  border-left: 1px solid #E9ECEF;
+}
+
+.ui-table-results-status-group {
+  display: flex;
+  min-width: 0;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
 }

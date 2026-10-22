@@ -24,6 +24,10 @@ const pageHeaders: Record<string, PageHeader> = {
     section: "Operações",
     page: "Transferências Sómoney",
   },
+  "/referencias": {
+    section: "Controle",
+    page: "Referências",
+  },
   "/pagamentos": {
     section: "Operações",
     page: "Pagamentos",

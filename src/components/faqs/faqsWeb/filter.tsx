@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 import { CategoryList } from "@/hooks/getCategory"
 
 
@@ -33,15 +34,9 @@ export default function FilterFaqsWeb({ onClose, isOpen, queryParams, setQueryPa
 }: props) {
 
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.sigla !== "" ||
-            queryParams?.estado !== "" || queryParams?.bankCode !== ""
-
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.pergunta, queryParams.categoria, queryParams.dataInicial, queryParams.estado,
+    ))
 
     const { data } = CategoryList()
     return (

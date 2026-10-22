@@ -9,10 +9,11 @@ import ModalEstornar from "./modalEstornar"
 
 type props = {
     id: string,
-    estorno: boolean
+    estorno: boolean,
+    onRefundSuccess?: () => void
 }
 
-export default function ExpandirTransferencias({ id, estorno }: props) {
+export default function ExpandirTransferencias({ id, estorno, onRefundSuccess }: props) {
 
     const [modalConfirmar, setModalConfirmar] = useState(false)
 
@@ -36,7 +37,7 @@ export default function ExpandirTransferencias({ id, estorno }: props) {
                     </DialogTrigger>
                     {modalConfirmar && <DialogContent className="sm:max-w-md md:w-[400px] p-3" >
 
-                        <ModalEstornar id={id} onClose={() => setModalConfirmar(false)} />
+                        <ModalEstornar id={id} onClose={() => setModalConfirmar(false)} onSuccess={onRefundSuccess} />
 
                     </DialogContent>}
                 </Dialog>:

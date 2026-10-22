@@ -199,9 +199,6 @@ export default function AdicionaUsuario({ onClose, isOpen, typeAccount }: props)
         }
     }, [formData.nacionalidade])
 
-   const numero = Math.floor(100000 + Math.random() * 900000);
-
-console.log(numero)
 
     return (
         <>

@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+## Documentação do produto
+
+- [Design system — especificação visual, componentes, estados e padrões de implementação](Design.md)
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

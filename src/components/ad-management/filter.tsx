@@ -5,6 +5,7 @@ import {
     SheetContent,
     SheetHeader,
 } from "@/components/ui/sheet"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 // import {
 //     Select,
 //     SelectContent,
@@ -28,15 +29,9 @@ export default function FilterPublicity({ onClose, isOpen, queryParams, setQuery
 
 }: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.sigla !== "" ||
-           queryParams?.estado !== "" || queryParams?.bankCode !== ""
-
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(
+        queryParams.title, queryParams.start_date, queryParams.end_date, queryParams.status,
+    ))
 
     return (
         <>

@@ -1,5 +1,7 @@
+import { TableResults } from "@/components/ui/table-results"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
+import { TableRowExpandButton } from "@/components/ui/table-row-expand-button"
 import { PaginationFooter } from "@/components/ui/pagination-footer"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -23,6 +25,9 @@ import { CopyTextButton } from "@/components/ui/copy-text-button"
 import { RefreshButton } from "@/components/ui/refresh-button"
 import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
 import { useSearchParams } from "react-router"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
+import { exportWithdrawals } from "@/lib/withdrawal-export"
 
 export default function Levantamentos() {
     const [searchParams] = useSearchParams()
@@ -289,7 +294,11 @@ export default function Levantamentos() {
         console.log("Aplicando filtros com os seguintes parâmetros:", queryParams, status, tipoDeConta, responsavel);
         setCurrentPage(1)
         setFilterVersion(v => v + 1)
-        setShowClearFilter(true)
+        setShowClearFilter(Boolean(
+            queryParams.name.trim() || queryParams.iban.trim() || queryParams.valor_de || queryParams.valor_ate ||
+            queryParams.dataInicial || queryParams.dataFinal || tipoDeConta !== "User" ||
+            status !== (pendente ? "PENDING" : "ACCEPTED") || responsavel.trim()
+        ))
         setFilterModalIsOpen(false)
     }
 
@@ -334,8 +343,20 @@ export default function Levantamentos() {
             {/* <div className="border-2 border-zinc-700 w-[350px]"></div> */}
             <section className="ui-data-page bg-white rounded-b-lg h-fit text-sm shadow-[0px_0px_13px_0px_rgba(207,_215,_229,_0.67)] border-x-2 border-b-2 border-b-[#C8D7EF] border-x-[#C8D7EF]">
 
-                <div className="flex flex-col p-5">
-                    <div className="flex space-x-4">
+                <div className="ui-data-stack flex flex-col p-5">
+                    <div className="ui-toolbar ui-legacy-toolbar">
+                        <div className="ui-toolbar-actions flex space-x-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-10 rounded-lg border-[#143163] bg-[#143163] px-4 font-semibold text-white shadow-none hover:bg-[#1D467F] hover:text-white"
+                            disabled={isLoading || isFetching || filteredDataUsers.length === 0}
+                            onClick={() => exportWithdrawals(filteredDataUsers)}
+                            title="Exportar os levantamentos visíveis nesta página"
+                        >
+                            <Download className="size-4" aria-hidden="true" />
+                            <span>Exportar Excel</span>
+                        </Button>
 
                         {/* <button onClick={() => setAddModalIsOpen(true)} type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
                          hover:bg-[#17CFDA] hover:ring-[#17CFDA] rounded-[5px] duration-300 font-semibold  flex space-x-2 items-center">
@@ -363,7 +384,7 @@ export default function Levantamentos() {
 
 
 
-                    <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                    <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                         <div className="flex space-x-2 ">
 
                             {!isLoading && (isFetching && <>
@@ -387,14 +408,9 @@ export default function Levantamentos() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Tabela */}
-                    <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
-                        <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total || "Nenhum valor encontrado"}</span></span>
-                        <span className="ui-inline-summary-divider" aria-hidden="true" />
-                        <span><strong>Total geral de pagamentos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_amount ? Number(data?.total_amount)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
                     </div>
 
+                    {/* Tabela */}
                     {selectedIds.length > 0 && (
                         <div className="flex items-center justify-between bg-[#EFF4FF] border border-[#D9E1E7] rounded-lg px-4 py-3 mb-3">
                             <p className="text-[#143163] text-sm font-medium">
@@ -436,7 +452,24 @@ export default function Levantamentos() {
                         </div>
                     )}
 
-                    <div className=" border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+                    <TableResults
+                        leadingContent={
+                            <div className="ui-inline-summary flex items-center text-[14px] text-[#143163]">
+                                <span><strong>Total geral de registos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total || "Nenhum valor encontrado"}</span></span>
+                                <span className="ui-inline-summary-divider" aria-hidden="true" />
+                                <span><strong>Total geral de pagamentos:</strong> <span className="font-semibold">{isLoading ? "..." : data?.total_amount ? Number(data?.total_amount)?.toLocaleString() + " Kz" : "Nenhum valor encontrado"}</span></span>
+                            </div>
+                        }
+                        label="Levantamentos encontrados"
+                        visibleCount={filteredDataUsers.length}
+                        totalCount={data?.total}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPreviousPage={handlePrevPage}
+                        onNextPage={handleNextPage}
+                        isLoading={isLoading || isFetching}
+                        containerClassName=" border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                    >
                         <table className="w-full md:table-fixed border-collapse ">
                             <thead className="bg-[#F5F6FA] h-14  ">
                                 <tr className=" place-items-center text-[#143163] ">
@@ -475,27 +508,16 @@ export default function Levantamentos() {
                                                     />
                                                 </label>
                                             </td>}
-                                            {!pendente && <td className="ui-expand-toggle-column py-2 text-center">
-                                                <button
-                                                    onClick={() =>
-                                                        setExpandedRow(expandedRow === item?.id ? null : item?.id)
-                                                    }
-                                                    className="cursor-pointer"
-                                                >
-                                                    {expandedRow === item?.id ?
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 26 26" fill="none">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C4.6879 2.00391 2.00385 4.68799 2 8V18C2.00378 21.312 4.68777 23.9961 7.99988 24H18C21.3121 23.9961 23.9962 21.312 24 18V8C23.9962 4.68799 21.3122 2.00391 18.0001 2H8ZM8 0H18C22.4183 0 26 3.58154 26 8V18C26 22.4185 22.4183 26 18 26H8C3.58173 26 0 22.4185 0 18V8C0 3.58154 3.58173 0 8 0Z" fill="#D9E1E7" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 13V8C0 5.79086 0.781049 3.90524 2.34315 2.34315C3.90524 0.781049 5.79086 0 8 0H18C20.2091 0 22.0948 0.781049 23.6569 2.34315C25.2189 3.90524 26 5.79086 26 8V18C26 20.2091 25.2189 22.0948 23.6569 23.6569C22.0948 25.2189 20.2091 26 18 26H8C5.79086 26 3.90524 25.2189 2.34315 23.6569C0.781049 22.0948 0 20.2091 0 18V13Z" fill="#217EFD" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9185 11.3696L7.68951 16.561C7.30243 16.9458 6.67657 16.9458 6.28949 16.561C6.10425 16.3774 6 16.1284 6 15.8677C6 15.6069 6.10425 15.3579 6.28949 15.1743L12.2175 9.28857C12.6047 8.90381 13.2302 8.90381 13.6175 9.28857L19.5455 15.1743C19.7307 15.3579 19.835 15.6069 19.835 15.8677C19.835 16.1284 19.7307 16.3774 19.5455 16.561C19.1584 16.9458 18.5325 16.9458 18.1454 16.561L12.9185 11.3696Z" fill="white" />
-                                                        </svg>
-                                                        :
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 26 26" fill="none">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9164 14.48L18.1454 9.28858C18.5325 8.90381 19.1584 8.90381 19.5455 9.28858C19.7307 9.47217 19.835 9.72119 19.835 9.98194C19.835 10.2427 19.7307 10.4917 19.5455 10.6753L13.6175 16.561C13.2302 16.9458 12.6047 16.9458 12.2175 16.561L6.28949 10.6753C6.10425 10.4917 6 10.2427 6 9.98193C6 9.72119 6.10425 9.47217 6.28949 9.28857C6.67657 8.90381 7.30243 8.90381 7.68951 9.28857L12.9164 14.48Z" fill="#ABB8C2" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C4.6879 2.00391 2.00385 4.68799 2 8V18C2.00378 21.312 4.68777 23.9961 7.99988 24H18C21.3121 23.9961 23.9962 21.312 24 18V8C23.9962 4.68799 21.3122 2.00391 18.0001 2H8ZM8 0H18C22.4183 0 26 3.58154 26 8V18C26 22.4185 22.4183 26 18 26H8C3.58173 26 0 22.4185 0 18V8C0 3.58154 3.58173 0 8 0Z" fill="#ABB8C2" />
-                                                        </svg>
-                                                    }
-                                                </button>
-                                            </td>}
+                                            {!pendente && (
+                                                <td className="ui-expand-toggle-column py-2 text-center">
+                                                    <TableRowExpandButton
+                                                        expanded={expandedRow === item?.id}
+                                                        expandLabel="Expandir detalhes do levantamento"
+                                                        collapseLabel="Recolher detalhes do levantamento"
+                                                        onClick={() => setExpandedRow(expandedRow === item?.id ? null : item?.id)}
+                                                    />
+                                                </td>
+                                            )}
                                             <td className="ui-expand-leading-column text-start py-2 bg">
                                                 <div className="flex min-w-0 items-center gap-1.5">
                                                     <span className="min-w-0 truncate font-semibold">
@@ -527,7 +549,7 @@ export default function Levantamentos() {
                                             <TableActionButton action="view" onClick={() => { setDetailsModalIsOpen(true), setItemSelected(item) }} />
                                             </td>
                                         </tr >
-                                           
+
                                             {expandedRow === item?.id && <tr className="ui-expandable-row border-t-1 border-[#EBECEF] ">
                                                 <td className="ui-expandable-cell" colSpan={8}>
                                                     {<ExpandirDepositosProcessados data={item?.created_at} responsavel={item?.responsavel?.name} />}
@@ -542,7 +564,7 @@ export default function Levantamentos() {
                             </tbody>
                         </table>
 
-                    </div>
+                    </TableResults>
 
                     {/* paginacao */}
 

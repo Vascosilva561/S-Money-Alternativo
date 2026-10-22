@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 type props = {
     isOpen: boolean,
@@ -37,15 +38,10 @@ export default function FilterBalancetUser({ onClose, isOpen, queryParams, setQu
     filter, setIsFiltered, setShowFilter, typeAccount }: props) {
 
     const filtro = () => {
-
-        if (queryParams.name !== "" || queryParams.phone_number !== "" || queryParams.nif !== "" || queryParams.balance !== "" || queryParams?.status !== ""
-
-        ) {
-            setShowFilter(true)
-            setIsFiltered(true)
-            //mostraLimparFiltro()
-            filter()
-        }
+        const hasFilters = hasActiveFilterValues(queryParams.name, queryParams.phone_number, queryParams.nif, queryParams.balance, queryParams.status)
+        setShowFilter(hasFilters)
+        setIsFiltered(hasFilters)
+        if (hasFilters) filter()
     }
 
     return (

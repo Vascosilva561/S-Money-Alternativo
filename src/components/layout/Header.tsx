@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { UserAvatar } from "../utils/useAvatar"
 import { SidebarTrigger } from "../ui/sidebar"
 import logoutIcon from "@/assets/header/log-out.svg"
-import { useLocation } from "react-router"
+import { Link, useLocation } from "react-router"
 import { ChevronRight } from "lucide-react"
 import { getAccountTypeLabel } from "@/components/utils/accountType"
 import { getPageHeader } from "@/components/layout/pageHeaders"
@@ -49,20 +49,24 @@ export default function Header() {
             )}
 
             <div className="ml-auto flex shrink-0 items-center gap-4">
-                <div className="flex shrink-0 items-center gap-3">
+                <Link
+                    to="/perfil"
+                    aria-label="Abrir Meu Perfil"
+                    className="group flex shrink-0 items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17CFDA] focus-visible:ring-offset-2"
+                >
                     <div className="hidden size-9 items-center justify-center overflow-hidden rounded-full bg-[#F6F5FA] lg:flex">
                         <UserAvatar photo={details?.photo} />
                     </div>
 
                     <div className="flex shrink-0 flex-col items-start gap-[2px] leading-none">
-                        <h1 className="whitespace-nowrap text-[13px] font-semibold leading-4 text-[#1B2A4A]">
+                        <h1 className="whitespace-nowrap text-[13px] font-semibold leading-4 text-[#1B2A4A] group-hover:underline">
                             {isLoading ? "..." : details?.name}
                         </h1>
                         <p className="whitespace-nowrap text-[11px] font-medium leading-[13px] text-[#7D8CA6]">
                             {isLoading ? "..." : getAccountTypeLabel(details?.account_type)}
                         </p>
                     </div>
-                </div>
+                </Link>
 
                 <span aria-hidden="true" className="h-6 w-px shrink-0 bg-[#E9ECEF]" />
 

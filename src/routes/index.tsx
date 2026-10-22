@@ -16,6 +16,7 @@ import Bancos from "@/pages/bancos";
 import CargosPermissoes from "@/pages/cargosPermissoes";
 import Dashboard from "@/pages/dashboard";
 import Depositos from "@/pages/depositos";
+
 import FAQs from "@/pages/FAQs";
 import GestaoUtilizadores from "@/pages/gestao_utilizadores";
 import { UserContextLayout } from "@/pages/user_context";
@@ -23,7 +24,8 @@ import UserOverview from "@/pages/user_overview";
 import UserContextOperationsPage from "@/pages/user_context_operations";
 import UserContextPaymentsPage from "@/pages/user_context_payments";
 import UserContextDepositsPage from "@/pages/user_context_deposits";
-import { UserContextAccountManagement, UserContextOtps, UserContextReports } from "@/pages/user_context_account_pages";
+import { UserContextReferences, UserContextWebhooks } from "@/pages/user_context_merchant_pages";
+import { UserContextAccountManagement, UserContextIbans, UserContextOtps, UserContextReports } from "@/pages/user_context_account_pages";
 import HistoricoDeRelatorioPage from "@/pages/historicosDeRelatorios";
 import Levantamentos from "@/pages/levantamentos";
 import Login from "@/pages/login";
@@ -47,6 +49,7 @@ import Webhooks from "@/pages/webhooks";
 import VisaoGeral from "@/pages/visauGeral";
 import GestaoDaConta from "@/pages/gestãoDaConta";
 import PagamentosPage from "@/pages/pagamentos";
+import Referencias from "@/pages/referencias";
 
 export const Routers = () => {
     const { isAuthenticated, loading } = useContext(AuthContext)
@@ -76,16 +79,19 @@ export const Routers = () => {
                         <Route path="/gestao-de-utilizadores/:userId" element={<UserContextLayout />}>
                             <Route index element={<Navigate to="visao-geral" replace />} />
                             <Route path="visao-geral" element={<UserOverview />} />
-                            <Route path="transferencias" element={<UserContextOperationsPage operation="transferencias" />} />
+                            <Route path="transferencias" element={<UserContextOperationsPage key="user-context-transferencias" operation="transferencias" />} />
                             <Route path="pagamentos" element={<UserContextPaymentsPage />} />
                             <Route path="depositos" element={<UserContextDepositsPage />} />
                             <Route path="pagamentos-referencia" element={<Navigate to="../pagamentos?tab=referencia" replace />} />
                             <Route path="pagamento-gpo" element={<Navigate to="../depositos?tab=gpo" replace />} />
-                            <Route path="levantamentos" element={<UserContextOperationsPage operation="levantamentos" />} />
-                            <Route path="conta-corrente" element={<UserContextOperationsPage operation="conta-corrente" />} />
+                            <Route path="levantamentos" element={<UserContextOperationsPage key="user-context-levantamentos" operation="levantamentos" />} />
+                            <Route path="conta-corrente" element={<UserContextOperationsPage key="user-context-conta-corrente" operation="conta-corrente" />} />
                             <Route path="historico-relatorios" element={<UserContextReports />} />
+                            <Route path="ibans" element={<UserContextIbans />} />
                             <Route path="otps" element={<UserContextOtps />} />
                             <Route path="gestao-da-conta" element={<UserContextAccountManagement />} />
+                            <Route path="webhooks" element={<UserContextWebhooks />} />
+                            <Route path="referencias" element={<UserContextReferences />} />
                         </Route>
                         <Route path="/gestao-de-utilizadores/criacao-validacao" element={<Navigate to="/gestao-de-utilizadores" replace />} />
                         <Route path="/gestao-de-utilizadores/contas" element={<Navigate to="/gestao-de-utilizadores" replace />} />
@@ -96,12 +102,13 @@ export const Routers = () => {
                         {/* operacoes */}
                         <Route path="/transferencias-somoney" element={<TranferenciaSomoney />} />
                         <Route path="/pagamentos" element={<PagamentosPage />} />
+                        <Route path="/referencias" element={<Referencias />} />
                         <Route path="/pagamentos-services" element={<Navigate to="/pagamentos" replace />} />
                         <Route path="/depositos" element={<Depositos />} />
                         <Route path="/pagamentos-referencia" element={<Navigate to="/pagamentos?tab=referencia" replace />} />
                         <Route path="/pagamentos-referencias" element={<Navigate to="/pagamentos?tab=referencia" replace />} />
                         <Route path="/deposito-referencia" element={<Navigate to="/depositos?tab=referencia" replace />} />
-                        <Route path="/pagamentos-gpo" element={<Navigate to="/depositos?tab=gpo" replace />} />
+                        <Route path="/pagamentos-gpo" element={<Navigate to="/pagamentos?tab=gpo" replace />} />
                         <Route path="/deposito-gpo" element={<Navigate to="/depositos?tab=gpo" replace />} />
                         <Route path="/levantamentos" element={<Levantamentos />} />
                         <Route path="/movimentos" element={<Movimentos />} />
@@ -121,9 +128,12 @@ export const Routers = () => {
                         <Route path="/cargos-permissoes" element={<CargosPermissoes />} />
                         <Route path="/usuarios-backoffice" element={<UsuariosBackOffice />} />
                         <Route path="/config-de-empresas" element={<ListaDeConfiguracoes />} />
+                        <Route path="/config-referencias" element={<Navigate to="/config-de-empresas?tab=referencias" replace />} />
+                        <Route path="/config-gpo" element={<Navigate to="/config-de-empresas?tab=gpo" replace />} />
                         <Route path="/webhooks" element={<Webhooks />} />
                         <Route path="/servicos" element={<Servicos />} />
                         <Route path="/bancos" element={<Bancos />} />
+                        <Route path="/lista-de-ibans" element={<Navigate to="/bancos?tab=ibans" replace />} />
                         {/* <Route path="/margens" element={<Margens />} /> */}
 
                         <Route path="/publicidades" element={<Publicidades />} />

@@ -1,7 +1,11 @@
 import DepositTabs from "@/components/deposits/DepositTabs"
 import UserContextOperationsPage from "@/pages/user_context_operations"
+import { useUserContext } from "@/pages/user_context_types"
 
 export default function UserContextDepositsPage() {
+  const account = useUserContext()
+  const isMerchant = account.account_type === "Merchant" || Boolean(account.business_name)
+
   return (
     <div className="ui-context-page">
       <div className="mb-5">
@@ -11,8 +15,8 @@ export default function UserContextDepositsPage() {
       </div>
 
       <DepositTabs
-        reference={<UserContextOperationsPage operation="pagamentos-referencia" title="Depósitos por Referência" embedded />}
-        gpo={<UserContextOperationsPage operation="pagamento-gpo" title="Depósitos por GPO" embedded />}
+        reference={<UserContextOperationsPage key="deposit-reference" operation={isMerchant ? "depositos-referencia" : "pagamentos-referencia"} title="Depósitos por Referência" embedded />}
+        gpo={<UserContextOperationsPage key="deposit-gpo" operation="pagamento-gpo" title="Depósitos por GPO" embedded />}
       />
     </div>
   )

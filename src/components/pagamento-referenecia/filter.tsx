@@ -10,7 +10,9 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
+    SheetDescription,
     SheetHeader,
+    SheetTitle,
 } from "@/components/ui/sheet"
 import { X } from "lucide-react"
 
@@ -36,6 +38,8 @@ type Props = {
     setCursor: React.Dispatch<React.SetStateAction<string>>
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>
     setCursorHistory: React.Dispatch<React.SetStateAction<string[]>>
+    title?: string
+    description?: string
 }
 
 export default function FilterPaymentsReference({
@@ -49,15 +53,19 @@ export default function FilterPaymentsReference({
     setCursor,
     setCurrentPage,
     setCursorHistory,
+    title = "Filtrar Dados",
+    description = "Defina os critérios que pretende aplicar para refinar a lista.",
 }: Props) {
-    const hasFilter = () =>
-        queryParams.payment_reference !== "" ||
-        queryParams.payment_status !== "" ||
-        queryParams.mft_status !== "" ||
-        queryParams.prt_status !== "" ||
-        queryParams.payment_id !== "" ||
-        queryParams.start_date !== "" ||
-        queryParams.end_date !== ""
+    const hasFilter = () => Boolean(
+        queryParams.payment_reference ||
+        queryParams.payment_status ||
+        queryParams.mft_status ||
+        queryParams.prt_status ||
+        queryParams.payment_id ||
+        queryParams.start_date ||
+        queryParams.end_date ||
+        queryParams.limit !== 10
+    )
 
     const handleFilter = () => {
         setIsFiltered(true)
@@ -70,25 +78,23 @@ export default function FilterPaymentsReference({
 
     return (
         <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
-            <SheetContent className="ui-filter-sheet-panel w-full overflow-y-auto p-5 sm:max-w-[440px] sm:p-6">
+            <SheetContent className="ui-filter-sheet-panel ui-reference-filter-sheet flex h-full w-full flex-col gap-0 overflow-hidden p-5 sm:max-w-[440px] sm:p-6">
                 <div className="flex w-full items-start justify-between gap-4 border-b border-[#E5EBF4] pb-4">
-                    <SheetHeader
-                        className="p-0 text-lg font-semibold text-[#143163]"
-                        description="Defina os critérios que pretende aplicar para refinar a lista."
-                    >
-                        Filtrar Dados
+                    <SheetHeader className="p-0 text-lg font-semibold text-[#143163]">
+                        <SheetTitle>{title}</SheetTitle>
+                        <SheetDescription>{description}</SheetDescription>
                     </SheetHeader>
                     <SheetClose
                         aria-label="Fechar filtros"
-                        className="rounded p-2 text-[#143163] transition-colors hover:bg-[#EAF6F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF]"
+                        className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#E3EAF4] bg-[#F5F7FA] p-0 text-[#143163] transition-colors hover:bg-[#E8EEF6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF]"
                     >
-                        <X className="size-5" aria-hidden="true" />
+                        <X className="size-4" aria-hidden="true" />
                     </SheetClose>
                 </div>
 
-                <div className="space-y-5 overflow-y-auto py-5">
+                <div className="ui-reference-filter-fields">
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="payment-id" className="text-sm font-semibold text-[#143163]">ID do Pagamento</label>
+                        <label htmlFor="payment-id" className="text-sm font-semibold text-[#143163]">ID do pagamento</label>
                         <input
                             id="payment-id"
                             type="text"
@@ -99,7 +105,7 @@ export default function FilterPaymentsReference({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="payment-reference" className="text-sm font-semibold text-[#143163]">Referência do Pagamento</label>
+                        <label htmlFor="payment-reference" className="text-sm font-semibold text-[#143163]">Referência do pagamento</label>
                         <input
                             id="payment-reference"
                             type="text"
@@ -110,7 +116,7 @@ export default function FilterPaymentsReference({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-[#143163]">Estado do Pagamento</label>
+                        <label className="text-sm font-semibold text-[#143163]">Estado do pagamento</label>
                         <Select value={queryParams.payment_status} onValueChange={(value) => setQueryParams((prev) => ({ ...prev, payment_status: value }))}>
                             <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
                             <SelectContent>
@@ -144,9 +150,9 @@ export default function FilterPaymentsReference({
                         </Select>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="ui-reference-filter-date-row grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="payment-start-date" className="text-sm font-semibold text-[#143163]">Data Inicial</label>
+                            <label htmlFor="payment-start-date" className="text-sm font-semibold text-[#143163]">Data inicial</label>
                             <input
                                 id="payment-start-date"
                                 type="date"
@@ -156,7 +162,7 @@ export default function FilterPaymentsReference({
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="payment-end-date" className="text-sm font-semibold text-[#143163]">Data Final</label>
+                            <label htmlFor="payment-end-date" className="text-sm font-semibold text-[#143163]">Data final</label>
                             <input
                                 id="payment-end-date"
                                 type="date"
@@ -169,10 +175,7 @@ export default function FilterPaymentsReference({
 
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-[#143163]">Limite de resultados</label>
-                        <Select
-                            value={String(queryParams.limit)}
-                            onValueChange={(value) => setQueryParams((prev) => ({ ...prev, limit: Number(value) }))}
-                        >
+                        <Select value={String(queryParams.limit)} onValueChange={(value) => setQueryParams((prev) => ({ ...prev, limit: Number(value) }))}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="10">10</SelectItem>

@@ -13,6 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { ListaManagers } from "../../hooks/getManagers"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 type props = {
     isOpen: boolean,
@@ -39,14 +40,17 @@ export default function FilterLEvantamentos({ onClose, isOpen, queryParams, setQ
 }: props) {
 
     const mostraLimparFiltro = () => {
-
-        if (queryParams.user_name_phone !== "" || queryParams.destinatario !== "" ||
-            queryParams.dataInicial !== "" || queryParams.dataFinal !== "" ||
-            queryParams?.montante_de !== "" || queryParams?.montante_ate !== ""
-
-        ) {
-            setShowFilter(true)
-        }
+        setShowFilter(hasActiveFilterValues(
+            queryParams.name,
+            queryParams.iban,
+            queryParams.valor_de,
+            queryParams.valor_ate,
+            queryParams.dataInicial,
+            queryParams.dataFinal,
+            tipoDeConta !== "User" ? tipoDeConta : "",
+            status !== (separador === "Pendentes" ? "PENDING" : "ACCEPTED") ? status : "",
+            responsavel,
+        ))
     }
     const { data } = ListaManagers()
 

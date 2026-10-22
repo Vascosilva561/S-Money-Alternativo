@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { Plus } from "lucide-react"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
@@ -80,7 +81,7 @@ export default function Margens() {
         placeholderData: keepPreviousData,
     })
 
-   
+
 
     // Função de pesquisa que apenas atualiza o termo de pesquisa
     const handleSearch = (params: string | undefined) => {
@@ -219,8 +220,9 @@ export default function Margens() {
                         }}
                     >
 
-                        <div className="w-full flex flex-col p-5">
-                            <div className="flex space-x-4">
+                        <div className="ui-data-stack w-full flex flex-col p-5">
+                            <div className="ui-toolbar ui-legacy-toolbar">
+                                <div className="ui-toolbar-actions flex space-x-4">
                                 <button onClick={() => setAdicionaModalIsOpen(true)} type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8]  ring-1 ring-[#ADCBD0]
                         hover:bg-[#17CFDA] hover:ring-[#17CFDA] rounded-[5px] duration-300 font-semibold pr-4 px-4 flex space-x-2 items-center">
                                     <Plus className="size-4" aria-hidden="true" />
@@ -240,10 +242,8 @@ export default function Margens() {
                             </div>
 
                             {/* filtros */}
-                            <div>
 
-                            </div>
-                            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                            <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                                 <div className="flex space-x-2 ">
 
                                     {!isLoading && (isFetching && <>
@@ -267,9 +267,20 @@ export default function Margens() {
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
                             {/* Tabela */}
-                            <div className=" mt-10 border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto ">
+                            <TableResults
+                                label="Margens encontradas"
+                                visibleCount={filteredDataPublicities.length}
+                                totalCount={data?.total}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPreviousPage={handlePrevPage}
+                                onNextPage={handleNextPage}
+                                isLoading={isLoading || isFetching}
+                                containerClassName=" mt-10 border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto "
+                            >
                                 <table className="w-full md:table-fixed border-collapse ">
                                     <thead className="bg-[#F5F6FA] h-14  ">
                                         <tr className=" place-items-center text-[#143163] ">
@@ -346,7 +357,7 @@ export default function Margens() {
                                     </tbody>
                                 </table>
 
-                            </div>
+                            </TableResults>
                             {/* paginacao */}
 
                             <PaginationFooter

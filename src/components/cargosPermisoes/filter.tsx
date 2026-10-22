@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 
 type props = {
@@ -38,13 +39,7 @@ export default function FilterCargos({ onClose, isOpen, queryParams, setQueryPar
 
 }: props) {
 
-    const mostraLimparFiltro = () => {
-
-        if (queryParams.name !== "" || queryParams.status !== ""
-        ) {
-            setShowFilter(true)
-        }
-    }
+    const mostraLimparFiltro = () => setShowFilter(hasActiveFilterValues(queryParams.name, queryParams.status))
 
     return (
         <>

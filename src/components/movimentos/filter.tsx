@@ -17,6 +17,7 @@ import {
 import { DateField, FormField, TextField } from "@/components/ui/form-field"
 import { CircleAlert, X } from "lucide-react"
 import { toast } from "sonner"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 type props = {
     isOpen: boolean,
@@ -46,9 +47,9 @@ export default function FilterMovimentos({ onClose, isOpen, queryParams, setQuer
 
     const mostraLimparFiltro = () => {
 
-        setShowFilter(Boolean(
-            queryParams.name || queryParams.iban || queryParams.dataInicial || queryParams.dataFinal ||
-            queryParams.valor_de || queryParams.valor_ate || status || tipoDeConta || tipoDeMovimento || tipoDeTransacao
+        setShowFilter(hasActiveFilterValues(
+            queryParams.name, queryParams.iban, queryParams.dataInicial, queryParams.dataFinal,
+            queryParams.valor_de, queryParams.valor_ate, status, tipoDeConta, tipoDeMovimento, tipoDeTransacao,
         ))
     }
     const checkFilter = () => {

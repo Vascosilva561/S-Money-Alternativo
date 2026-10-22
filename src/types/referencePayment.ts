@@ -1,4 +1,12 @@
 export interface ReferencePaymentType {
+    id?: string
+    value?: string
+    cost?: string
+    profit_somoney?: string
+    transaction_reference?: string
+    created_at?: string
+    updated_at?: string
+    merchant?: { id: string; email: string; business_name: string; balance: string }
     payment_id: string
     entity_code: string
     payment_reference: string
@@ -33,4 +41,5 @@ export interface ReferencePaymentResponse {
     code: string
     payments: ReferencePaymentType[]
     next_cursor: string | null
+    total?: number
 }

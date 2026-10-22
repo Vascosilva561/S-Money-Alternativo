@@ -1,8 +1,8 @@
 import { api } from "@/api"
-// import { AuthContext } from "@/context/auth"
+import { AuthContext } from "@/context/auth"
 import { useQuery } from "@tanstack/react-query"
-// import { isAxiosError } from "axios"
-// import { useContext } from "react"
+import { isAxiosError } from "axios"
+import { useContext } from "react"
 
 type user = {
     details: {
@@ -27,15 +27,19 @@ type user = {
 }
 
 export function DetailsUser() {
-
-    //const {logout} = useContext(AuthContext)
+    const { isAuthenticated, logout } = useContext(AuthContext)
 
    const getUser = async (): Promise<user | null> => {
     try {
         const { data } = await api.get("/front/managers/session")
+        if (data?.errors) {
+            logout()
+            return null
+        }
         return data
     } catch (error) {
-        
+        if (isAxiosError(error) && error.response?.status === 401) logout()
+
         console.log(error)
 
         return null
@@ -44,7 +48,8 @@ export function DetailsUser() {
 
     const { data, isLoading } = useQuery<user | null>({
         queryKey: ["detailsUser"],
-        queryFn: getUser
+        queryFn: getUser,
+        enabled: isAuthenticated,
     })
 
     const UserData = {

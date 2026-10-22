@@ -1,10 +1,10 @@
 import * as React from "react"
-import { ArrowUpRight, Eye, Pencil, Trash2, type LucideIcon } from "lucide-react"
+import { ArrowUpRight, Check, Eye, Pencil, Trash2, X, type LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-export type TableAction = "view" | "context" | "edit" | "delete"
+export type TableAction = "view" | "context" | "edit" | "delete" | "validate" | "reject"
 
 const actionConfig: Record<TableAction, {
   label: string
@@ -33,6 +33,18 @@ const actionConfig: Record<TableAction, {
   delete: {
     label: "Eliminar",
     icon: Trash2,
+    className: "bg-[#FDECEC] text-[#B42318] hover:bg-[#B42318] hover:text-white",
+    focusClassName: "focus-visible:ring-[#B42318]",
+  },
+  validate: {
+    label: "Validar IBAN",
+    icon: Check,
+    className: "bg-[#E2F6E8] text-[#16803C] hover:bg-[#14B94A] hover:text-white",
+    focusClassName: "focus-visible:ring-[#14B94A]",
+  },
+  reject: {
+    label: "Recusar IBAN",
+    icon: X,
     className: "bg-[#FDECEC] text-[#B42318] hover:bg-[#B42318] hover:text-white",
     focusClassName: "focus-visible:ring-[#B42318]",
   },

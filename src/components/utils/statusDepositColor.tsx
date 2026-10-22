@@ -5,6 +5,7 @@ export const statusDepositColor = (status: string) => {
     case "PAID":
       return "bg-[#CFE7D7] text-[#0D9339]";
     case "REJECTED":
+    case "EXPIRED":
     case "ERROR":
     case "FAILED":
     case "CANCELED":

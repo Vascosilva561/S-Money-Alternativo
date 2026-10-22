@@ -189,9 +189,9 @@ export default function DetailsGestaoUsuario({ onClose, isOpen, itemSelected }: 
 
                     <div id="account-detail-panel" role="tabpanel" aria-labelledby={dadosUser ? "account-user-tab" : "account-documents-tab"} tabIndex={0} className="ui-detail-sheet-body ui-account-detail-body">
                     {dadosUser ? <div className="ui-account-detail-content space-y-5">
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex min-w-0 items-center gap-3">
-                                <div className="grid size-12 shrink-0 place-items-center rounded-full border border-[#D7E2F2] bg-[#F8FAFC] text-sm font-semibold text-[#143163]">
+                        <div className="flex min-w-0 items-center gap-3">
+                            <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+                                <div className="grid size-10 shrink-0 place-items-center rounded-full border border-[#D7E2F2] bg-[#F8FAFC] text-sm font-semibold text-[#143163] sm:size-12">
                                     {getInitials(itemSelected?.account_type === "User" ? `${itemSelected?.first_name} ${itemSelected?.last_name}` : `${itemSelected?.business_name}`)}
                                 </div>
                                 <div className="min-w-0">
@@ -199,15 +199,15 @@ export default function DetailsGestaoUsuario({ onClose, isOpen, itemSelected }: 
                                     <p className="mt-0.5 text-sm text-[#667085]">{itemSelected?.account_type === "User" ? "Conta Particular" : "Conta Empresa"}</p>
                                 </div>
                             </div>
-                            <div className="flex min-h-16 items-center gap-2 p-2">
-                                <Wallet className="size-7 shrink-0 text-[#143163]" aria-hidden="true" />
-                                <div className="min-w-0">
-                                    <p className="text-xs text-[#667085]">Saldo em conta</p>
-                                    <p className="break-words font-semibold text-[#143163]">
+                            <div className="flex min-h-16 w-fit shrink-0 items-center gap-1 p-1">
+                                <Wallet className="size-6 shrink-0 text-[#143163]" aria-hidden="true" />
+                                <div className="w-fit min-w-0">
+                                    <p className="whitespace-nowrap text-xs text-[#667085]">Saldo em conta</p>
+                                    <p className="whitespace-nowrap font-semibold text-[#143163]">
                                         {mostraSaldo ? itemSelected?.balance?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "******"} Kz
                                     </p>
                                 </div>
-                                <button type="button" aria-label={mostraSaldo ? "Ocultar saldo" : "Mostrar saldo"} onClick={() => setMostraSaldo((visible) => !visible)} className="grid size-9 shrink-0 place-items-center rounded-lg text-[#143163] transition hover:bg-[#F1F5FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF]">{mostraSaldo ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}</button>
+                                <button type="button" aria-label={mostraSaldo ? "Ocultar saldo" : "Mostrar saldo"} onClick={() => setMostraSaldo((visible) => !visible)} className="grid size-8 shrink-0 place-items-center rounded-lg text-[#143163] transition hover:bg-[#F1F5FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#48B9FF]">{mostraSaldo ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}</button>
                             </div>
                         </div>
                         <p className="text-[#143163] font-semibold pt-2">Informações do utilizador</p>

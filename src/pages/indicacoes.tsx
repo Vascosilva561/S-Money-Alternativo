@@ -1,3 +1,4 @@
+import { TableResults } from "@/components/ui/table-results"
 import { Plus } from "lucide-react"
 import { api } from "@/api"
 import { TableActionButton } from "@/components/ui/table-action-button"
@@ -7,13 +8,13 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import ListaProdutos from "@/components/servicos/listProducts"
 import type { ReferralItem, ReferralResponse } from "@/types/Indicacoes"
-import type { ConfigTypeResponse, ProgramaIndicacao } from "@/types/configurations"
+import type { Indicator, IndicatorsResponse } from "@/types/indicator"
 import DetailsIndicacoes from "@/components/indicacoes&Config/details"
 import Configurar from "@/components/indicacoes&Config/configurar"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import ModalEliminarConfig from "@/components/indicacoes&Config/eliminar"
 import EditarConfig from "@/components/indicacoes&Config/edit"
-import { formatCurrency, formatDate, formatDateTime } from "@/components/utils/formmat"
+import { formatCurrency, formatDateTime } from "@/components/utils/formmat"
 
 export default function Indicacoes() {
 
@@ -25,7 +26,7 @@ export default function Indicacoes() {
     const [editModalIsOpen, setEditModalIsOpen] = useState(false)
     const [showClearFilter, _setShowClearFilter] = useState(false)
     const [itemSelected, setItemSelected] = useState<ReferralItem>()
-    const [itemSelectedConfig, setItemSelectedConfig] = useState<ProgramaIndicacao>()
+    const [itemSelectedConfig, setItemSelectedConfig] = useState<Indicator>()
     const [modalEliminar, setModalEliminar] = useState(false)
 
     const [queryParams, _setQueryParams] = useState({
@@ -75,7 +76,7 @@ export default function Indicacoes() {
         data: configData,
         //isFetching: isFetchingConfig,
         isLoading: isLoadingConfig
-    } = useQuery<ConfigTypeResponse>({
+    } = useQuery<IndicatorsResponse>({
         queryKey: ['ConfigIndicacoes', currentPage, perPage, isFiltered],
         queryFn: () => getIndicacoes(currentPage), // ajuste o nome real da função
         placeholderData: keepPreviousData,
@@ -129,7 +130,7 @@ export default function Indicacoes() {
         });
     }, [referralData?.dados, searchInput]);
 
-    const filteredConfig = useMemo<ProgramaIndicacao[]>(() => {
+    const filteredConfig = useMemo<Indicator[]>(() => {
         const lista = configData?.dados ?? []
         const search = searchInput?.trim().toLowerCase() ?? ""
 
@@ -137,12 +138,13 @@ export default function Indicacoes() {
 
         return lista.filter((item) => {
             const searchableFields = [
-                item.name,
-                item.description,
-                item.start_date,
-                item.end_date,
-                item.reward_amount,
-                item.budget,
+                item.user?.name,
+                item.user?.phone_number,
+                item.user?.email,
+                item.user?.invite_code,
+                item.invite_code,
+                item.value_indicator,
+                item.value_indicated,
                 item.active ? "ativo" : "inativo",
             ]
 
@@ -251,8 +253,9 @@ export default function Indicacoes() {
                         }}
                     >
 
-                        <div className="w-full flex flex-col p-5">
-                            <div className="flex space-x-4">
+                        <div className="ui-data-stack w-full flex flex-col p-5">
+                            <div className="ui-toolbar ui-legacy-toolbar">
+                                <div className="ui-toolbar-actions flex space-x-4">
                                 {!listaIndicacoes && <button
                                     onClick={() => setAddConfigModalIsOpen(true)}
                                     type="button" className="cursor-pointer p-2 text-[#143163] bg-[#EAF6F8] ring-1 ring-[#ADCBD0] pr-4 px-4
@@ -285,7 +288,7 @@ export default function Indicacoes() {
                                 }
                             </div>
 
-                            <div className="flex justify-between space-x-4 items-center text-[#143163] mt-5">
+                            <div className="ui-toolbar-search flex min-w-0 items-center gap-3">
                                 <div className="flex space-x-2 ">
 
                                     {/* {!isLoading && (isFetching && <>
@@ -309,14 +312,23 @@ export default function Indicacoes() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Tabela */}
-                            <div className="mt-10 flex items-center space-x-2 text-[16px] text-[#143163]"><p className="font-bold">Total geral de registos: </p><p className="">
-                                {(isLoadingReferral || isLoadingConfig) ? "..." : listaIndicacoes ? referralData?.total : configData?.total}</p>
                             </div>
 
+                            {/* Tabela */}
+
+
                             {separador === "ListaDeIndicacoes" && (
-                                <div className="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto">
+                                <TableResults
+                                    label="Indicações encontradas"
+                                    visibleCount={filteredIndications.length}
+                                    totalCount={totalItems}
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPreviousPage={handlePrevPage}
+                                    onNextPage={handleNextPage}
+                                    isLoading={isLoadingReferral || isLoadingConfig}
+                                    containerClassName="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto"
+                                >
                                     <table className="w-full md:table-fixed border-collapse">
                                         <thead className="bg-[#F5F6FA] h-14">
                                             <tr className="place-items-center text-[#143163]">
@@ -357,36 +369,44 @@ export default function Indicacoes() {
                                             )}
                                         </tbody>
                                     </table>
-                                </div>
+                                </TableResults>
                             )}
 
                             {separador === "Configuracoes" && (
-                                <div className="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto">
+                                <TableResults
+                                    label="Promoções encontradas"
+                                    visibleCount={filteredConfig.length}
+                                    totalCount={totalItems}
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPreviousPage={handlePrevPage}
+                                    onNextPage={handleNextPage}
+                                    isLoading={isLoadingReferral || isLoadingConfig}
+                                    containerClassName="border-1 border-[#EBECEF] rounded-lg relative overflow-x-auto"
+                                >
                                     <table className="w-full md:table-fixed border-collapse">
                                         <thead className="bg-[#F5F6FA] h-14">
                                             <tr className="place-items-center text-[#143163]">
-                                                <th className="text-start px-5">Nome</th>
-                                                <th className="text-start">Descrição</th>
-                                                <th className="ui-date-column text-center">Data de início</th>
-                                                <th className="ui-date-column text-center">Data de término</th>
-                                                <th className="text-center">Valor do prémio</th>
-                                                <th className="text-center">Orçamento</th>
+                                                <th className="text-start px-5">Utilizador</th>
+                                                <th className="text-start">Telefone</th>
+                                                <th className="text-start">Código de convite</th>
+                                                <th className="text-center">Valor do indicador</th>
+                                                <th className="text-center">Valor indicado</th>
                                                 <th className="text-center">Estado</th>
                                                 <th className="text-start">Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {isLoadingConfig ? (
-                                                <TableStateRow colSpan={8} state="loading" message="A carregar configurações..." />
+                                                <TableStateRow colSpan={7} state="loading" message="A carregar configurações..." />
                                             ) : filteredConfig.length > 0 ? (
-                                                filteredConfig.map((item: ProgramaIndicacao) => (
+                                                filteredConfig.map((item: Indicator) => (
                                                     <tr key={item.id} className="border-t-1 border-[#EBECEF] odd:bg-white even:bg-[#F8FAFC] hover:bg-[#F5F6FA] duration-300 text-[#143163]">
-                                                        <td className="text-start py-2 px-5"><p className="font-semibold">{item?.name}</p></td>
-                                                        <td className="text-start py-2">{item?.description}</td>
-                                                        <td className="ui-date-column text-center py-2">{formatDate(item?.start_date, "N/A")}</td>
-                                                        <td className="ui-date-column text-center py-2">{formatDate(item?.end_date, "N/A")}</td>
-                                                        <td className="text-center py-2 font-semibold">{formatCurrency(item?.reward_amount)}</td>
-                                                        <td className="text-center py-2 font-semibold">{formatCurrency(item?.budget)}</td>
+                                                        <td className="text-start py-2 px-5"><p className="font-semibold">{item.user?.name || "—"}</p></td>
+                                                        <td className="text-start py-2">{item.user?.phone_number || "—"}</td>
+                                                        <td className="text-start py-2">{item.user?.invite_code || item.invite_code || "—"}</td>
+                                                        <td className="text-center py-2 font-semibold">{formatCurrency(Number(item.value_indicator))}</td>
+                                                        <td className="text-center py-2 font-semibold">{formatCurrency(Number(item.value_indicated))}</td>
                                                         <td className="text-center py-2">
                                                             <span className={`ui-promotion-status-tag px-2 py-1 rounded-[6px] text-xs font-semibold ${item?.active ? "bg-[#DEF7EC] text-[#03543F]" : "bg-[#FDE8E8] text-[#9B1C1C]"}`}>
                                                                 {item?.active ? "Activo" : "Inativo"}
@@ -415,11 +435,11 @@ export default function Indicacoes() {
                                                     </tr>
                                                 ))
                                             ) : (
-                                                <TableStateRow colSpan={8} state="empty" message="Nenhuma configuração encontrada." />
+                                                <TableStateRow colSpan={7} state="empty" message="Nenhuma configuração encontrada." />
                                             )}
                                         </tbody>
                                     </table>
-                                </div>
+                                </TableResults>
                             )}
 
                             {/* paginacao */}

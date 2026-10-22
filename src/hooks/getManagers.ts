@@ -1,7 +1,7 @@
 import { api } from "@/api"
 import { useQuery } from "@tanstack/react-query"
 
-export function ListaManagers() {
+export function ListaManagers(enabled = true) {
 
     const getMenagers = async () => {
 
@@ -15,7 +15,8 @@ export function ListaManagers() {
 
     const data = useQuery({
         queryKey: ["listaManagers"],
-        queryFn: getMenagers
+        queryFn: getMenagers,
+        enabled
     })
 
     return data

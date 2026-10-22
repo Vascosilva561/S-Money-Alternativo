@@ -1,27 +1,28 @@
 interface Account {
-    id: string;
-    name: string;
-    email: string;
-    first_name: string,
-    last_name: string,
+    id: string
+    name: string
+    email: string
+    first_name: string
+    last_name: string
     business_name: string
 }
 
 export type ReferenceDepositType = {
-    id: string;
-    reference: string;
-    account: Account;
-    status: "SUCCESS" | "PENDING" | "FAILED"; // adiciona outros status se existirem
-    channel: "MULTICAIXA" | string;
-    amount: string;
-    id_transaction: string | null;
-    period_id: string;
-    created_at: string;
-    updated_at: string;
+    id: string
+    reference: string
+    account: Account
+    status: "SUCCESS" | "PENDING" | "FAILED" | string
+    channel: string
+    amount: string
+    id_transaction: string | null
+    period_id: string
+    created_at: string
+    updated_at: string
 }
 
 export type ReferenceDepositResponse = {
-    dados: ReferenceDepositType[];
-    total: number;
-    total_amount: number
+    dados: ReferenceDepositType[]
+    total: number
+    total_amount: number | string
+    next_cursor?: string | null
 }

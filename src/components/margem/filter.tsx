@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sheet"
 import { getServicosOptions } from "./adiciona"
 import { useQuery } from "@tanstack/react-query"
+import { hasActiveFilterValues } from "@/lib/filter-utils"
 
 
 type props = {
@@ -95,7 +96,10 @@ export default function FilterMargens({ onClose, isOpen, queryParams, setQueryPa
                         <SheetClose asChild>
                             <Button onClick={() => {
                             setIsFiltered(true)
-                            setShowFilter(true)
+                            setShowFilter(hasActiveFilterValues(
+                                queryParams.servico, queryParams.valor, queryParams.status,
+                                queryParams.start_date, queryParams.end_date,
+                            ))
                             filter(1)
                         }} className="h-11 w-full rounded-lg bg-[#143163] text-white hover:bg-[#1D467F]"
                             type="button" variant="brand">

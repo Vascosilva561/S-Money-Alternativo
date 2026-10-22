@@ -3,6 +3,7 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
+    SheetFooter,
     SheetHeader,
 } from "@/components/ui/sheet"
 import { useEffect, useState } from "react"
@@ -17,7 +18,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import type { Permissions } from "@/types/permissions"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 import { getControllers } from "../utils/getControllers"
 import { SwitchIcon } from "../switchIcon/switchIcon"
 import {
@@ -168,125 +169,137 @@ export default function EditPositions({ onClose, isOpen, itemSelected }: props) 
         <>
             <Sheet onOpenChange={onClose} open={isOpen} >
 
-                <SheetContent className="ui-edit-sheet pr-16 pl-16 pt-10 w-full flex-col overflow-y-auto scrollbar-none">
-                    <div className="flex items-start justify-between gap-4 w-full border-b border-[#E5EBF4] pb-4">
+                <SheetContent className="ui-position-sheet">
+                    <div className="ui-position-header">
                         <SheetHeader className="text-[#143163] font-semibold text-lg p-0" description="Actualize os dados deste registo e guarde as alterações.">Editar Cargo</SheetHeader>
-                        <SheetClose className=" cursor-pointer bg-[#DBDEE3] hover:bg-[#C5C9CE] rounded duration-300"><svg width="25" height="25" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="25" height="25" rx="8" />
-                            <path d="M29.7067 28.2943C30.0973 28.685 30.0973 29.3183 29.7067 29.709C29.512 29.9037 29.256 30.0023 29 30.0023C28.744 30.0023 28.488 29.905 28.2933 29.709L21 22.4156L13.7067 29.709C13.512 29.9037 13.256 30.0023 13 30.0023C12.744 30.0023 12.488 29.905 12.2933 29.709C11.9027 29.3183 11.9027 28.685 12.2933 28.2943L19.5867 21.001L12.2933 13.7077C11.9027 13.317 11.9027 12.6837 12.2933 12.293C12.684 11.9023 13.3173 11.9023 13.708 12.293L21.0013 19.5864L28.2946 12.293C28.6853 11.9023 29.3187 11.9023 29.7093 12.293C30.1 12.6837 30.1 13.317 29.7093 13.7077L22.416 21.001L29.7067 28.2943Z" fill="#143163" stroke="#143163" />
-                        </svg>
+                        <SheetClose aria-label="Fechar formulário" className="ui-position-close">
+                            <X className="size-4" aria-hidden="true" />
                         </SheetClose>
                     </div>
 
-                    <div className="">
-                        <div className="ui-modal-tabs flex space-x-1.5 mt-5 pr-1 pl-1">
-                            <button
-                                onClick={() => setCurrentView(0)}
-                                className={`grid place-items-center text-[#143163] font-semibold rounded-t  w-full cursor-pointer ${!currentView ? "border-t-4 h-[50px]" : "h-[45px] mt-1.5"}
-                                             border-[#48B9FF] text-[12px] p-2 ring-1 ring-[#A9B8CF]`}>Cargo</button>
-                            <button
-                                onClick={() => setCurrentView(1)}
-                                className={`grid place-items-center text-[#143163] font-semibold rounded-t w-full cursor-pointer ${currentView ? "border-t-4 h-[50px]" : "h-[45px] mt-1.5"}
-                                             border-[#48B9FF] text-[12px] p-2 ring-1 ring-[#A9B8CF]`}>Permissões</button>
+                    <div className="ui-modal-tabs" role="group" aria-label="Etapas do cargo">
+                        <button
+                            type="button"
+                            aria-pressed={currentView === 0}
+                            onClick={() => setCurrentView(0)}
+                            className={`cursor-pointer ${currentView === 0 ? "border-t-4" : ""}`}
+                        >Cargo</button>
+                        <button
+                            type="button"
+                            aria-pressed={currentView === 1}
+                            onClick={() => setCurrentView(1)}
+                            className={`cursor-pointer ${currentView === 1 ? "border-t-4" : ""}`}
+                        >Permissões</button>
 
-                        </div>
                     </div>
-                    <div className="overflow-hidden relative w-full h-auto">
-                        <div className={`flex transition ease-out duration-500 w-[200%] h-auto`}
+                    <div className="ui-position-carousel">
+                        <div className="ui-position-track"
                             style={{
                                 transform: `translateX(-${currentView * 50}%)`,
                             }}
                         >
-                            <div className="space-y-5 w-full px-1">
-                                <h1 className="text-[#143163] font-semibold mt-5 text-lg">Descrição do Cargo  1/2</h1>
+                            <section className="ui-position-panel" aria-label="Dados do cargo">
+                                <div className="ui-modal-step-heading">
+                                    <h2 className="ui-modal-step-title">Descrição do Cargo</h2>
+                                    <span className="ui-modal-step-indicator">Etapa 1 de 2</span>
+                                </div>
+                                <div className="ui-modal-step-divider" aria-hidden="true" />
 
-                                <div className="ring-[0.5px] ring-[#A9B8CF] w-full"></div>
-
-                                <div className="mt-10">
-                                    <div className="flex flex-col space-y-2 mt-6">
-                                        <label className="text-[#143163] font-semibold text-[14px]">Nome do Cargo</label>
-                                        <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className={`p-2 ring-1 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
+                                <div className="ui-position-fields">
+                                    <div className="ui-field">
+                                        <label htmlFor="edit-position-name" className="ui-field-label">Nome do Cargo</label>
+                                        <input
+                                            id="edit-position-name"
+                                            type="text"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            className="ui-control h-11 px-3"
+                                        />
                                     </div>
-                                    <div className="flex flex-col space-y-2 mt-6 w-full">
-                                        <label className="text-[#143163] font-semibold text-[14px]">Estado</label>
+                                    <div className="ui-field">
+                                        <label htmlFor="edit-position-status" className="ui-field-label">Estado</label>
                                         <Select onValueChange={(value) => setFormData({ ...formData, status: value })} value={formData?.status}>
-                                            <SelectTrigger className="w-full">
+                                            <SelectTrigger id="edit-position-status" className="ui-position-select-trigger w-full">
                                                 <SelectValue placeholder="Todos" />
                                             </SelectTrigger>
-                                            <SelectContent >
+                                            <SelectContent>
                                                 <SelectItem value="Active">Activo</SelectItem>
                                                 <SelectItem value="Inactive">Inativo</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="flex items-center justify-between space-x-2">
-                                        <div className="flex flex-col space-y-2 mt-6 w-full">
-                                            <label className="text-[#143163] font-semibold text-[14px]">Descrição</label>
-                                            <textarea value={formData.descricao} onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                                                className={`p-2 ring-1 resize-none h-28 rounded-[6px] ring-[#ADCBD0] focus:ring-1 focus:ring-[#7D8CA6] focus:outline-none text-[#143163] text-sm`} />
-                                        </div>
+                                    <div className="ui-field">
+                                        <label htmlFor="edit-position-description" className="ui-field-label">Descrição</label>
+                                        <textarea
+                                            id="edit-position-description"
+                                            value={formData.descricao}
+                                            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                                            className="ui-control ui-textarea"
+                                        />
                                     </div>
-                                    <Button
-                                        onClick={createPosition}
-                                        className=" w-full p-2 mt-[60px] rounded-[6px] mb-10 cursor-pointer bg-[#EAF6F8] hover:bg-[#17CFDA] hover:ring-[#17CFDA] transition duration-300 ring-1 ring-[#ADCBD0] text-[#143163] font-semibold"
-                                        type="submit" variant="brand">
-                                        {loading ?
-                                            <div className="flex justify-center items-center">
-                                                <div className="w-6 h-6 rounded-full border-1 border-t-transparent border-[#143163] animate-spin"></div>
-                                            </div> : "Salvar Alterações"
-                                        }
-                                    </Button>
                                 </div>
-                            </div>
-                            <div className="relative w-full h-full flex flex-col ">
-                                    <div className="mb-10 flex-1 overflow-y-auto px-2 mt-4 max-h-[550px] pb-28 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                                    <Accordion type="single" collapsible className="">
-                                        {isLoading ?
-                                            <div className="relative">
-                                                <div className="absolute flex justify-center w-full mt-20">
-                                                    <span className="w-6 h-6 rounded-full border-1 border-t-transparent border-[#143163] animate-spin "></span>
-                                                </div>
-                                            </div> :
-                                            dadosAgrupados && Object?.entries(dadosAgrupados)?.map(([controller, permissoes]) => (
-                                                <AccordionItem key={controller} value={controller} className="border-b-0 text-[#143163] ">
-                                                    <AccordionTrigger className="capitalize flex justify-between w-full items-center p-2 py-4 cursor-pointer duration-300 hover:bg-[#f0f4fa] !hover:bg-[#f0f4fa]">
-                                                        <span className="font-semibold ">{getControllers(controller)}</span>
+                            </section>
+                            <section className="ui-position-panel" aria-label="Permissões do cargo">
+                                <div className="ui-modal-step-heading">
+                                    <h2 className="ui-modal-step-title">Permissões do Cargo</h2>
+                                    <span className="ui-modal-step-indicator">Etapa 2 de 2</span>
+                                </div>
+                                <div className="ui-modal-step-divider" aria-hidden="true" />
+
+                                <div className="ui-position-permissions-scroll">
+                                    {isLoading ? (
+                                        <div className="ui-position-loading" aria-label="A carregar permissões">
+                                            <span className="ui-position-spinner" />
+                                        </div>
+                                    ) : Object.keys(dadosAgrupados).length > 0 ? (
+                                        <Accordion type="single" collapsible>
+                                            {Object.entries(dadosAgrupados).map(([controller, permissoes]) => (
+                                                <AccordionItem key={controller} value={controller} className="ui-position-accordion-item text-[#143163]">
+                                                    <AccordionTrigger className="ui-position-accordion-trigger capitalize">
+                                                        <span className="font-semibold">{getControllers(controller)}</span>
                                                         <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                                                     </AccordionTrigger>
                                                     <AccordionContent>
-                                                        <div className="mt-2">
+                                                        <div className="space-y-2 pb-2">
                                                             {Array.isArray(permissoes) && permissoes.map((permissions: any, index: any) => (
-                                                                <div key={index} className="capitalize flex justify-between w-full items-center bg-[#F3F7FD] mb-2 p-2 rounded ">
-                                                                    <span >{permissions?.descricao}</span>
-                                                                    <button type="button" className="cursor-pointer" onClick={() => togglePermissaoPorId(permissions.controller, permissions.acao)}>
+                                                                <div key={index} className="ui-position-permission-row capitalize">
+                                                                    <span>{permissions?.descricao}</span>
+                                                                    <button
+                                                                        type="button"
+                                                                        aria-label={`Alterar permissão: ${permissions?.descricao}`}
+                                                                        onClick={() => togglePermissaoPorId(permissions.controller, permissions.acao)}
+                                                                    >
                                                                         <SwitchIcon active={permissions.bool === 1} />
                                                                     </button>
-
                                                                 </div>
                                                             ))}
                                                         </div>
                                                     </AccordionContent>
                                                 </AccordionItem>
                                             ))}
-                                    </Accordion>
+                                        </Accordion>
+                                    ) : (
+                                        <p className="ui-position-empty-state">Nenhuma permissão encontrada.</p>
+                                    )}
                                 </div>
-                                <div className="p-2 bg-white sticky bottom-0">
-                                    <Button
-                                        onClick={createPosition}
-                                        className=" w-full p-2 mt-[60px] rounded-[6px] mb-4 cursor-pointer bg-[#EAF6F8] hover:bg-[#17CFDA] hover:ring-[#17CFDA] transition duration-300 ring-1 ring-[#ADCBD0] text-[#143163] font-semibold"
-                                        type="submit" variant="brand">
-                                        {loading ?
-                                            <div className="flex justify-center items-center">
-                                                <div className="w-6 h-6 rounded-full border-1 border-t-transparent border-[#143163] animate-spin"></div>
-                                            </div> : "Salvar Alterações"
-                                        }
-                                    </Button>
-                                </div>
-                            </div>
+                            </section>
 
                         </div>
                     </div>
+
+                    <SheetFooter className="ui-position-footer">
+                        <Button
+                            disabled={loading || (currentView === 1 && isLoading)}
+                            onClick={currentView === 0 ? () => setCurrentView(1) : createPosition}
+                            className="ui-position-action"
+                            type="button"
+                            variant="brand"
+                        >
+                            {loading ? (
+                                <div className="ui-position-spinner ui-position-spinner--light" />
+                            ) : currentView === 0 ? "Seguinte" : "Salvar alterações"}
+                        </Button>
+                    </SheetFooter>
 
                 </SheetContent>
 

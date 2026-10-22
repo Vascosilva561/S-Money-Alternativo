@@ -23,8 +23,8 @@ export const ROLE_PERMISSIONS: Record<Role, Partial<Record<MenuKey, PermissionLe
     movimentos: "view",
     relatorios: "view",
     saldo_por_usuario: "view",
-    faqs: "manage",
     meu_perfil: "view",
+    bancos: "manage",
   },
   suporte: {
     dashboard: "view",
@@ -81,6 +81,7 @@ export const ROLE_PERMISSIONS: Record<Role, Partial<Record<MenuKey, PermissionLe
     faqs: "manage",
     meu_perfil: "manage",
     gestao_de_niveis: "manage",
+    referencias: "manage",
   },
   superadmin: {
     dashboard: "manage",
@@ -103,6 +104,7 @@ export const ROLE_PERMISSIONS: Record<Role, Partial<Record<MenuKey, PermissionLe
     faqs: "manage",
     meu_perfil: "manage",
     gestao_de_niveis: "manage",
+    referencias: "manage",
   },
 }
 
